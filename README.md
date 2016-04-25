@@ -97,33 +97,36 @@ user interface.
 - [ ] create `Album` model
 - build out API, Flux loop, and components for:
   - [ ] Album CRUD
-  - [ ] adding notes requires a album
-  - [ ] moving notes to a different album
-  - [ ] viewing notes by album
+  - [ ] adding photos to an album
+  - [ ] moving photos to a different album
+  - [ ] viewing photos by album
 - Use CSS to style new views
 
 Phase 3 adds organization to the Photos. Photos belong to a Album,
 which has its own `Index` view.
 
-### Phase 6: Tags (1.5 days)
+### Phase 6: Comments (1.5 days)
 
-**Objective:** Notes can be tagged with multiple tags, and tags are searchable.
+**Objective:** Photos and other comments can be commented on, and will display on the photo's page.
+
+- [ ] create `Comment` model
+- build out API, Flux loop, and components for:
+  - [ ] Comment CRUD
+  - [ ] adding comments
+  - [ ] deleting comments
+- Style new elements
+
+### Phase 7: Tags (1.5 days)
+
+**Objective:** Photos can be tagged with multiple hashtags, and tags are searchable.
 
 - [ ] create `Tag` model and join table
 - build out API, Flux loop, and components for:
-  - [ ] fetching tags for notebook
-  - [ ] adding tags to notebook
-  - [ ] creating tags while adding to notebooks
-  - [ ] searching notebooks by tag
+  - [ ] fetching tags for photo
+  - [ ] adding tags to photo
+  - [ ] creating tags while adding to photos
+  - [ ] searching photos by tag
 - [ ] Style new elements
-
-### Phase 7: Allow Complex Styling in Photos (0.5 days)
-
-**objective:** Enable complex styling of notes.
-
-- [ ] Integrate `react-quill` (based on Quill.js).
-- [ ] Use Rails helpers to sanitize HTML before rendering.
-- [ ] Style the new Quill elements.
 
 ### Phase 8: Styling Cleanup and Seeding (1 day)
 
