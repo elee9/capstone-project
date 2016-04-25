@@ -1,12 +1,12 @@
 # FresherNote
 
-[Heroku link][heroku] **NB:** This should be a link to your production site
+[Heroku link][heroku]
 
-[heroku]: http://www.herokuapp.com
+[heroku]: http://pyxels.herokuapp.com
 
 ## Minimum Viable Product
 
-FresherNote is a web application inspired by Evernote that will be build using Ruby on Rails and React.js.  By the end of Week 9, this app will, at a minimum, satisfy the following criteria:
+Pyxels is a web application inspired by 500px that will be built using Ruby on Rails and React.js.  By the end of Week 9, this app will, at a minimum, satisfy the following criteria:
 
 - [ ] New account creation, login, and guest/demo login
 - [ ] Smooth, bug-free navigation
@@ -25,8 +25,8 @@ progress. Put an x between the brackets for a checkmark: [x] -->
 
 - [ ] Create an account (MVP)
 - [ ] Log in / Log out, including as a Guest/Demo User (MVP)
-- [ ] Create, read, edit, and delete notes (MVP)
-- [ ] Organize notes within Notebooks (MVP)
+- [ ] Create, read, edit, and delete pictures (MVP)
+- [ ] Organize pictures within albums (MVP)
 - [ ] Tag notes with multiple tags (expected feature, but not MVP)
 - [ ] Apply complex styling to notes while editing (expected feature, but not MVP)
 
