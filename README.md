@@ -55,31 +55,31 @@ progress. Put an x between the brackets for a checkmark: [x] -->
 - [ ] user signup/signin pages
 - [ ] blank landing page after signin
 
-### Phase 2: Notes Model, API, and basic APIUtil (1.5 days)
+### Phase 2: Photos Model, API, and basic APIUtil (1.5 days)
 
-**Objective:** Notes can be created, read, edited and destroyed through
+**Objective:** Photos can be created, read, edited and destroyed through
 the API.
 
-- [ ] create `Note` model
+- [ ] create `Photo` model
 - [ ] seed the database with a small amount of test data
-- [ ] CRUD API for notes (`NotesController`)
-- [ ] jBuilder views for notes
+- [ ] CRUD API for photos (`PhotosController`)
+- [ ] jBuilder views for photos
 - [ ] setup Webpack & Flux scaffold
 - [ ] setup `APIUtil` to interact with the API
 - [ ] test out API interaction in the console.
 
 ### Phase 3: Flux Architecture and Router (1.5 days)
 
-**Objective:** Notes can be created, read, edited and destroyed with the
+**Objective:** Photos can be created, read, edited and destroyed with the
 user interface.
 
 - [ ] setup the flux loop with skeleton files
 - [ ] setup React Router
-- implement each note component, building out the flux loop as needed.
-  - [ ] `NotesIndex`
-  - [ ] `NoteIndexItem`
-  - [ ] `NoteForm`
-- [ ] save Notes to the DB when the form loses focus or is left idle
+- implement each photo component, building out the flux loop as needed.
+  - [ ] `PhotosIndex`
+  - [ ] `PhotoIndexItem`
+  - [ ] `PhotoForm`
+- [ ] save Photos to the DB when the form loses focus or is left idle
   after editing.
 
 ### Phase 4: Start Styling (0.5 days)
@@ -90,19 +90,19 @@ user interface.
 - [ ] position elements on the page
 - [ ] add basic colors & styles
 
-### Phase 5: Notebooks (1 day)
+### Phase 5: Albums (1 day)
 
-**Objective:** Notes belong to Notebooks, and can be viewed by notebook.
+**Objective:** Photos can belong to user-specified Albums, and can be viewed by album.
 
-- [ ] create `Notebook` model
+- [ ] create `Album` model
 - build out API, Flux loop, and components for:
-  - [ ] Notebook CRUD
-  - [ ] adding notes requires a notebook
-  - [ ] moving notes to a different notebook
-  - [ ] viewing notes by notebook
+  - [ ] Album CRUD
+  - [ ] adding notes requires a album
+  - [ ] moving notes to a different album
+  - [ ] viewing notes by album
 - Use CSS to style new views
 
-Phase 3 adds organization to the Notes. Notes belong to a Notebook,
+Phase 3 adds organization to the Photos. Photos belong to a Album,
 which has its own `Index` view.
 
 ### Phase 6: Tags (1.5 days)
@@ -117,7 +117,7 @@ which has its own `Index` view.
   - [ ] searching notebooks by tag
 - [ ] Style new elements
 
-### Phase 7: Allow Complex Styling in Notes (0.5 days)
+### Phase 7: Allow Complex Styling in Photos (0.5 days)
 
 **objective:** Enable complex styling of notes.
 
@@ -134,11 +134,9 @@ which has its own `Index` view.
 - [ ] Add modals, transitions, and other styling flourishes.
 
 ### Bonus Features (TBD)
-- [ ] Search through notes for blocks of text
-- [ ] Pagination / infinite scroll for Notes Index
-- [ ] Set reminders on notes
-- [ ] Changelogs for Notes
-- [ ] Multiple sessions
+- [ ] Geotagging pictures with the Google Maps API
+- [ ] Show related photos based on number of matching tags
+- [ ] Pagination / infinite scroll for Photos Index
 
 [phase-one]: ./docs/phases/phase1.md
 [phase-two]: ./docs/phases/phase2.md

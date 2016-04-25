@@ -3,12 +3,13 @@
 ## Rails
 ### Models
 * User
-* Note
+* Photo
 
 ### Controllers
 * UsersController (create, new)
 * SessionsController (create, new, destroy)
-* Api::NotesController (create, destroy, index, show, update)
+* CommentsController (create, destroy)
+* Api::PhotosController (create, destroy, index, show, update)
 
 ### Views
 * users/new.html.erb

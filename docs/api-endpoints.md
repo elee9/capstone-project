@@ -20,32 +20,36 @@
 
 ## JSON API
 
-### Photo
+### Photos
 
 - `GET /api/photos`
-  - Photo index/search
+  - Photo index
   - accepts `hashtag` query param to list photos by tag
 - `POST /api/photos`
 - `GET /api/photos/:id`
 - `PATCH /api/photos/:id`
 - `DELETE /api/photos/:id`
 
-### Notebooks
+### Albums
 
-- `GET /api/notebooks`
-- `POST /api/notebooks`
-- `GET /api/notebooks/:id`
-- `PATCH /api/notebooks/:id`
-- `DELETE /api/notebooks/:id`
-- `GET /api/notebooks/:id/notes`
-  - index of all notes for a notebook
+- `GET /api/albums`
+- `POST /api/albums`
+- `GET /api/albums/:id`
+- `PATCH /api/albums/:id`
+- `DELETE /api/albums/:id`
+- `GET /api/albums/:id/photos`
+  - index of all photos for a album
+
+### Comments
+- `POST /api/photos/:id/comments`
+- `DELETE /api/photo/:id/comments`
 
 ### Tags
 
 - A note's tags will be included in the note show template
 - `GET /api/tags`
   - includes query param for typeahead suggestions
-- `POST /api/notes/:note_id/tags`: add tag to note by name
-  - if note doesn't already exist, it will be created
-- `DELETE /api/notes/:note_id/tags/:tag_name`: remove tag from note by
+- `POST /api/photos/:photo_id/tags`: add tag to photo by name
+  - if photo doesn't already exist, it will be created
+- `DELETE /api/photos/:photo_id/tags/:tag_name`: remove tag from photo by
   name

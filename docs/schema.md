@@ -24,12 +24,20 @@ column name | data type | details
 id          | integer   | not null, primary key
 name        | string    | not null
 
+## comments (polymorphism)
+column name | data type | details
+------------|-----------|-----------------------
+id          | integer   | not null, primary key
+text        | string    | not null
+author_id   | integer   | not null, foreign key (references users), indexed
+parent_id   | integer   | not null, foreign key (references users), indexed
+
 ## taggings
 column name | data type | details
 ------------|-----------|-----------------------
 id          | integer   | not null, primary key
 name        | string    | not null
-note_id     | integer   | not null, foreign key (references notes), indexed, unique [tag_id]
+photo_id    | integer   | not null, foreign key (references photos), indexed, unique [tag_id]
 tag_id      | integer   | not null, foreign key (references tags), indexed
 
 ## users
