@@ -11,3 +11,10 @@
 /log/*
 !/log/.keep
 /tmp
+
+# Dependency directories
+node_modules
+jspm_packages
+
+# Optional npm cache directory
+.npm
