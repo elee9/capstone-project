@@ -1,11 +1,10 @@
-var AppDispatcher = require('../dispatcher/dispatcher.js'),
+var AppDispatcher = require('../dispatcher/dispatcher'),
     Store = require('flux/utils').Store,
-    SessionConstants = require('../constants/user_constants.js');
+    SessionConstants = require('../constants/session_constants');
 
 var SessionStore = new Store(AppDispatcher);
 
-var _currentUser = {},
-    _errors = {};
+var _currentUser, _errors;
 
 var login = function(user) {
   _currentUser = user;
@@ -20,9 +19,22 @@ var setErrors = function(errors) {
   _errors = errors;
 };
 
+SessionStore.currentUser = function() {
+  if (_currentUser) {
+    return $.extend({}, _currentUser);
+  }
+};
+
+SessionStore.errors = function(){
+  if (_errors){
+    return [].slice.call(_errors);
+  }
+};
+
 SessionStore.__onDispatch = function(payload) {
   switch (payload.actionType) {
     case SessionConstants.LOGIN:
+      console.log("logging in!");
       login(payload.user);
       break;
     case SessionConstants.LOGOUT:
@@ -32,7 +44,7 @@ SessionStore.__onDispatch = function(payload) {
       setErrors(payload.errors);
       break;
   }
-  this.__emitChange();
+  SessionStore.__emitChange();
 };
 
 module.exports = SessionStore;

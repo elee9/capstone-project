@@ -24,10 +24,10 @@ class User < ActiveRecord::Base
 
   after_initialize :ensure_session_token, :ensure_default_bio
 
-  def self.find_by_credentials(email, password)
-    user = User.find_by_email(email)
-    return nil unless user.is_password?(password)
-    user
+  def self.find_by_credentials(username, password)
+    user = User.find_by_username(username)
+    return nil unless user
+    user.is_password?(password) ? user : nil
   end
 
   def reset_session_token!
@@ -36,7 +36,7 @@ class User < ActiveRecord::Base
     self.session_token
   end
 
-  def is_password?
+  def is_password?(password)
     BCrypt::Password.new(self.password_digest).is_password?(password)
   end
 
@@ -52,4 +52,5 @@ class User < ActiveRecord::Base
 
   def ensure_default_bio
     self.bio ||= "Hi! I'm new to Pyxels, take a look through my photos!"
+  end
 end

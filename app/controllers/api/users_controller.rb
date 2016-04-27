@@ -4,16 +4,16 @@ class Api::UsersController < ApplicationController
 
     if @user.save
       login_user!(@user)
-      render :create
+      render 'api/users/show'
     else
       @errors = @user.errors.full_messages
-      render :errors
+      render 'api/shared/errors', status: 422
     end
   end
 
   def show
     @user = User.find(params[:id])
-    render :show
+    render 'api/users/show'
   end
 
   def edit
@@ -24,10 +24,10 @@ class Api::UsersController < ApplicationController
     @user = User.find(params[:id])
 
     if @user.update_attributes(user_params)
-      render :show
+      render 'api/users/show'
     else
       @errors = @user.errors.full_messages
-      render :errors
+      render 'api/shared/errors', status: 422
     end
   end
 

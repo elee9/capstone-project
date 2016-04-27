@@ -1,25 +1,34 @@
 class Api::SessionsController < ApplicationController
   def create
-    @user.find_by_credentials(params[:user][:username], params[:user][:password])
+    @user = User.find_by_credentials(params[:user][:username], params[:user][:password])
 
     if @user
       login_user!(@user)
-      render :show
+      render 'api/users/show'
     else
-      @errors = @user.errors.full_messages
-      render :errors
+      @errors = ["Invalid username or password!"]
+      render 'api/shared/errors', status: 401
     end
   end
 
   def show
-    @user = current_user
-    render :show
+    if current_user
+      @user = current_user
+      render 'api/users/show'
+    else
+      @errors = nil
+      render 'api/shared/errors', status: 404
+    end
   end
 
   def destroy
     @user = current_user
-
-    logout_user!
-    render :show
+    if @user
+      logout_user!
+      render 'api/users/show'
+    else
+      @errors = nil
+      render 'api/shared/errors', status: 404
+    end
   end
 end
