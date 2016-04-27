@@ -21,7 +21,6 @@ var SessionApiUtil = {
       method: 'post',
       data : { user: user },
       success: function(currentUser) {
-        console.log("logging in 2");
         SessionActions.login(currentUser);
       },
       error: SessionApiUtil.handleError
@@ -43,7 +42,7 @@ var SessionApiUtil = {
     $.ajax({
       url: '/api/session',
       success: function(user) {
-        SessionActions.fetchCurrentUser();
+        SessionActions.receiveCurrentuser(user);
       },
       error: SessionApiUtil.handleError
     });

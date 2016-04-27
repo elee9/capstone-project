@@ -69,7 +69,6 @@ module.exports = React.createClass({
   },
 
   greeting: function() {
-    console.log(this.state.currentUser);
     if (!this.state.currentUser) {
       return;
     }

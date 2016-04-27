@@ -1,5 +1,5 @@
 var SessionStore = require('../stores/session_store'),
-    SessionActions = require('../actions/session_actions');
+    SessionApiUtil = require('../util/session_api_util');
 
 var CurrentUserState = {
 
@@ -12,9 +12,6 @@ var CurrentUserState = {
 
 	componentDidMount: function(){
 		SessionStore.addListener(this.updateUser);
-		if (typeof SessionStore.currentUser() === 'undefined') {
-			SessionActions.fetchCurrentUser();
-		}
 	},
 
 	updateUser: function(){

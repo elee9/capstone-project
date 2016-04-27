@@ -51,12 +51,15 @@
 	    Route = ReactRouter.Route,
 	    IndexRoute = ReactRouter.IndexRoute,
 	    Link = ReactRouter.Link,
-	    hashHistory = ReactRouter.hashHistory;
+	    hashHistory = ReactRouter.hashHistory,
+	    SessionApiUtil = __webpack_require__(227);
 	
 	var App = __webpack_require__(225),
 	    Splash = __webpack_require__(253),
 	    Login = __webpack_require__(226),
 	    Signup = __webpack_require__(254);
+	
+	SessionApiUtil.fetchCurrentUser();
 	
 	var Router = React.createElement(
 	  Router,
@@ -25573,7 +25576,6 @@
 	  },
 	
 	  greeting: function () {
-	    console.log(this.state.currentUser);
 	    if (!this.state.currentUser) {
 	      return;
 	    }
@@ -25628,7 +25630,6 @@
 	      method: 'post',
 	      data: { user: user },
 	      success: function (currentUser) {
-	        console.log("logging in 2");
 	        SessionActions.login(currentUser);
 	      },
 	      error: SessionApiUtil.handleError
@@ -25650,7 +25651,7 @@
 	    $.ajax({
 	      url: '/api/session',
 	      success: function (user) {
-	        SessionActions.fetchCurrentUser();
+	        SessionActions.receiveCurrentuser(user);
 	      },
 	      error: SessionApiUtil.handleError
 	    });
@@ -26000,7 +26001,7 @@
 	    AppDispatcher = __webpack_require__(228);
 	
 	module.exports = {
-	  fetchCurrentUser: function (user) {
+	  receiveCurrentuser: function (user) {
 	    AppDispatcher.dispatch({
 	      actionType: SessionConstants.LOGIN,
 	      user: user
@@ -26068,7 +26069,6 @@
 	SessionStore.__onDispatch = function (payload) {
 	  switch (payload.actionType) {
 	    case SessionConstants.LOGIN:
-	      console.log("logging in!");
 	      login(payload.user);
 	      break;
 	    case SessionConstants.LOGOUT:
@@ -32654,7 +32654,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var SessionStore = __webpack_require__(234),
-	    SessionActions = __webpack_require__(233);
+	    SessionApiUtil = __webpack_require__(227);
 	
 	var CurrentUserState = {
 	
@@ -32667,9 +32667,6 @@
 	
 		componentDidMount: function () {
 			SessionStore.addListener(this.updateUser);
-			if (typeof SessionStore.currentUser() === 'undefined') {
-				SessionActions.fetchCurrentUser();
-			}
 		},
 	
 		updateUser: function () {

@@ -34,7 +34,6 @@ SessionStore.errors = function(){
 SessionStore.__onDispatch = function(payload) {
   switch (payload.actionType) {
     case SessionConstants.LOGIN:
-      console.log("logging in!");
       login(payload.user);
       break;
     case SessionConstants.LOGOUT:

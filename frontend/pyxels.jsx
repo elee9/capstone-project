@@ -5,12 +5,15 @@ var React = require('react'),
     Route = ReactRouter.Route,
     IndexRoute = ReactRouter.IndexRoute,
     Link = ReactRouter.Link,
-    hashHistory = ReactRouter.hashHistory;
+    hashHistory = ReactRouter.hashHistory,
+    SessionApiUtil = require('./util/session_api_util');
 
 var App = require('./components/app'),
     Splash = require('./components/splash'),
     Login = require('./components/login'),
     Signup = require('./components/signup');
+
+SessionApiUtil.fetchCurrentUser();
 
 var Router = (
   <Router history={hashHistory}>
@@ -21,6 +24,7 @@ var Router = (
     </Route>
   </Router>
 );
+
 
 document.addEventListener('DOMContentLoaded', function() {
   ReactDOM.render(

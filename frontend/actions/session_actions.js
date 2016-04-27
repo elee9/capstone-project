@@ -3,7 +3,7 @@ var SessionConstants = require('../constants/session_constants'),
 
 
 module.exports = {
-  fetchCurrentUser: function(user) {
+  receiveCurrentuser: function(user) {
     AppDispatcher.dispatch({
       actionType: SessionConstants.LOGIN,
       user: user
