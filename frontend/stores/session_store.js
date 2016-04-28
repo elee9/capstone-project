@@ -4,7 +4,8 @@ var AppDispatcher = require('../dispatcher/dispatcher'),
 
 var SessionStore = new Store(AppDispatcher);
 
-var _currentUser, _errors;
+var _currentUser, _errors,
+    _currentUserFetched = false;
 
 var login = function(user) {
   _currentUser = user;
@@ -31,10 +32,15 @@ SessionStore.errors = function(){
   }
 };
 
+SessionStore.currentUserFetched = function() {
+  return _currentUserFetched;
+};
+
 SessionStore.__onDispatch = function(payload) {
   switch (payload.actionType) {
     case SessionConstants.LOGIN:
       login(payload.user);
+      _currentUserFetched = true;
       break;
     case SessionConstants.LOGOUT:
       logout();

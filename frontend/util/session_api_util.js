@@ -15,13 +15,14 @@ var SessionApiUtil = {
     });
   },
 
-  login: function(user) {
+  login: function(user, redirect) {
     $.ajax({
       url: 'api/session',
       method: 'post',
       data : { user: user },
       success: function(currentUser) {
         SessionActions.login(currentUser);
+        redirect();
       },
       error: SessionApiUtil.handleError
     });

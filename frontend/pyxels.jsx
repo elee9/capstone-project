@@ -13,7 +13,6 @@ var App = require('./components/app'),
     Login = require('./components/login'),
     Signup = require('./components/signup');
 
-SessionApiUtil.fetchCurrentUser();
 
 var Router = (
   <Router history={hashHistory}>

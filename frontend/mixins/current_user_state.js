@@ -12,6 +12,9 @@ var CurrentUserState = {
 
 	componentDidMount: function(){
 		SessionStore.addListener(this.updateUser);
+		if (typeof SessionStore.currentUser() === 'undefined') {
+			SessionApiUtil.fetchCurrentUser();
+		}
 	},
 
 	updateUser: function(){

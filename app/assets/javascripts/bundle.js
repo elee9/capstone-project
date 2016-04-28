@@ -52,14 +52,12 @@
 	    IndexRoute = ReactRouter.IndexRoute,
 	    Link = ReactRouter.Link,
 	    hashHistory = ReactRouter.hashHistory,
-	    SessionApiUtil = __webpack_require__(227);
+	    SessionApiUtil = __webpack_require__(225);
 	
-	var App = __webpack_require__(225),
+	var App = __webpack_require__(232),
 	    Splash = __webpack_require__(253),
-	    Login = __webpack_require__(226),
+	    Login = __webpack_require__(233),
 	    Signup = __webpack_require__(254);
-	
-	SessionApiUtil.fetchCurrentUser();
 	
 	var Router = React.createElement(
 	  Router,
@@ -25462,154 +25460,9 @@
 /* 225 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var React = __webpack_require__(1),
-	    Login = __webpack_require__(226),
-	    Link = __webpack_require__(166).Link;
-	
-	module.exports = React.createClass({
-	  displayName: 'exports',
-	
-	  render: function () {
-	    return React.createElement(
-	      'div',
-	      { className: 'app-container' },
-	      React.createElement(
-	        'div',
-	        { className: 'photo-grid' },
-	        this.props.children,
-	        React.createElement(Login, null)
-	      )
-	    );
-	  }
-	});
-
-/***/ },
-/* 226 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var React = __webpack_require__(1),
-	    Link = __webpack_require__(166).Link,
-	    SessionApiUtil = __webpack_require__(227),
-	    CurrentUserState = __webpack_require__(255);
-	
-	module.exports = React.createClass({
-	  displayName: 'exports',
-	
-	  mixins: [CurrentUserState],
-	
-	  getInitialState: function () {
-	    return {
-	      username: "", password: ""
-	    };
-	  },
-	
-	  updateUsername: function (event) {
-	    this.setState({ username: event.target.value });
-	  },
-	
-	  updatePassword: function (event) {
-	    this.setState({ password: event.target.value });
-	  },
-	
-	  logout: function (event) {
-	    event.preventDefault();
-	    SessionApiUtil.logout();
-	  },
-	
-	  handleSubmit: function (event) {
-	    event.preventDefault();
-	
-	    var user = {
-	      username: this.state.username,
-	      password: this.state.password
-	    };
-	
-	    SessionApiUtil.login(user);
-	  },
-	
-	  errors: function () {
-	    if (!this.state.userErrors) {
-	      return;
-	    }
-	    var self = this;
-	    return React.createElement(
-	      'ul',
-	      null,
-	      Object.keys(this.state.userErrors).map(function (key, i) {
-	        return React.createElement(
-	          'li',
-	          { key: i },
-	          self.state.userErrors[key]
-	        );
-	      })
-	    );
-	  },
-	
-	  form: function () {
-	    if (this.state.currentUser) {
-	      return;
-	    }
-	    return React.createElement(
-	      'form',
-	      { onSubmit: this.handleSubmit },
-	      React.createElement(
-	        'label',
-	        null,
-	        'Username:',
-	        React.createElement('input', { type: 'text', placeholder: 'Username', onChange: this.updateUsername })
-	      ),
-	      React.createElement('br', null),
-	      React.createElement(
-	        'label',
-	        null,
-	        'Password:',
-	        React.createElement('input', { type: 'password', placeholder: 'Password', onChange: this.updatePassword })
-	      ),
-	      React.createElement('br', null),
-	      React.createElement('input', { type: 'submit', value: 'Log In' }),
-	      React.createElement(
-	        Link,
-	        { to: 'signup' },
-	        'Sign Up'
-	      )
-	    );
-	  },
-	
-	  greeting: function () {
-	    if (!this.state.currentUser) {
-	      return;
-	    }
-	    return React.createElement(
-	      'div',
-	      null,
-	      React.createElement(
-	        'h2',
-	        null,
-	        'Hi, ',
-	        this.state.currentUser.username
-	      ),
-	      React.createElement('input', { type: 'submit', value: 'Log out', onClick: this.logout })
-	    );
-	  },
-	
-	  render: function () {
-	    return React.createElement(
-	      'div',
-	      null,
-	      this.greeting(),
-	      this.errors(),
-	      this.form()
-	    );
-	  }
-	});
-
-/***/ },
-/* 227 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var AppDispatcher = __webpack_require__(228),
-	    SessionConstants = __webpack_require__(232),
-	    SessionActions = __webpack_require__(233);
+	var AppDispatcher = __webpack_require__(226),
+	    SessionConstants = __webpack_require__(230),
+	    SessionActions = __webpack_require__(231);
 	
 	var SessionApiUtil = {
 	  signup: function (data) {
@@ -25624,13 +25477,14 @@
 	    });
 	  },
 	
-	  login: function (user) {
+	  login: function (user, redirect) {
 	    $.ajax({
 	      url: 'api/session',
 	      method: 'post',
 	      data: { user: user },
 	      success: function (currentUser) {
 	        SessionActions.login(currentUser);
+	        redirect();
 	      },
 	      error: SessionApiUtil.handleError
 	    });
@@ -25668,15 +25522,15 @@
 	module.exports = SessionApiUtil;
 
 /***/ },
-/* 228 */
+/* 226 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Dispatcher = __webpack_require__(229).Dispatcher;
+	var Dispatcher = __webpack_require__(227).Dispatcher;
 	
 	module.exports = new Dispatcher();
 
 /***/ },
-/* 229 */
+/* 227 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -25688,11 +25542,11 @@
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 */
 	
-	module.exports.Dispatcher = __webpack_require__(230);
+	module.exports.Dispatcher = __webpack_require__(228);
 
 
 /***/ },
-/* 230 */
+/* 228 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -25714,7 +25568,7 @@
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 	
-	var invariant = __webpack_require__(231);
+	var invariant = __webpack_require__(229);
 	
 	var _prefix = 'ID_';
 	
@@ -25929,7 +25783,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 231 */
+/* 229 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -25984,7 +25838,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 232 */
+/* 230 */
 /***/ function(module, exports) {
 
 	module.exports = {
@@ -25994,11 +25848,11 @@
 	};
 
 /***/ },
-/* 233 */
+/* 231 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var SessionConstants = __webpack_require__(232),
-	    AppDispatcher = __webpack_require__(228);
+	var SessionConstants = __webpack_require__(230),
+	    AppDispatcher = __webpack_require__(226);
 	
 	module.exports = {
 	  receiveCurrentuser: function (user) {
@@ -26030,16 +25884,267 @@
 	};
 
 /***/ },
+/* 232 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1),
+	    Login = __webpack_require__(233),
+	    Link = __webpack_require__(166).Link;
+	
+	module.exports = React.createClass({
+	  displayName: 'exports',
+	
+	  render: function () {
+	    return React.createElement(
+	      'div',
+	      { className: 'app-container' },
+	      React.createElement(
+	        'div',
+	        { className: 'photo-grid' },
+	        this.props.children,
+	        React.createElement(Login, null)
+	      )
+	    );
+	  }
+	});
+
+/***/ },
+/* 233 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1),
+	    Link = __webpack_require__(166).Link,
+	    SessionApiUtil = __webpack_require__(225),
+	    CurrentUserState = __webpack_require__(234),
+	    Modal = __webpack_require__(255);
+	
+	module.exports = React.createClass({
+	  displayName: 'exports',
+	
+	  mixins: [CurrentUserState],
+	
+	  contextTypes: {
+	    router: React.PropTypes.object.isRequired
+	  },
+	
+	  getInitialState: function () {
+	    return {
+	      username: "", password: ""
+	    };
+	  },
+	
+	  updateUsername: function (event) {
+	    this.setState({ username: event.target.value });
+	  },
+	
+	  updatePassword: function (event) {
+	    this.setState({ password: event.target.value });
+	  },
+	
+	  logout: function (event) {
+	    event.preventDefault();
+	    SessionApiUtil.logout();
+	  },
+	
+	  handleSubmit: function (event) {
+	    if (event) {
+	      event.preventDefault();
+	    }
+	    var that = this;
+	
+	    var user = {
+	      username: this.state.username,
+	      password: this.state.password
+	    };
+	
+	    SessionApiUtil.login(user, function () {
+	      that.context.router.push("/");
+	    });
+	  },
+	
+	  showModal: function () {
+	    this.refs.modal.show();
+	  },
+	
+	  hideModal: function () {
+	    this.refs.modal.hide();
+	  },
+	
+	  errors: function () {
+	    if (!this.state.userErrors) {
+	      return;
+	    }
+	    var self = this;
+	    return React.createElement(
+	      'ul',
+	      null,
+	      Object.keys(this.state.userErrors).map(function (key, i) {
+	        return React.createElement(
+	          'li',
+	          { key: i },
+	          self.state.userErrors[key]
+	        );
+	      })
+	    );
+	  },
+	
+	  guestLogin: function (event) {
+	    event.preventDefault();
+	    var that = this;
+	
+	    this.setState({
+	      username: '',
+	      password: ''
+	    });
+	
+	    var username = "demothedog".split("");
+	    var password = "demodemo".split("");
+	    var time = 50;
+	
+	    username.forEach(function (letter) {
+	      time += 50;
+	      setTimeout(function () {
+	        that.setState({ username: that.state.username + letter });
+	      }, time);
+	    });
+	
+	    time += 500;
+	
+	    password.forEach(function (letter) {
+	      time += 50;
+	      setTimeout(function () {
+	        that.setState({ password: that.state.password + letter });
+	      }, time);
+	    });
+	
+	    time += 500;
+	
+	    setTimeout(this.handleSubmit, time);
+	  },
+	
+	  form: function () {
+	    if (this.state.currentUser) {
+	      return;
+	    }
+	    return React.createElement(
+	      'div',
+	      null,
+	      React.createElement(
+	        'button',
+	        { onClick: this.showModal },
+	        'Log In'
+	      ),
+	      React.createElement(
+	        Modal,
+	        { ref: 'modal' },
+	        React.createElement(
+	          'form',
+	          { onSubmit: this.handleSubmit },
+	          React.createElement(
+	            'label',
+	            null,
+	            'Username:',
+	            React.createElement('input', { type: 'text', placeholder: 'Username', onChange: this.updateUsername, value: this.state.username })
+	          ),
+	          React.createElement('br', null),
+	          React.createElement(
+	            'label',
+	            null,
+	            'Password:',
+	            React.createElement('input', { type: 'password', placeholder: 'Password', onChange: this.updatePassword, value: this.state.password })
+	          ),
+	          React.createElement('br', null),
+	          React.createElement('input', { type: 'submit', value: 'Log In' }),
+	          React.createElement(
+	            'button',
+	            { onClick: this.guestLogin },
+	            'Guest'
+	          ),
+	          React.createElement(
+	            Link,
+	            { to: 'signup' },
+	            'Sign Up'
+	          )
+	        )
+	      )
+	    );
+	  },
+	
+	  greeting: function () {
+	    if (!this.state.currentUser) {
+	      return;
+	    }
+	    return React.createElement(
+	      'div',
+	      null,
+	      React.createElement(
+	        'h2',
+	        null,
+	        'Hi, ',
+	        this.state.currentUser.username
+	      ),
+	      React.createElement('input', { type: 'submit', value: 'Log out', onClick: this.logout })
+	    );
+	  },
+	
+	  render: function () {
+	    return React.createElement(
+	      'div',
+	      null,
+	      this.greeting(),
+	      this.errors(),
+	      this.form()
+	    );
+	  }
+	});
+
+/***/ },
 /* 234 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var AppDispatcher = __webpack_require__(228),
-	    Store = __webpack_require__(235).Store,
-	    SessionConstants = __webpack_require__(232);
+	var SessionStore = __webpack_require__(235),
+	    SessionApiUtil = __webpack_require__(225);
+	
+	var CurrentUserState = {
+	
+		getInitialState: function () {
+			return {
+				currentUser: SessionStore.currentUser(),
+				userErrors: SessionStore.errors()
+			};
+		},
+	
+		componentDidMount: function () {
+			SessionStore.addListener(this.updateUser);
+			if (typeof SessionStore.currentUser() === 'undefined') {
+				SessionApiUtil.fetchCurrentUser();
+			}
+		},
+	
+		updateUser: function () {
+			this.setState({
+				currentUser: SessionStore.currentUser(),
+				userErrors: SessionStore.errors()
+			});
+		}
+	
+	};
+	
+	module.exports = CurrentUserState;
+
+/***/ },
+/* 235 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var AppDispatcher = __webpack_require__(226),
+	    Store = __webpack_require__(236).Store,
+	    SessionConstants = __webpack_require__(230);
 	
 	var SessionStore = new Store(AppDispatcher);
 	
-	var _currentUser, _errors;
+	var _currentUser,
+	    _errors,
+	    _currentUserFetched = false;
 	
 	var login = function (user) {
 	  _currentUser = user;
@@ -26066,10 +26171,15 @@
 	  }
 	};
 	
+	SessionStore.currentUserFetched = function () {
+	  return _currentUserFetched;
+	};
+	
 	SessionStore.__onDispatch = function (payload) {
 	  switch (payload.actionType) {
 	    case SessionConstants.LOGIN:
 	      login(payload.user);
+	      _currentUserFetched = true;
 	      break;
 	    case SessionConstants.LOGOUT:
 	      logout();
@@ -26084,7 +26194,7 @@
 	module.exports = SessionStore;
 
 /***/ },
-/* 235 */
+/* 236 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -26096,15 +26206,15 @@
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 */
 	
-	module.exports.Container = __webpack_require__(236);
-	module.exports.MapStore = __webpack_require__(239);
-	module.exports.Mixin = __webpack_require__(251);
-	module.exports.ReduceStore = __webpack_require__(240);
-	module.exports.Store = __webpack_require__(241);
+	module.exports.Container = __webpack_require__(237);
+	module.exports.MapStore = __webpack_require__(240);
+	module.exports.Mixin = __webpack_require__(252);
+	module.exports.ReduceStore = __webpack_require__(241);
+	module.exports.Store = __webpack_require__(242);
 
 
 /***/ },
-/* 236 */
+/* 237 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -26126,10 +26236,10 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var FluxStoreGroup = __webpack_require__(237);
+	var FluxStoreGroup = __webpack_require__(238);
 	
-	var invariant = __webpack_require__(231);
-	var shallowEqual = __webpack_require__(238);
+	var invariant = __webpack_require__(229);
+	var shallowEqual = __webpack_require__(239);
 	
 	var DEFAULT_OPTIONS = {
 	  pure: true,
@@ -26287,7 +26397,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 237 */
+/* 238 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -26306,7 +26416,7 @@
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 	
-	var invariant = __webpack_require__(231);
+	var invariant = __webpack_require__(229);
 	
 	/**
 	 * FluxStoreGroup allows you to execute a callback on every dispatch after
@@ -26368,7 +26478,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 238 */
+/* 239 */
 /***/ function(module, exports) {
 
 	/**
@@ -26423,7 +26533,7 @@
 	module.exports = shallowEqual;
 
 /***/ },
-/* 239 */
+/* 240 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -26444,10 +26554,10 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var FluxReduceStore = __webpack_require__(240);
-	var Immutable = __webpack_require__(250);
+	var FluxReduceStore = __webpack_require__(241);
+	var Immutable = __webpack_require__(251);
 	
-	var invariant = __webpack_require__(231);
+	var invariant = __webpack_require__(229);
 	
 	/**
 	 * This is a simple store. It allows caching key value pairs. An implementation
@@ -26573,7 +26683,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 240 */
+/* 241 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -26594,10 +26704,10 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var FluxStore = __webpack_require__(241);
+	var FluxStore = __webpack_require__(242);
 	
-	var abstractMethod = __webpack_require__(249);
-	var invariant = __webpack_require__(231);
+	var abstractMethod = __webpack_require__(250);
+	var invariant = __webpack_require__(229);
 	
 	var FluxReduceStore = (function (_FluxStore) {
 	  _inherits(FluxReduceStore, _FluxStore);
@@ -26680,7 +26790,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 241 */
+/* 242 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -26699,11 +26809,11 @@
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 	
-	var _require = __webpack_require__(242);
+	var _require = __webpack_require__(243);
 	
 	var EventEmitter = _require.EventEmitter;
 	
-	var invariant = __webpack_require__(231);
+	var invariant = __webpack_require__(229);
 	
 	/**
 	 * This class should be extended by the stores in your application, like so:
@@ -26863,7 +26973,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 242 */
+/* 243 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -26876,14 +26986,14 @@
 	 */
 	
 	var fbemitter = {
-	  EventEmitter: __webpack_require__(243)
+	  EventEmitter: __webpack_require__(244)
 	};
 	
 	module.exports = fbemitter;
 
 
 /***/ },
-/* 243 */
+/* 244 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -26902,11 +27012,11 @@
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 	
-	var EmitterSubscription = __webpack_require__(244);
-	var EventSubscriptionVendor = __webpack_require__(246);
+	var EmitterSubscription = __webpack_require__(245);
+	var EventSubscriptionVendor = __webpack_require__(247);
 	
-	var emptyFunction = __webpack_require__(248);
-	var invariant = __webpack_require__(247);
+	var emptyFunction = __webpack_require__(249);
+	var invariant = __webpack_require__(248);
 	
 	/**
 	 * @class BaseEventEmitter
@@ -27080,7 +27190,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 244 */
+/* 245 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -27101,7 +27211,7 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var EventSubscription = __webpack_require__(245);
+	var EventSubscription = __webpack_require__(246);
 	
 	/**
 	 * EmitterSubscription represents a subscription with listener and context data.
@@ -27133,7 +27243,7 @@
 	module.exports = EmitterSubscription;
 
 /***/ },
-/* 245 */
+/* 246 */
 /***/ function(module, exports) {
 
 	/**
@@ -27187,7 +27297,7 @@
 	module.exports = EventSubscription;
 
 /***/ },
-/* 246 */
+/* 247 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -27206,7 +27316,7 @@
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 	
-	var invariant = __webpack_require__(247);
+	var invariant = __webpack_require__(248);
 	
 	/**
 	 * EventSubscriptionVendor stores a set of EventSubscriptions that are
@@ -27296,7 +27406,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 247 */
+/* 248 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -27351,7 +27461,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 248 */
+/* 249 */
 /***/ function(module, exports) {
 
 	/**
@@ -27393,7 +27503,7 @@
 	module.exports = emptyFunction;
 
 /***/ },
-/* 249 */
+/* 250 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -27410,7 +27520,7 @@
 	
 	'use strict';
 	
-	var invariant = __webpack_require__(231);
+	var invariant = __webpack_require__(229);
 	
 	function abstractMethod(className, methodName) {
 	   true ? process.env.NODE_ENV !== 'production' ? invariant(false, 'Subclasses of %s must override %s() with their own implementation.', className, methodName) : invariant(false) : undefined;
@@ -27420,7 +27530,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 250 */
+/* 251 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -32404,7 +32514,7 @@
 	}));
 
 /***/ },
-/* 251 */
+/* 252 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -32421,9 +32531,9 @@
 	
 	'use strict';
 	
-	var FluxStoreGroup = __webpack_require__(237);
+	var FluxStoreGroup = __webpack_require__(238);
 	
-	var invariant = __webpack_require__(231);
+	var invariant = __webpack_require__(229);
 	
 	/**
 	 * `FluxContainer` should be preferred over this mixin, but it requires using
@@ -32527,7 +32637,6 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 252 */,
 /* 253 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -32555,7 +32664,7 @@
 
 	var React = __webpack_require__(1),
 	    Link = __webpack_require__(166).Link,
-	    SessionApiUtil = __webpack_require__(227);
+	    SessionApiUtil = __webpack_require__(225);
 	
 	module.exports = React.createClass({
 	  displayName: 'exports',
@@ -32653,32 +32762,606 @@
 /* 255 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var SessionStore = __webpack_require__(234),
-	    SessionApiUtil = __webpack_require__(227);
+	var React = __webpack_require__(1);
+	var modalFactory = __webpack_require__(256);
+	var insertKeyframesRule = __webpack_require__(261);
+	var appendVendorPrefix = __webpack_require__(258);
 	
-	var CurrentUserState = {
+	var animation = {
+	    show: {
+	        animationDuration: '0.8s',
+	        animationTimingFunction: 'cubic-bezier(0.6,0,0.4,1)'
+	    },
+	    hide: {
+	        animationDuration: '0.4s',
+	        animationTimingFunction: 'ease-out'
+	    },
+	    showContentAnimation: insertKeyframesRule({
+	        '0%': {
+	            opacity: 0,
+	        },
+	        '40%':{
+	            opacity: 0
+	        },
+	        '100%': {
+	            opacity: 1,
+	        }
+	    }),
 	
-		getInitialState: function () {
-			return {
-				currentUser: SessionStore.currentUser(),
-				userErrors: SessionStore.errors()
-			};
-		},
+	    hideContentAnimation: insertKeyframesRule({
+	        '0%': {
+	            opacity: 1
+	        },
+	        '100%': {
+	            opacity: 0,
+	        }
+	    }),
 	
-		componentDidMount: function () {
-			SessionStore.addListener(this.updateUser);
-		},
+	    showBackdropAnimation: insertKeyframesRule({
+	        '0%': {
+	            opacity: 0
+	        },
+	        '100%': {
+	            opacity: 0.9
+	        },
+	    }),
 	
-		updateUser: function () {
-			this.setState({
-				currentUser: SessionStore.currentUser(),
-				userErrors: SessionStore.errors()
-			});
-		}
-	
+	    hideBackdropAnimation: insertKeyframesRule({
+	        '0%': {
+	            opacity: 0.9
+	        },
+	        '100%': {
+	            opacity: 0
+	        }
+	    })
 	};
 	
-	module.exports = CurrentUserState;
+	var showAnimation = animation.show;
+	var hideAnimation = animation.hide;
+	var showContentAnimation = animation.showContentAnimation;
+	var hideContentAnimation = animation.hideContentAnimation;
+	var showBackdropAnimation = animation.showBackdropAnimation;
+	var hideBackdropAnimation = animation.hideBackdropAnimation;
+	
+	module.exports = modalFactory({
+	    getRef: function(willHidden) {
+	        return 'content';
+	    },
+	    getSharp: function(willHidden) {
+	        var strokeDashLength = 1680;
+	
+	        var showSharpAnimation = insertKeyframesRule({
+	            '0%': {
+	                'stroke-dashoffset': strokeDashLength
+	            },
+	            '100%': {
+	                'stroke-dashoffset': 0
+	            },
+	        });
+	
+	
+	        var sharpStyle = {
+	            position: 'absolute',
+	            width: 'calc(100%)',
+	            height: 'calc(100%)',
+	            zIndex: '-1'
+	        };
+	
+	        var rectStyle = appendVendorPrefix({
+	            animationDuration: willHidden? '0.4s' :'0.8s',
+	            animationFillMode: 'forwards',
+	            animationName: willHidden? hideContentAnimation: showSharpAnimation,
+	            stroke: '#ffffff',
+	            strokeWidth: '2px',
+	            strokeDasharray: strokeDashLength
+	        });
+	
+	        return React.createElement("div", {style: sharpStyle}, 
+	            React.createElement("svg", {
+	                xmlns: "http://www.w3.org/2000/svg", 
+	                width: "100%", 
+	                height: "100%", 
+	                viewBox: "0 0 496 136", 
+	                preserveAspectRatio: "none"}, 
+	                React.createElement("rect", {style: rectStyle, 
+	                    x: "2", 
+	                    y: "2", 
+	                    fill: "none", 
+	                    width: "492", 
+	                    height: "132"})
+	            )
+	        )
+	    },
+	    getModalStyle: function(willHidden) {
+	        return appendVendorPrefix({
+	            zIndex: 1050,
+	            position: "fixed",
+	            width: "500px",
+	            transform: "translate3d(-50%, -50%, 0)",
+	            top: "50%",
+	            left: "50%"
+	        })
+	    },
+	    getBackdropStyle: function(willHidden) {
+	        return appendVendorPrefix({
+	            position: "fixed",
+	            top: 0,
+	            right: 0,
+	            bottom: 0,
+	            left: 0,
+	            zIndex: 1040,
+	            backgroundColor: "#373A47",
+	            animationFillMode: 'forwards',
+	            animationDuration: '0.4s',
+	            animationName: willHidden ? hideBackdropAnimation : showBackdropAnimation,
+	            animationTimingFunction: (willHidden ? hideAnimation : showAnimation).animationTimingFunction
+	        });
+	    },
+	    getContentStyle: function(willHidden) {
+	        return appendVendorPrefix({
+	            margin: 0,
+	            backgroundColor: "white",
+	            animationDuration: (willHidden ? hideAnimation : showAnimation).animationDuration,
+	            animationFillMode: 'forwards',
+	            animationName: willHidden ? hideContentAnimation : showContentAnimation,
+	            animationTimingFunction: (willHidden ? hideAnimation : showAnimation).animationTimingFunction
+	        })
+	    }
+	});
+
+
+/***/ },
+/* 256 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var transitionEvents = __webpack_require__(257);
+	var appendVendorPrefix = __webpack_require__(258);
+	
+	module.exports = function(animation){
+	
+	    return React.createClass({
+	        propTypes: {
+	            className: React.PropTypes.string,
+	            // Close the modal when esc is pressed? Defaults to true.
+	            keyboard: React.PropTypes.bool,
+	            onShow: React.PropTypes.func,
+	            onHide: React.PropTypes.func,
+	            animation: React.PropTypes.object,
+	            backdrop: React.PropTypes.bool,
+	            closeOnClick: React.PropTypes.bool,
+	            modalStyle: React.PropTypes.object,
+	            backdropStyle: React.PropTypes.object,
+	            contentStyle: React.PropTypes.object,
+	        },
+	
+	        getDefaultProps: function() {
+	            return {
+	                className: "",
+	                onShow: function(){},
+	                onHide: function(){},
+	                animation: animation,
+	                keyboard: true,
+	                backdrop: true,
+	                closeOnClick: true,
+	                modalStyle: {},
+	                backdropStyle: {},
+	                contentStyle: {},
+	            };
+	        },
+	
+	        getInitialState: function(){
+	            return {
+	                willHidden: false,
+	                hidden: true
+	            }
+	        },
+	
+	        hasHidden: function(){
+	            return this.state.hidden;
+	        },
+	
+	        addTransitionListener: function(node, handle){
+	            if (node) {
+	              var endListener = function(e) {
+	                  if (e && e.target !== node) {
+	                      return;
+	                  }
+	                  transitionEvents.removeEndEventListener(node, endListener);
+	                  handle();
+	              };
+	              transitionEvents.addEndEventListener(node, endListener);
+	            }
+	        },
+	
+	        handleBackdropClick: function() {
+	            if (this.props.closeOnClick) {
+	                this.hide();
+	            }
+	        },
+	
+	        render: function() {
+	
+	            var hidden = this.hasHidden();
+	            if (hidden) return null;
+	
+	            var willHidden = this.state.willHidden;
+	            var animation = this.props.animation;
+	            var modalStyle = animation.getModalStyle(willHidden);
+	            var backdropStyle = animation.getBackdropStyle(willHidden);
+	            var contentStyle = animation.getContentStyle(willHidden);
+	            var ref = animation.getRef(willHidden);
+	            var sharp = animation.getSharp && animation.getSharp(willHidden);
+	
+	            // Apply custom style properties
+	            if (this.props.modalStyle) {
+	                var prefixedModalStyle = appendVendorPrefix(this.props.modalStyle);
+	                for (var style in prefixedModalStyle) {
+	                    modalStyle[style] = prefixedModalStyle[style];
+	                }
+	            }
+	
+	            if (this.props.backdropStyle) {
+	              var prefixedBackdropStyle = appendVendorPrefix(this.props.backdropStyle);
+	                for (var style in prefixedBackdropStyle) {
+	                    backdropStyle[style] = prefixedBackdropStyle[style];
+	                }
+	            }
+	
+	            if (this.props.contentStyle) {
+	              var prefixedContentStyle = appendVendorPrefix(this.props.contentStyle);
+	                for (var style in prefixedContentStyle) {
+	                    contentStyle[style] = prefixedContentStyle[style];
+	                }
+	            }
+	
+	            var backdrop = this.props.backdrop? React.createElement("div", {style: backdropStyle, onClick: this.props.closeOnClick? this.handleBackdropClick: null}): undefined;
+	
+	            if(willHidden) {
+	                var node = this.refs[ref];
+	                this.addTransitionListener(node, this.leave);
+	            }
+	
+	            return (React.createElement("span", null, 
+	                React.createElement("div", {ref: "modal", style: modalStyle, className: this.props.className}, 
+	                    sharp, 
+	                    React.createElement("div", {ref: "content", tabIndex: "-1", style: contentStyle}, 
+	                        this.props.children
+	                    )
+	                ), 
+	                backdrop
+	             ))
+	            ;
+	        },
+	
+	        leave: function(){
+	            this.setState({
+	                hidden: true
+	            });
+	            this.props.onHide();
+	        },
+	
+	        enter: function(){
+	            this.props.onShow();
+	        },
+	
+	        show: function(){
+	            if (!this.hasHidden()) return;
+	
+	            this.setState({
+	                willHidden: false,
+	                hidden: false
+	            });
+	
+	            setTimeout(function(){
+	              var ref = this.props.animation.getRef();
+	              var node = this.refs[ref];
+	              this.addTransitionListener(node, this.enter);
+	            }.bind(this), 0);
+	        },
+	
+	        hide: function(){
+	            if (this.hasHidden()) return;
+	
+	            this.setState({
+	                willHidden: true
+	            });
+	        },
+	
+	        toggle: function(){
+	            if (this.hasHidden())
+	                this.show();
+	            else
+	                this.hide();
+	        },
+	
+	        listenKeyboard: function(event) {
+	            if (this.props.keyboard &&
+	                    (event.key === "Escape" ||
+	                     event.keyCode === 27)) {
+	                this.hide();
+	            }
+	        },
+	
+	        componentDidMount: function(){
+	            window.addEventListener("keydown", this.listenKeyboard, true);
+	        },
+	
+	        componentWillUnmount: function() {
+	            window.removeEventListener("keydown", this.listenKeyboard, true);
+	        }
+	    });
+	}
+
+
+/***/ },
+/* 257 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	/**
+	 * EVENT_NAME_MAP is used to determine which event fired when a
+	 * transition/animation ends, based on the style property used to
+	 * define that event.
+	 */
+	var EVENT_NAME_MAP = {
+	  transitionend: {
+	    'transition': 'transitionend',
+	    'WebkitTransition': 'webkitTransitionEnd',
+	    'MozTransition': 'mozTransitionEnd',
+	    'OTransition': 'oTransitionEnd',
+	    'msTransition': 'MSTransitionEnd'
+	  },
+	
+	  animationend: {
+	    'animation': 'animationend',
+	    'WebkitAnimation': 'webkitAnimationEnd',
+	    'MozAnimation': 'mozAnimationEnd',
+	    'OAnimation': 'oAnimationEnd',
+	    'msAnimation': 'MSAnimationEnd'
+	  }
+	};
+	
+	var endEvents = [];
+	
+	function detectEvents() {
+	  var testEl = document.createElement('div');
+	  var style = testEl.style;
+	
+	  // On some platforms, in particular some releases of Android 4.x,
+	  // the un-prefixed "animation" and "transition" properties are defined on the
+	  // style object but the events that fire will still be prefixed, so we need
+	  // to check if the un-prefixed events are useable, and if not remove them
+	  // from the map
+	  if (!('AnimationEvent' in window)) {
+	    delete EVENT_NAME_MAP.animationend.animation;
+	  }
+	
+	  if (!('TransitionEvent' in window)) {
+	    delete EVENT_NAME_MAP.transitionend.transition;
+	  }
+	
+	  for (var baseEventName in EVENT_NAME_MAP) {
+	    var baseEvents = EVENT_NAME_MAP[baseEventName];
+	    for (var styleName in baseEvents) {
+	      if (styleName in style) {
+	        endEvents.push(baseEvents[styleName]);
+	        break;
+	      }
+	    }
+	  }
+	}
+	
+	if (typeof window !== 'undefined') {
+	  detectEvents();
+	}
+	
+	
+	// We use the raw {add|remove}EventListener() call because EventListener
+	// does not know how to remove event listeners and we really should
+	// clean up. Also, these events are not triggered in older browsers
+	// so we should be A-OK here.
+	
+	function addEventListener(node, eventName, eventListener) {
+	  node.addEventListener(eventName, eventListener, false);
+	}
+	
+	function removeEventListener(node, eventName, eventListener) {
+	  node.removeEventListener(eventName, eventListener, false);
+	}
+	
+	module.exports = {
+	  addEndEventListener: function(node, eventListener) {
+	    if (endEvents.length === 0) {
+	      // If CSS transitions are not supported, trigger an "end animation"
+	      // event immediately.
+	      window.setTimeout(eventListener, 0);
+	      return;
+	    }
+	    endEvents.forEach(function(endEvent) {
+	      addEventListener(node, endEvent, eventListener);
+	    });
+	  },
+	
+	  removeEndEventListener: function(node, eventListener) {
+	    if (endEvents.length === 0) {
+	      return;
+	    }
+	    endEvents.forEach(function(endEvent) {
+	      removeEventListener(node, endEvent, eventListener);
+	    });
+	  }
+	};
+
+
+/***/ },
+/* 258 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var getVendorPropertyName = __webpack_require__(259);
+	
+	module.exports = function(target, sources) {
+	  var to = Object(target);
+	  var hasOwnProperty = Object.prototype.hasOwnProperty;
+	
+	  for (var nextIndex = 1; nextIndex < arguments.length; nextIndex++) {
+	    var nextSource = arguments[nextIndex];
+	    if (nextSource == null) {
+	      continue;
+	    }
+	
+	    var from = Object(nextSource);
+	
+	    for (var key in from) {
+	      if (hasOwnProperty.call(from, key)) {
+	        to[key] = from[key];
+	      }
+	    }
+	  }
+	
+	  var prefixed = {};
+	  for (var key in to) {
+	    prefixed[getVendorPropertyName(key)] = to[key]
+	  }
+	
+	  return prefixed
+	}
+
+
+/***/ },
+/* 259 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var builtinStyle = __webpack_require__(260);
+	var prefixes = ['Moz', 'Webkit', 'O', 'ms'];
+	var domVendorPrefix;
+	
+	// Helper function to get the proper vendor property name. (transition => WebkitTransition)
+	module.exports = function(prop, isSupportTest) {
+	
+	  var vendorProp;
+	  if (prop in builtinStyle) return prop;
+	
+	  var UpperProp = prop.charAt(0).toUpperCase() + prop.substr(1);
+	
+	  if (domVendorPrefix) {
+	
+	    vendorProp = domVendorPrefix + UpperProp;
+	    if (vendorProp in builtinStyle) {
+	      return vendorProp;
+	    }
+	  } else {
+	
+	    for (var i = 0; i < prefixes.length; ++i) {
+	      vendorProp = prefixes[i] + UpperProp;
+	      if (vendorProp in builtinStyle) {
+	        domVendorPrefix = prefixes[i];
+	        return vendorProp;
+	      }
+	    }
+	  }
+	
+	  // if support test, not fallback to origin prop name
+	  if (!isSupportTest) {
+	    return prop;
+	  }
+	
+	}
+
+
+/***/ },
+/* 260 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	module.exports = document.createElement('div').style;
+
+
+/***/ },
+/* 261 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var insertRule = __webpack_require__(262);
+	var vendorPrefix = __webpack_require__(263)();
+	var index = 0;
+	
+	module.exports = function(keyframes) {
+	  // random name
+	  var name = 'anim_' + (++index) + (+new Date);
+	  var css = "@" + vendorPrefix + "keyframes " + name + " {";
+	
+	  for (var key in keyframes) {
+	    css += key + " {";
+	
+	    for (var property in keyframes[key]) {
+	      var part = ":" + keyframes[key][property] + ";";
+	      // We do vendor prefix for every property
+	      css += vendorPrefix + property + part;
+	      css += property + part;
+	    }
+	
+	    css += "}";
+	  }
+	
+	  css += "}";
+	
+	  insertRule(css);
+	
+	  return name
+	}
+
+
+/***/ },
+/* 262 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	var extraSheet;
+	
+	module.exports = function(css) {
+	
+	  if (!extraSheet) {
+	    // First time, create an extra stylesheet for adding rules
+	    extraSheet = document.createElement('style');
+	    document.getElementsByTagName('head')[0].appendChild(extraSheet);
+	    // Keep reference to actual StyleSheet object (`styleSheet` for IE < 9)
+	    extraSheet = extraSheet.sheet || extraSheet.styleSheet;
+	  }
+	
+	  var index = (extraSheet.cssRules || extraSheet.rules).length;
+	  extraSheet.insertRule(css, index);
+	
+	  return extraSheet;
+	}
+
+
+/***/ },
+/* 263 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	var cssVendorPrefix;
+	
+	module.exports = function() {
+	
+	  if (cssVendorPrefix) return cssVendorPrefix;
+	
+	  var styles = window.getComputedStyle(document.documentElement, '');
+	  var pre = (Array.prototype.slice.call(styles).join('').match(/-(moz|webkit|ms)-/) || (styles.OLink === '' && ['', 'o']))[1];
+	
+	  return cssVendorPrefix = '-' + pre + '-';
+	}
+
 
 /***/ }
 /******/ ]);

@@ -1,10 +1,15 @@
 var React = require('react'),
     Link = require('react-router').Link,
     SessionApiUtil = require('../util/session_api_util'),
-    CurrentUserState = require('../mixins/current_user_state');
+    CurrentUserState = require('../mixins/current_user_state'),
+    Modal = require('boron/OutlineModal');
 
 module.exports = React.createClass({
   mixins: [CurrentUserState],
+
+  contextTypes: {
+    router: React.PropTypes.object.isRequired
+  },
 
   getInitialState: function() {
     return {
@@ -26,14 +31,27 @@ module.exports = React.createClass({
   },
 
   handleSubmit: function(event) {
-    event.preventDefault();
+    if (event) {
+      event.preventDefault();
+    }
+    var that = this;
 
     var user = {
       username: this.state.username,
       password: this.state.password
     };
 
-    SessionApiUtil.login(user);
+    SessionApiUtil.login(user, function(){
+      that.context.router.push("/");
+    });
+  },
+
+  showModal: function(){
+    this.refs.modal.show();
+  },
+
+  hideModal: function() {
+    this.refs.modal.hide();
   },
 
   errors: function() {
@@ -50,21 +68,62 @@ module.exports = React.createClass({
 		</ul>);
   },
 
+  guestLogin: function(event) {
+    event.preventDefault();
+    var that = this;
+
+    this.setState({
+      username: '',
+      password: ''
+    });
+
+    var username = "demothedog".split("");
+    var password = "demodemo".split("");
+    var time = 50;
+
+    username.forEach(function (letter) {
+      time += 50;
+      setTimeout(function () {
+        that.setState({username: that.state.username + letter});
+      }, time);
+    });
+
+    time += 500;
+
+    password.forEach(function (letter) {
+      time += 50;
+      setTimeout(function () {
+        that.setState({password: that.state.password + letter});
+      }, time);
+    });
+
+    time += 500;
+
+    setTimeout(this.handleSubmit, time);
+
+  },
+
   form: function() {
     if (this.state.currentUser) {
       return;
     }
     return(
-      <form onSubmit={this.handleSubmit}>
-        <label>Username:
-          <input type='text' placeholder='Username' onChange={this.updateUsername}/>
-        </label><br/>
-        <label>Password:
-          <input type='password' placeholder='Password' onChange={this.updatePassword}/>
-        </label><br/>
-        <input type="submit" value="Log In"/>
-        <Link to="signup">Sign Up</Link>
-      </form>
+      <div>
+        <button onClick={this.showModal}>Log In</button>
+        <Modal ref="modal">
+          <form onSubmit={this.handleSubmit}>
+            <label>Username:
+              <input type='text' placeholder='Username' onChange={this.updateUsername} value={this.state.username}/>
+            </label><br/>
+            <label>Password:
+              <input type='password' placeholder='Password' onChange={this.updatePassword} value={this.state.password}/>
+            </label><br/>
+            <input type="submit" value="Log In"/>
+            <button onClick={this.guestLogin}>Guest</button>
+            <Link to="signup">Sign Up</Link>
+          </form>
+        </Modal>
+      </div>
     );
   },
 
