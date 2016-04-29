@@ -2,16 +2,25 @@ var React = require('react'),
     Link = require('react-router').Link,
     SessionApiUtil = require('../util/session_api_util'),
     CurrentUserState = require('../mixins/current_user_state'),
+    SessionStore = require('../stores/session_store'),
     Modal = require('boron/OutlineModal');
 
 module.exports = React.createClass({
+  componentDidMount: function() {
+    SessionStore.addListener(this.getErrors);
+  },
+
   contextTypes: {
     router: React.PropTypes.object.isRequired
   },
 
+  getErrors: function() {
+    this.setState({ errors: SessionStore.errors() });
+  },
+
   getInitialState: function() {
     return {
-      username: "", password: ""
+      username: "", password: "", errors: []
     };
   },
 
@@ -45,6 +54,9 @@ module.exports = React.createClass({
   },
 
   showModal: function(){
+    this.setState({username: ""});
+    this.setState({password: ""});
+    this.setState({errors: []});
     this.refs.modal.show();
   },
 
@@ -53,14 +65,14 @@ module.exports = React.createClass({
   },
 
   errors: function() {
-    if (!this.state.userErrors){
+    if (!this.state.errors){
       return;
     }
     var self = this;
     return (<ul>
 		{
-			Object.keys(this.state.userErrors).map(function(key, i){
-				return (<li key={i}>{self.state.userErrors[key]}</li>);
+			this.state.errors.map(function(el, i){
+				return (<li key={i}>{el}</li>);
 			})
 		}
 		</ul>);
@@ -81,6 +93,10 @@ module.exports = React.createClass({
 
     username.forEach(function (letter) {
       time += 50;
+      setTimeout(function() {
+        $('#userlabel').addClass("active");
+      }, time + 25);
+      document.getElementById("username").focus();
       setTimeout(function () {
         that.setState({username: that.state.username + letter});
       }, time);
@@ -90,12 +106,16 @@ module.exports = React.createClass({
 
     password.forEach(function (letter) {
       time += 50;
+      setTimeout(function() {
+        $('#passlabel').addClass("active");
+      }, time + 25);
       setTimeout(function () {
+        document.getElementById("password").focus();
         that.setState({password: that.state.password + letter});
       }, time);
     });
 
-    time += 500;
+    time += 650;
 
     setTimeout(this.handleSubmit, time);
 
@@ -103,23 +123,30 @@ module.exports = React.createClass({
 
   form: function() {
     return(
-      <div>
-        <div onClick={this.showModal} className="beckiswrong">LOG IN</div>
-        <Modal ref="modal" className="loginModal">
-          <div>Log In</div>
-          <form onSubmit={this.handleSubmit}>
+      <Modal ref='modal'>
+        <div className="row loginModal">
+          <div className="loginText">Log In</div>
             {this.errors()}
-            <label>Username:
-              <input type='text' placeholder='Username' onChange={this.updateUsername} value={this.state.username}/>
-            </label><br/>
-            <label>Password:
-              <input type='password' placeholder='Password' onChange={this.updatePassword} value={this.state.password}/>
-            </label><br/>
-            <input type="submit" value="Log In"/>
-            <div onClick={this.guestLogin}>Guest</div>
-          </form>
-        </Modal>
-      </div>
+            <form onSubmit={this.handleSubmit} className="loginForm">
+                <div className="row">
+                  <div className="input-field inputText">
+                    <input type='text' id="username" onChange={this.updateUsername} value={this.state.username}/>
+                    <label id='userlabel' htmlFor="username">Username</label>
+                  </div>
+                </div>
+                <div className="row">
+                  <div className="input-field inputText">
+                    <input type='password' id="password" onChange={this.updatePassword} value={this.state.password}/>
+                    <label id='passlabel' htmlFor="password">Password</label>
+                  </div>
+                </div>
+
+              <button type="submit" name="action" value="submit" className="waves-effect waves-light btn right">Log In</button>
+              <button onClick={this.guestLogin} className="waves-effect waves-light btn left">Guest</button>
+            </form>
+          </div>
+      </Modal>
+
     );
   },
 
@@ -138,8 +165,10 @@ module.exports = React.createClass({
   render: function() {
     return(
       <div>
-        {this.greeting()}
-        {this.form()}
+        <div>
+          <div onClick={this.showModal} className="beckiswrong">LOG IN</div>
+            {this.form()}
+        </div>
       </div>
     );
   }

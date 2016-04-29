@@ -57,25 +57,43 @@ module.exports = React.createClass({
       <div>
         <div onClick={this.showModal} className="beckiswrong">SIGN UP</div>
         <Modal ref="modal" className="signupModal">
-          <form onSubmit={this.handleSubmit}>
-            <div>Sign Up</div>
-            <label>Username:
-              <input type='text' placeholder='Username' onChange={this.updateUsername}/>
-            </label><br/>
-            <label>Email:
-              <input type='text' placeholder='Email' onChange={this.updateEmail}/>
-            </label><br/>
-            <label>First Name:
-              <input type='text' placeholder='First Name' onChange={this.updateFirstName}/>
-            </label><br/>
-            <label>Last Name:
-              <input type='text' placeholder='Last Name' onChange={this.updateLastName}/>
-            </label><br/>
-            <label>Password:
-              <input type='password' placeholder='Password' onChange={this.updatePassword}/>
-            </label><br/>
-            <input type="submit" value="Sign Up"/>
-          </form>
+          <div className="row">
+            <div className="signupText">Sign Up</div>
+              <form onSubmit={this.handleSubmit} class="signupForm">
+                  <div className="row">
+                    <div className="input-field col s6 inputText">
+                      <input type='text' id="username" onChange={this.updateUsername} value={this.state.username}/>
+                      <label id='userlabel' htmlFor="username">Username</label>
+                    </div>
+                  </div>
+                  <div className="row">
+                    <div className="input-field col s6 inputText">
+                      <input type='text' id="first_name" onChange={this.updateFirstName} value={this.state.first_name}/>
+                      <label htmlFor="first_name">First Name</label>
+                    </div>
+
+                    <div className="input-field col s6 inputText">
+                      <input type='text' id="last_name" onChange={this.updateLastName} value={this.state.last_name}/>
+                      <label htmlFor="last_name">Last Name</label>
+                    </div>
+                  </div>
+                  <div className="row">
+                    <div className="input-field col s6 inputText">
+                      <input type='text' id="email" onChange={this.updatePassword} value={this.state.email}/>
+                      <label htmlFor="email">Email</label>
+                    </div>
+                  </div>
+                  <div className="row">
+                    <div className="input-field col s6 inputText">
+                      <input type='password' id="password" onChange={this.updatePassword} value={this.state.password}/>
+                      <label id='passlabel' htmlFor="password">Password</label>
+                    </div>
+                  </div>
+
+                <button type="submit" name="action" value="submit" className="waves-effect waves-light btn right">Log In</button>
+                <button onClick={this.guestLogin} className="waves-effect waves-light btn left">Guest</button>
+              </form>
+            </div>
         </Modal>
       </div>
     );

@@ -1,0 +1,38 @@
+.loginText {
+  font-size: 50px;
+}
+
+.signupText {
+  font-size: 50px;
+}
+
+.inputText {
+  text-align: left;
+  margin-left: auto;
+  margin-right: auto;
+  width: 300px;
+}
+
+.loginForm {
+  margin: auto;
+}
+
+.beckiswrong {
+  cursor:pointer;
+}
+
+.loginModal {
+  position: relative;
+  top: 18px;
+  cursor: default;
+  color: black;
+  background: white;
+  padding:30px 30px;
+  text-align: center;
+}
+
+.signupModal {
+  position: relative;
+  cursor: default;
+  color: black;
+}
