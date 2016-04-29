@@ -65,9 +65,7 @@
 	  React.createElement(
 	    Route,
 	    { path: '/', component: App },
-	    React.createElement(IndexRoute, { component: Splash }),
-	    React.createElement(Route, { path: 'login', component: Login }),
-	    React.createElement(Route, { path: 'signup', component: Signup })
+	    React.createElement(IndexRoute, { component: Splash })
 	  )
 	);
 	
@@ -25889,7 +25887,8 @@
 
 	var React = __webpack_require__(1),
 	    Login = __webpack_require__(233),
-	    Link = __webpack_require__(166).Link;
+	    Link = __webpack_require__(166).Link,
+	    NavBar = __webpack_require__(264);
 	
 	module.exports = React.createClass({
 	  displayName: 'exports',
@@ -25898,11 +25897,11 @@
 	    return React.createElement(
 	      'div',
 	      { className: 'app-container' },
+	      React.createElement(NavBar, null),
 	      React.createElement(
 	        'div',
 	        { className: 'photo-grid' },
-	        this.props.children,
-	        React.createElement(Login, null)
+	        this.props.children
 	      )
 	    );
 	  }
@@ -25920,8 +25919,6 @@
 	
 	module.exports = React.createClass({
 	  displayName: 'exports',
-	
-	  mixins: [CurrentUserState],
 	
 	  contextTypes: {
 	    router: React.PropTypes.object.isRequired
@@ -26023,23 +26020,26 @@
 	  },
 	
 	  form: function () {
-	    if (this.state.currentUser) {
-	      return;
-	    }
 	    return React.createElement(
 	      'div',
 	      null,
 	      React.createElement(
-	        'button',
-	        { onClick: this.showModal },
-	        'Log In'
+	        'div',
+	        { onClick: this.showModal, className: 'beckiswrong' },
+	        'LOG IN'
 	      ),
 	      React.createElement(
 	        Modal,
-	        { ref: 'modal' },
+	        { ref: 'modal', className: 'loginModal' },
+	        React.createElement(
+	          'div',
+	          null,
+	          'Log In'
+	        ),
 	        React.createElement(
 	          'form',
 	          { onSubmit: this.handleSubmit },
+	          this.errors(),
 	          React.createElement(
 	            'label',
 	            null,
@@ -26056,14 +26056,9 @@
 	          React.createElement('br', null),
 	          React.createElement('input', { type: 'submit', value: 'Log In' }),
 	          React.createElement(
-	            'button',
+	            'div',
 	            { onClick: this.guestLogin },
 	            'Guest'
-	          ),
-	          React.createElement(
-	            Link,
-	            { to: 'signup' },
-	            'Sign Up'
 	          )
 	        )
 	      )
@@ -26078,7 +26073,7 @@
 	      'div',
 	      null,
 	      React.createElement(
-	        'h2',
+	        'div',
 	        null,
 	        'Hi, ',
 	        this.state.currentUser.username
@@ -26092,7 +26087,6 @@
 	      'div',
 	      null,
 	      this.greeting(),
-	      this.errors(),
 	      this.form()
 	    );
 	  }
@@ -26142,7 +26136,7 @@
 	
 	var SessionStore = new Store(AppDispatcher);
 	
-	var _currentUser,
+	var _currentUser = JSON.parse(window.localStorage.getItem("current_user")),
 	    _errors,
 	    _currentUserFetched = false;
 	
@@ -26179,10 +26173,12 @@
 	  switch (payload.actionType) {
 	    case SessionConstants.LOGIN:
 	      login(payload.user);
+	      window.localStorage.setItem("current_user", JSON.stringify(payload.user));
 	      _currentUserFetched = true;
 	      break;
 	    case SessionConstants.LOGOUT:
 	      logout();
+	      window.localStorage.setItem("current_user", null);
 	      break;
 	    case SessionConstants.ERROR:
 	      setErrors(payload.errors);
@@ -32643,18 +32639,10 @@
 	var React = __webpack_require__(1);
 	
 	module.exports = React.createClass({
-	  displayName: 'exports',
+	  displayName: "exports",
 	
 	  render: function () {
-	    return React.createElement(
-	      'div',
-	      null,
-	      React.createElement(
-	        'span',
-	        null,
-	        'Splash Page!'
-	      )
-	    );
+	    return React.createElement("div", { className: "splashHolder" });
 	  }
 	});
 
@@ -32664,7 +32652,8 @@
 
 	var React = __webpack_require__(1),
 	    Link = __webpack_require__(166).Link,
-	    SessionApiUtil = __webpack_require__(225);
+	    SessionApiUtil = __webpack_require__(225),
+	    Modal = __webpack_require__(255);
 	
 	module.exports = React.createClass({
 	  displayName: 'exports',
@@ -32709,51 +32698,80 @@
 	    SessionApiUtil.signup(user);
 	  },
 	
+	  showModal: function () {
+	    this.refs.modal.show();
+	  },
+	
+	  hideModal: function () {
+	    this.refs.modal.hide();
+	  },
+	
+	  form: function () {
+	    return React.createElement(
+	      'div',
+	      null,
+	      React.createElement(
+	        'div',
+	        { onClick: this.showModal, className: 'beckiswrong' },
+	        'SIGN UP'
+	      ),
+	      React.createElement(
+	        Modal,
+	        { ref: 'modal', className: 'signupModal' },
+	        React.createElement(
+	          'form',
+	          { onSubmit: this.handleSubmit },
+	          React.createElement(
+	            'div',
+	            null,
+	            'Sign Up'
+	          ),
+	          React.createElement(
+	            'label',
+	            null,
+	            'Username:',
+	            React.createElement('input', { type: 'text', placeholder: 'Username', onChange: this.updateUsername })
+	          ),
+	          React.createElement('br', null),
+	          React.createElement(
+	            'label',
+	            null,
+	            'Email:',
+	            React.createElement('input', { type: 'text', placeholder: 'Email', onChange: this.updateEmail })
+	          ),
+	          React.createElement('br', null),
+	          React.createElement(
+	            'label',
+	            null,
+	            'First Name:',
+	            React.createElement('input', { type: 'text', placeholder: 'First Name', onChange: this.updateFirstName })
+	          ),
+	          React.createElement('br', null),
+	          React.createElement(
+	            'label',
+	            null,
+	            'Last Name:',
+	            React.createElement('input', { type: 'text', placeholder: 'Last Name', onChange: this.updateLastName })
+	          ),
+	          React.createElement('br', null),
+	          React.createElement(
+	            'label',
+	            null,
+	            'Password:',
+	            React.createElement('input', { type: 'password', placeholder: 'Password', onChange: this.updatePassword })
+	          ),
+	          React.createElement('br', null),
+	          React.createElement('input', { type: 'submit', value: 'Sign Up' })
+	        )
+	      )
+	    );
+	  },
+	
 	  render: function () {
 	    return React.createElement(
-	      'form',
-	      { onSubmit: this.handleSubmit },
-	      React.createElement(
-	        'h5',
-	        null,
-	        'Sign Up'
-	      ),
-	      React.createElement(
-	        'label',
-	        null,
-	        'Username:',
-	        React.createElement('input', { type: 'text', placeholder: 'Username', onChange: this.updateUsername })
-	      ),
-	      React.createElement('br', null),
-	      React.createElement(
-	        'label',
-	        null,
-	        'Email:',
-	        React.createElement('input', { type: 'text', placeholder: 'Email', onChange: this.updateEmail })
-	      ),
-	      React.createElement('br', null),
-	      React.createElement(
-	        'label',
-	        null,
-	        'First Name:',
-	        React.createElement('input', { type: 'text', placeholder: 'First Name', onChange: this.updateFirstName })
-	      ),
-	      React.createElement('br', null),
-	      React.createElement(
-	        'label',
-	        null,
-	        'Last Name:',
-	        React.createElement('input', { type: 'text', placeholder: 'Last Name', onChange: this.updateLastName })
-	      ),
-	      React.createElement('br', null),
-	      React.createElement(
-	        'label',
-	        null,
-	        'Password:',
-	        React.createElement('input', { type: 'password', placeholder: 'Password', onChange: this.updatePassword })
-	      ),
-	      React.createElement('br', null),
-	      React.createElement('input', { type: 'submit', value: 'Sign Up' })
+	      'div',
+	      null,
+	      this.form()
 	    );
 	  }
 	});
@@ -33362,6 +33380,93 @@
 	  return cssVendorPrefix = '-' + pre + '-';
 	}
 
+
+/***/ },
+/* 264 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1),
+	    Login = __webpack_require__(233),
+	    CurrentUserState = __webpack_require__(234),
+	    SessionApiUtil = __webpack_require__(225),
+	    Signup = __webpack_require__(254);
+	
+	module.exports = React.createClass({
+	  displayName: 'exports',
+	
+	  mixins: [CurrentUserState],
+	
+	  logout: function (event) {
+	    event.preventDefault();
+	    SessionApiUtil.logout();
+	  },
+	
+	  render: function () {
+	    var auth;
+	
+	    if (this.state.currentUser) {
+	      auth = React.createElement(
+	        'div',
+	        { className: 'profile' },
+	        React.createElement(
+	          'div',
+	          { className: 'profile-circle' },
+	          'Profile Picture Circle Thing'
+	        ),
+	        React.createElement(
+	          'ul',
+	          { className: 'dropdown-loggedin' },
+	          React.createElement(
+	            'li',
+	            null,
+	            'Profile'
+	          ),
+	          React.createElement(
+	            'li',
+	            null,
+	            'Settings'
+	          ),
+	          React.createElement(
+	            'li',
+	            { onClick: this.logout },
+	            'Sign Out'
+	          )
+	        )
+	      );
+	    } else {
+	      auth = React.createElement(
+	        'div',
+	        null,
+	        React.createElement(
+	          'div',
+	          { className: 'signup-text' },
+	          React.createElement(Signup, null)
+	        ),
+	        React.createElement(
+	          'div',
+	          { className: 'login-text' },
+	          React.createElement(Login, null)
+	        )
+	      );
+	    }
+	
+	    return React.createElement(
+	      'div',
+	      { className: 'navbar' },
+	      React.createElement(
+	        'div',
+	        { className: 'logo' },
+	        'Pyxels'
+	      ),
+	      React.createElement(
+	        'div',
+	        null,
+	        auth
+	      )
+	    );
+	  }
+	
+	});
 
 /***/ }
 /******/ ]);

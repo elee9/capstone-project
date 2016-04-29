@@ -18,8 +18,6 @@ var Router = (
   <Router history={hashHistory}>
     <Route path='/' component={App}>
       <IndexRoute component={Splash}/>
-      <Route path='login' component={Login}/>
-      <Route path='signup' component={Signup}/>
     </Route>
   </Router>
 );

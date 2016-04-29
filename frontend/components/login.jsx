@@ -5,8 +5,6 @@ var React = require('react'),
     Modal = require('boron/OutlineModal');
 
 module.exports = React.createClass({
-  mixins: [CurrentUserState],
-
   contextTypes: {
     router: React.PropTypes.object.isRequired
   },
@@ -104,14 +102,13 @@ module.exports = React.createClass({
   },
 
   form: function() {
-    if (this.state.currentUser) {
-      return;
-    }
     return(
       <div>
-        <button onClick={this.showModal}>Log In</button>
-        <Modal ref="modal">
+        <div onClick={this.showModal} className="beckiswrong">LOG IN</div>
+        <Modal ref="modal" className="loginModal">
+          <div>Log In</div>
           <form onSubmit={this.handleSubmit}>
+            {this.errors()}
             <label>Username:
               <input type='text' placeholder='Username' onChange={this.updateUsername} value={this.state.username}/>
             </label><br/>
@@ -119,8 +116,7 @@ module.exports = React.createClass({
               <input type='password' placeholder='Password' onChange={this.updatePassword} value={this.state.password}/>
             </label><br/>
             <input type="submit" value="Log In"/>
-            <button onClick={this.guestLogin}>Guest</button>
-            <Link to="signup">Sign Up</Link>
+            <div onClick={this.guestLogin}>Guest</div>
           </form>
         </Modal>
       </div>
@@ -133,7 +129,7 @@ module.exports = React.createClass({
     }
     return(
       <div>
-        <h2>Hi, {this.state.currentUser.username}</h2>
+        <div>Hi, {this.state.currentUser.username}</div>
         <input type="submit" value="Log out" onClick={this.logout}/>
       </div>
     );
@@ -143,7 +139,6 @@ module.exports = React.createClass({
     return(
       <div>
         {this.greeting()}
-        {this.errors()}
         {this.form()}
       </div>
     );

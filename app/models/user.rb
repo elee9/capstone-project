@@ -24,6 +24,8 @@ class User < ActiveRecord::Base
 
   after_initialize :ensure_session_token, :ensure_default_bio
 
+  has_many :photos
+
   def self.find_by_credentials(username, password)
     user = User.find_by_username(username)
     return nil unless user
