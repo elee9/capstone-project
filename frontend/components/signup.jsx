@@ -62,36 +62,50 @@ module.exports = React.createClass({
               <form onSubmit={this.handleSubmit} class="signupForm">
                   <div className="row">
                     <div className="input-field col s6 inputText">
-                      <input type='text' id="username" onChange={this.updateUsername} value={this.state.username}/>
+                      <input type='text' id="username"
+                             onChange={this.updateUsername}
+                             value={this.state.username}/>
                       <label id='userlabel' htmlFor="username">Username</label>
                     </div>
                   </div>
                   <div className="row">
                     <div className="input-field col s6 inputText">
-                      <input type='text' id="first_name" onChange={this.updateFirstName} value={this.state.first_name}/>
+                      <input type='text' id="first_name"
+                             onChange={this.updateFirstName}
+                             value={this.state.first_name}/>
                       <label htmlFor="first_name">First Name</label>
                     </div>
 
                     <div className="input-field col s6 inputText">
-                      <input type='text' id="last_name" onChange={this.updateLastName} value={this.state.last_name}/>
+                      <input type='text' id="last_name"
+                             onChange={this.updateLastName}
+                             value={this.state.last_name}/>
                       <label htmlFor="last_name">Last Name</label>
                     </div>
                   </div>
                   <div className="row">
                     <div className="input-field col s6 inputText">
-                      <input type='text' id="email" onChange={this.updatePassword} value={this.state.email}/>
+                      <input type='text' id="email"
+                             onChange={this.updatePassword}
+                             value={this.state.email}/>
                       <label htmlFor="email">Email</label>
                     </div>
                   </div>
                   <div className="row">
                     <div className="input-field col s6 inputText">
-                      <input type='password' id="password" onChange={this.updatePassword} value={this.state.password}/>
+                      <input type='password' id="password"
+                             onChange={this.updatePassword}
+                             value={this.state.password}/>
                       <label id='passlabel' htmlFor="password">Password</label>
                     </div>
                   </div>
 
-                <button type="submit" name="action" value="submit" className="waves-effect waves-light btn right">Log In</button>
-                <button onClick={this.guestLogin} className="waves-effect waves-light btn left">Guest</button>
+                <button type="submit" name="action" value="submit"
+                        className="waves-effect waves-light btn right">Log In
+                </button>
+                <button onClick={this.guestLogin}
+                        className="waves-effect waves-light btn left">Guest
+                </button>
               </form>
             </div>
         </Modal>

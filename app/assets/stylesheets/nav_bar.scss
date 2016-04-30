@@ -1,8 +1,12 @@
 .navbar {
   display: flex;
   justify-content: space-between;
-  background: transparent;
+  background: black;
   color: white;
+}
+
+.onsplash {
+  background: transparent;
 }
 
 .profile {
@@ -13,7 +17,7 @@
   display: none;
   position: absolute;
   left: -1px;
-  top: 1px;
+  top: 20px;
   font-size: 14px;
   white-space: nowrap;
   background: #fff;
@@ -23,6 +27,7 @@
   border-bottom-left-radius: 5px;
   border-bottom-right-radius: 5px;
   overflow: hidden;
+  background: black;
 }
 
 .profile:hover .dropdown-loggedin {
@@ -45,4 +50,5 @@
 
 .logo {
   padding: 10px 0px 10px 20px;
+  font-size: 48px;
 }

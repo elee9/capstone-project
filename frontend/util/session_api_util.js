@@ -42,6 +42,7 @@ var SessionApiUtil = {
   fetchCurrentUser: function() {
     $.ajax({
       url: '/api/session',
+      datatype: 'json',
       success: function(user) {
         SessionActions.receiveCurrentuser(user);
       },

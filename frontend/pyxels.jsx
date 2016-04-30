@@ -5,19 +5,21 @@ var React = require('react'),
     Route = ReactRouter.Route,
     IndexRoute = ReactRouter.IndexRoute,
     Link = ReactRouter.Link,
-    hashHistory = ReactRouter.hashHistory,
+    browserHistory = ReactRouter.browserHistory,
     SessionApiUtil = require('./util/session_api_util');
 
 var App = require('./components/app'),
     Splash = require('./components/splash'),
     Login = require('./components/login'),
-    Signup = require('./components/signup');
+    Signup = require('./components/signup'),
+    PhotoIndex = require('./components/photos_index');
 
 
 var Router = (
-  <Router history={hashHistory}>
+  <Router history={browserHistory}>
     <Route path='/' component={App}>
       <IndexRoute component={Splash}/>
+      <Route path='/index' component={PhotoIndex}/>
     </Route>
   </Router>
 );

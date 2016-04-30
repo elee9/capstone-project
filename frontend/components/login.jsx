@@ -49,7 +49,7 @@ module.exports = React.createClass({
     };
 
     SessionApiUtil.login(user, function(){
-      that.context.router.push("/");
+      that.context.router.push("index");
     });
   },
 
@@ -72,7 +72,7 @@ module.exports = React.createClass({
     return (<ul>
 		{
 			this.state.errors.map(function(el, i){
-				return (<li key={i}>{el}</li>);
+				return (<li className="error" key={i}>{el}</li>);
 			})
 		}
 		</ul>);
