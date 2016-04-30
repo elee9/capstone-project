@@ -42,9 +42,9 @@ module.exports = React.createClass({
     };
 
     return(
-      <div>
+      <div className='indexWrapper'>
         <Masonry
-          className='imageIndex'
+          className='photoIndex'
           elementType={'ul'}
           options={masonryOptions}
           disableImageLoaded={true}>

@@ -150,18 +150,6 @@ module.exports = React.createClass({
     );
   },
 
-  greeting: function() {
-    if (!this.state.currentUser) {
-      return;
-    }
-    return(
-      <div>
-        <div>Hi, {this.state.currentUser.username}</div>
-        <input type="submit" value="Log out" onClick={this.logout}/>
-      </div>
-    );
-  },
-
   render: function() {
     return(
       <div>

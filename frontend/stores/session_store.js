@@ -3,9 +3,9 @@ var AppDispatcher = require('../dispatcher/dispatcher'),
     SessionConstants = require('../constants/session_constants');
 
 var SessionStore = new Store(AppDispatcher);
+var _currentUser = JSON.parse(window.localStorage.getItem("currentUser"));
 
-var _currentUser = JSON.parse(window.localStorage.getItem("current_user")),
-    _errors,
+var _errors,
     _currentUserFetched = false;
 
 var login = function(user) {
@@ -41,12 +41,12 @@ SessionStore.__onDispatch = function(payload) {
   switch (payload.actionType) {
     case SessionConstants.LOGIN:
       login(payload.user);
-      window.localStorage.setItem("current_user", JSON.stringify(payload.user));
+      window.localStorage.setItem("currentUser", JSON.stringify(payload.user));
       _currentUserFetched = true;
       break;
     case SessionConstants.LOGOUT:
       logout();
-      window.localStorage.setItem("current_user", null);
+      window.localStorage.setItem("currentUser", "false");
       break;
     case SessionConstants.ERROR:
       setErrors(payload.errors);

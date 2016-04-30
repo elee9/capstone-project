@@ -22,13 +22,7 @@ class Api::SessionsController < ApplicationController
   end
 
   def destroy
-    @user = current_user
-    if @user
-      logout_user!
-      render 'api/users/show'
-    else
-      @errors = nil
-      render 'api/shared/errors', status: 401
-    end
+    logout_user!
+    render json: {}
   end
 end

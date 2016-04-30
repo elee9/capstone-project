@@ -1,3 +1,31 @@
-// Place all the styles related to the api::photos controller here.
-// They will automatically be included in application.css.
-// You can use Sass (SCSS) here: http://sass-lang.com/
+.wrapper {
+  margin: 0 auto;
+}
+
+.photoIndex {
+  list-style-type: none;
+  padding: 45px 20px 45px 20px;
+  min-width: 200px;
+  margin: 10px auto;
+}
+
+.photo {
+  margin: 10px auto;
+  position: relative;
+  margin: 3px 4px 4px 4px;
+  background: #fff;
+  cursor: pointer;
+  -webkit-transition: opacity 200ms;
+  transition: opacity 200ms;
+  transition-timing-function: linear;
+  float: left;
+}
+
+.photo:hover {
+  opacity: 0.6;
+}
+
+.photo img {
+  width: 350px;
+  vertical-align: text-top;
+}
