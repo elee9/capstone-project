@@ -18,7 +18,7 @@ module.exports = React.createClass({
   logout: function(event) {
     event.preventDefault();
     SessionApiUtil.logout();
-    this.context.router.push("/");
+    this.context.router.push('/');
   },
 
   render: function() {
@@ -26,31 +26,37 @@ module.exports = React.createClass({
 
     var onSplash;
 
-    if (document.location.pathname === "/") {
-      onSplash = "navbar onsplash";
+    if (document.location.pathname === '/') {
+      onSplash = 'navbar onsplash';
     } else {
-      onSplash = "navbar";
+      onSplash = 'navbar';
     }
 
     if (this.state.currentUser) {
-      auth = (<div className="profile">
-                <div className="profile-circle">Profile Picture Circle Thing</div>
-                <ul className="dropdown-loggedin">
-                  <li>Profile</li>
-                  <li>Settings</li>
-                  <li onClick={this.logout}>Sign Out</li>
-                </ul>
-              </div>);
+          auth = (<div className='profile'>
+                    <ul id='dropdown1' className='dropdown-content dropdown-loggedin'>
+                      <li className='divider'/>
+                      <li >Profile</li>
+                      <li className='divider'/>
+                      <li >Settings</li>
+                      <li className='divider'/>
+                      <li onClick={this.logout}>Sign Out</li>
+                    </ul>
+                    <a className='username-text'>{this.state.currentUser.username}</a>
+                    <a className='dropdown-button profile-circle' data-activates='dropdown1'>
+                      <img src={this.state.currentUser.profile_pic}/>
+                    </a>
+                  </div>);
     } else {
       auth = (<div>
-                <div className="signup-text"><Signup/></div>
-                <div className="login-text"><Login/></div>
+                <div className='signup-text'><Signup/></div>
+                <div className='login-text'><Login/></div>
               </div>);
     }
 
     return (
       <div className={onSplash}>
-        <div className="logo">Pyxels</div>
+        <div className='logo'>Pyxels</div>
         <div>{auth}</div>
       </div>
     );

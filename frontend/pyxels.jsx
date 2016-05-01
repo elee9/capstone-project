@@ -30,4 +30,6 @@ document.addEventListener('DOMContentLoaded', function() {
     Router,
     document.getElementById('root')
   );
+
+  $(".dropdown-button").dropdown();
 });

@@ -73,6 +73,8 @@
 	
 	document.addEventListener('DOMContentLoaded', function () {
 	  ReactDOM.render(Router, document.getElementById('root'));
+	
+	  $(".dropdown-button").dropdown();
 	});
 
 /***/ },
@@ -33012,7 +33014,7 @@
 	  logout: function (event) {
 	    event.preventDefault();
 	    SessionApiUtil.logout();
-	    this.context.router.push("/");
+	    this.context.router.push('/');
 	  },
 	
 	  render: function () {
@@ -33020,10 +33022,10 @@
 	
 	    var onSplash;
 	
-	    if (document.location.pathname === "/") {
-	      onSplash = "navbar onsplash";
+	    if (document.location.pathname === '/') {
+	      onSplash = 'navbar onsplash';
 	    } else {
-	      onSplash = "navbar";
+	      onSplash = 'navbar';
 	    }
 	
 	    if (this.state.currentUser) {
@@ -33031,28 +33033,36 @@
 	        'div',
 	        { className: 'profile' },
 	        React.createElement(
-	          'div',
-	          { className: 'profile-circle' },
-	          'Profile Picture Circle Thing'
-	        ),
-	        React.createElement(
 	          'ul',
-	          { className: 'dropdown-loggedin' },
+	          { id: 'dropdown1', className: 'dropdown-content dropdown-loggedin' },
+	          React.createElement('li', { className: 'divider' }),
 	          React.createElement(
 	            'li',
 	            null,
 	            'Profile'
 	          ),
+	          React.createElement('li', { className: 'divider' }),
 	          React.createElement(
 	            'li',
 	            null,
 	            'Settings'
 	          ),
+	          React.createElement('li', { className: 'divider' }),
 	          React.createElement(
 	            'li',
 	            { onClick: this.logout },
 	            'Sign Out'
 	          )
+	        ),
+	        React.createElement(
+	          'a',
+	          { className: 'username-text' },
+	          this.state.currentUser.username
+	        ),
+	        React.createElement(
+	          'a',
+	          { className: 'dropdown-button profile-circle', 'data-activates': 'dropdown1' },
+	          React.createElement('img', { src: this.state.currentUser.profile_pic })
 	        )
 	      );
 	    } else {
@@ -33297,8 +33307,8 @@
 	var React = __webpack_require__(1),
 	    PhotoStore = __webpack_require__(261),
 	    ApiUtil = __webpack_require__(263),
-	    PhotoIndexItem = __webpack_require__(274),
-	    Masonry = __webpack_require__(265);
+	    PhotoIndexItem = __webpack_require__(265),
+	    Masonry = __webpack_require__(266);
 	
 	module.exports = React.createClass({
 	  displayName: 'exports',
@@ -33338,8 +33348,9 @@
 	    var masonryOptions = {
 	      fitWidth: true,
 	      itemSelector: ".photo",
-	      gutter: 8,
-	      columnWidth: 12
+	      gutter: 7,
+	      transitionDuration: '0.5s'
+	
 	    };
 	
 	    return React.createElement(
@@ -33546,9 +33557,31 @@
 /* 265 */
 /***/ function(module, exports, __webpack_require__) {
 
+	var React = __webpack_require__(1);
+	
+	module.exports = React.createClass({
+	  displayName: 'exports',
+	
+	  render: function () {
+	    return React.createElement(
+	      'li',
+	      { className: 'photo' },
+	      React.createElement('img', { src: this.props.photo.photo_url })
+	    );
+	  }
+	});
+
+/***/ },
+/* 266 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/*** IMPORTS FROM imports-loader ***/
+	var define = false;
+	(function() {
+	
 	var isBrowser = typeof window !== 'undefined';
-	var Masonry = isBrowser ? window.Masonry || __webpack_require__(266) : null;
-	var imagesloaded = isBrowser ? __webpack_require__(273) : null;
+	var Masonry = isBrowser ? window.Masonry || __webpack_require__(267) : null;
+	var imagesloaded = isBrowser ? __webpack_require__(274) : null;
 	var React = __webpack_require__(1);
 	var refName = 'masonryContainer';
 	
@@ -33741,13 +33774,18 @@
 	});
 	
 	module.exports = MasonryComponent;
-
+	
+	}.call(window));
 
 /***/ },
-/* 266 */
+/* 267 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
+	/*** IMPORTS FROM imports-loader ***/
+	var define = false;
+	(function() {
+	
+	/*!
 	 * Masonry v4.1.0
 	 * Cascading grid layout library
 	 * http://masonry.desandro.com
@@ -33758,17 +33796,18 @@
 	( function( window, factory ) {
 	  // universal module definition
 	  /* jshint strict: false */ /*globals define, module, require */
-	  if ( true ) {
+	  if ( typeof define == 'function' && define.amd ) {
 	    // AMD
-	    !(__WEBPACK_AMD_DEFINE_ARRAY__ = [
-	        __webpack_require__(267),
-	        __webpack_require__(269)
-	      ], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory), __WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ? (__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+	    define( [
+	        'outlayer/outlayer',
+	        'get-size/get-size'
+	      ],
+	      factory );
 	  } else if ( typeof module == 'object' && module.exports ) {
 	    // CommonJS
 	    module.exports = factory(
-	      require('outlayer'),
-	      require('get-size')
+	      __webpack_require__(268),
+	      __webpack_require__(270)
 	    );
 	  } else {
 	    // browser global
@@ -33951,13 +33990,18 @@
 	  return Masonry;
 	
 	}));
-
+	
+	}.call(window));
 
 /***/ },
-/* 267 */
+/* 268 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
+	/*** IMPORTS FROM imports-loader ***/
+	var define = false;
+	(function() {
+	
+	/*!
 	 * Outlayer v2.1.0
 	 * the brains and guts of a layout library
 	 * MIT license
@@ -33967,24 +34011,26 @@
 	  'use strict';
 	  // universal module definition
 	  /* jshint strict: false */ /* globals define, module, require */
-	  if ( true ) {
+	  if ( typeof define == 'function' && define.amd ) {
 	    // AMD - RequireJS
-	    !(__WEBPACK_AMD_DEFINE_ARRAY__ = [
-	        __webpack_require__(268),
-	        __webpack_require__(269),
-	        __webpack_require__(270),
-	        __webpack_require__(272)
-	      ], __WEBPACK_AMD_DEFINE_RESULT__ = function( EvEmitter, getSize, utils, Item ) {
+	    define( [
+	        'ev-emitter/ev-emitter',
+	        'get-size/get-size',
+	        'fizzy-ui-utils/utils',
+	        './item'
+	      ],
+	      function( EvEmitter, getSize, utils, Item ) {
 	        return factory( window, EvEmitter, getSize, utils, Item);
-	      }.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+	      }
+	    );
 	  } else if ( typeof module == 'object' && module.exports ) {
 	    // CommonJS - Browserify, Webpack
 	    module.exports = factory(
 	      window,
-	      require('ev-emitter'),
-	      require('get-size'),
-	      require('fizzy-ui-utils'),
-	      require('./item')
+	      __webpack_require__(269),
+	      __webpack_require__(270),
+	      __webpack_require__(271),
+	      __webpack_require__(273)
 	    );
 	  } else {
 	    // browser global
@@ -34894,10 +34940,11 @@
 	return Outlayer;
 	
 	}));
-
+	
+	}.call(window));
 
 /***/ },
-/* 268 */
+/* 269 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;/**
@@ -35012,10 +35059,14 @@
 
 
 /***/ },
-/* 269 */
-/***/ function(module, exports, __webpack_require__) {
+/* 270 */
+/***/ function(module, exports) {
 
-	var __WEBPACK_AMD_DEFINE_RESULT__;/*!
+	/*** IMPORTS FROM imports-loader ***/
+	var define = false;
+	(function() {
+	
+	/*!
 	 * getSize v2.0.2
 	 * measure size of elements
 	 * MIT license
@@ -35027,11 +35078,11 @@
 	( function( window, factory ) {
 	  'use strict';
 	
-	  if ( true ) {
+	  if ( typeof define == 'function' && define.amd ) {
 	    // AMD
-	    !(__WEBPACK_AMD_DEFINE_RESULT__ = function() {
+	    define( function() {
 	      return factory();
-	    }.call(exports, __webpack_require__, exports, module), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+	    });
 	  } else if ( typeof module == 'object' && module.exports ) {
 	    // CommonJS
 	    module.exports = factory();
@@ -35224,13 +35275,18 @@
 	return getSize;
 	
 	});
-
+	
+	}.call(window));
 
 /***/ },
-/* 270 */
+/* 271 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/**
+	/*** IMPORTS FROM imports-loader ***/
+	var define = false;
+	(function() {
+	
+	/**
 	 * Fizzy UI utils v2.0.1
 	 * MIT license
 	 */
@@ -35241,18 +35297,18 @@
 	  // universal module definition
 	  /*jshint strict: false */ /*globals define, module, require */
 	
-	  if ( true ) {
+	  if ( typeof define == 'function' && define.amd ) {
 	    // AMD
-	    !(__WEBPACK_AMD_DEFINE_ARRAY__ = [
-	      __webpack_require__(271)
-	    ], __WEBPACK_AMD_DEFINE_RESULT__ = function( matchesSelector ) {
+	    define( [
+	      'desandro-matches-selector/matches-selector'
+	    ], function( matchesSelector ) {
 	      return factory( window, matchesSelector );
-	    }.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+	    });
 	  } else if ( typeof module == 'object' && module.exports ) {
 	    // CommonJS
 	    module.exports = factory(
 	      window,
-	      require('desandro-matches-selector')
+	      __webpack_require__(272)
 	    );
 	  } else {
 	    // browser global
@@ -35465,13 +35521,18 @@
 	return utils;
 	
 	}));
-
+	
+	}.call(window));
 
 /***/ },
-/* 271 */
-/***/ function(module, exports, __webpack_require__) {
+/* 272 */
+/***/ function(module, exports) {
 
-	var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;/**
+	/*** IMPORTS FROM imports-loader ***/
+	var define = false;
+	(function() {
+	
+	/**
 	 * matchesSelector v2.0.1
 	 * matchesSelector( element, '.selector' )
 	 * MIT license
@@ -35483,9 +35544,9 @@
 	  /*global define: false, module: false */
 	  'use strict';
 	  // universal module definition
-	  if ( true ) {
+	  if ( typeof define == 'function' && define.amd ) {
 	    // AMD
-	    !(__WEBPACK_AMD_DEFINE_FACTORY__ = (factory), __WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ? (__WEBPACK_AMD_DEFINE_FACTORY__.call(exports, __webpack_require__, exports, module)) : __WEBPACK_AMD_DEFINE_FACTORY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+	    define( factory );
 	  } else if ( typeof module == 'object' && module.exports ) {
 	    // CommonJS
 	    module.exports = factory();
@@ -35524,30 +35585,37 @@
 	  };
 	
 	}));
-
+	
+	}.call(window));
 
 /***/ },
-/* 272 */
+/* 273 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/**
+	/*** IMPORTS FROM imports-loader ***/
+	var define = false;
+	(function() {
+	
+	/**
 	 * Outlayer Item
 	 */
 	
 	( function( window, factory ) {
 	  // universal module definition
 	  /* jshint strict: false */ /* globals define, module, require */
-	  if ( true ) {
+	  if ( typeof define == 'function' && define.amd ) {
 	    // AMD - RequireJS
-	    !(__WEBPACK_AMD_DEFINE_ARRAY__ = [
-	        __webpack_require__(268),
-	        __webpack_require__(269)
-	      ], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory), __WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ? (__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+	    define( [
+	        'ev-emitter/ev-emitter',
+	        'get-size/get-size'
+	      ],
+	      factory
+	    );
 	  } else if ( typeof module == 'object' && module.exports ) {
 	    // CommonJS - Browserify, Webpack
 	    module.exports = factory(
-	      require('ev-emitter'),
-	      require('get-size')
+	      __webpack_require__(269),
+	      __webpack_require__(270)
 	    );
 	  } else {
 	    // browser global
@@ -36081,13 +36149,18 @@
 	return Item;
 	
 	}));
-
+	
+	}.call(window));
 
 /***/ },
-/* 273 */
+/* 274 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
+	/*** IMPORTS FROM imports-loader ***/
+	var define = false;
+	(function() {
+	
+	/*!
 	 * imagesLoaded v4.1.0
 	 * JavaScript is all like "You images are done yet or what?"
 	 * MIT License
@@ -36098,18 +36171,18 @@
 	
 	  /*global define: false, module: false, require: false */
 	
-	  if ( true ) {
+	  if ( typeof define == 'function' && define.amd ) {
 	    // AMD
-	    !(__WEBPACK_AMD_DEFINE_ARRAY__ = [
-	      __webpack_require__(268)
-	    ], __WEBPACK_AMD_DEFINE_RESULT__ = function( EvEmitter ) {
+	    define( [
+	      'ev-emitter/ev-emitter'
+	    ], function( EvEmitter ) {
 	      return factory( window, EvEmitter );
-	    }.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+	    });
 	  } else if ( typeof module == 'object' && module.exports ) {
 	    // CommonJS
 	    module.exports = factory(
 	      window,
-	      require('ev-emitter')
+	      __webpack_require__(269)
 	    );
 	  } else {
 	    // browser global
@@ -36457,25 +36530,8 @@
 	return ImagesLoaded;
 	
 	});
-
-
-/***/ },
-/* 274 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var React = __webpack_require__(1);
 	
-	module.exports = React.createClass({
-	  displayName: 'exports',
-	
-	  render: function () {
-	    return React.createElement(
-	      'li',
-	      { className: 'photo' },
-	      React.createElement('img', { src: this.props.photo.photo_url })
-	    );
-	  }
-	});
+	}.call(window));
 
 /***/ }
 /******/ ]);

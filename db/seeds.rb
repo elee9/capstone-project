@@ -36,8 +36,8 @@ PHOTO_DESCRIPTIONS = ["From the gardens of Denmark.",
   "Dusk's fiery beauty."]
 
 User.create!({username: 'demothedog', first_name: 'demo', last_name: 'thedog',
-              email: 'demothedog@gmail.com', password: 'demodemo',
-              bio: 'Hi! I\'m Demo the Dog!'})
+              email: 'demothedog@gmail.com', profile_pic: "http://i.imgur.com/LdpbHK4.jpg",
+              password: 'demodemo', bio: 'Hi! I\'m Demo the Dog!'})
 
 PHOTO_URLS.each_with_index do |el, i|
   Photo.create!({title: PHOTO_TITLES[i], description: PHOTO_DESCRIPTIONS[i],
