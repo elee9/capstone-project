@@ -38,7 +38,10 @@ module.exports = React.createClass({
 
   render: function(){
     var masonryOptions = {
-      isFitWidth: true
+      fitWidth: true,
+      itemSelector: ".photo",
+      gutter: 8,
+      columnWidth: 12
     };
 
     return(

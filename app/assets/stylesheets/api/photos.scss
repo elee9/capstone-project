@@ -1,24 +1,21 @@
-.wrapper {
-  margin: 0 auto;
+.indexWrapper {
+  margin: 0px auto;
 }
 
 .photoIndex {
   list-style-type: none;
-  padding: 45px 20px 45px 20px;
-  min-width: 200px;
+  padding: 45px 20px;
+  min-width: 300px;
   margin: 10px auto;
 }
 
 .photo {
-  margin: 10px auto;
   position: relative;
-  margin: 3px 4px 4px 4px;
-  background: #fff;
-  cursor: pointer;
+  margin-bottom: 8px;
+  background: gray;
   -webkit-transition: opacity 200ms;
   transition: opacity 200ms;
   transition-timing-function: linear;
-  float: left;
 }
 
 .photo:hover {
@@ -26,6 +23,6 @@
 }
 
 .photo img {
-  width: 350px;
-  vertical-align: text-top;
+  height: 380px;
+  cursor: pointer;
 }
