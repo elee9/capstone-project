@@ -12,7 +12,8 @@ var App = require('./components/app'),
     Splash = require('./components/splash'),
     Login = require('./components/login'),
     Signup = require('./components/signup'),
-    PhotoIndex = require('./components/photos_index');
+    PhotoIndex = require('./components/photos_index'),
+    PhotoDetail = require('./components/photo_detail');
 
 
 var Router = (
@@ -20,6 +21,7 @@ var Router = (
     <Route path='/' component={App}>
       <IndexRoute component={Splash}/>
       <Route path='/index' component={PhotoIndex}/>
+      <Route path="/photos/:id" component={PhotoDetail}/>
     </Route>
   </Router>
 );

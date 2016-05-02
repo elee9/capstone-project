@@ -1,6 +1,6 @@
 class Api::PhotosController < ApplicationController
   def index
-    @photos = Photo.all.order(id: :desc)
+    @photos = Photo.includes(:user).all.order(id: :desc)
 
     render :index
   end

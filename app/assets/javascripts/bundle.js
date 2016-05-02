@@ -58,7 +58,8 @@
 	    Splash = __webpack_require__(259),
 	    Login = __webpack_require__(228),
 	    Signup = __webpack_require__(258),
-	    PhotoIndex = __webpack_require__(260);
+	    PhotoIndex = __webpack_require__(260),
+	    PhotoDetail = __webpack_require__(275);
 	
 	var Router = React.createElement(
 	  Router,
@@ -67,7 +68,8 @@
 	    Route,
 	    { path: '/', component: App },
 	    React.createElement(IndexRoute, { component: Splash }),
-	    React.createElement(Route, { path: '/index', component: PhotoIndex })
+	    React.createElement(Route, { path: '/index', component: PhotoIndex }),
+	    React.createElement(Route, { path: '/photos/:id', component: PhotoDetail })
 	  )
 	);
 	
@@ -25627,11 +25629,7 @@
 	      'div',
 	      { className: 'app-container' },
 	      React.createElement(NavBar, null),
-	      React.createElement(
-	        'div',
-	        { className: 'photo-grid' },
-	        this.props.children
-	      )
+	      this.props.children
 	    );
 	  }
 	});
@@ -25651,7 +25649,11 @@
 	  displayName: 'exports',
 	
 	  componentDidMount: function () {
-	    SessionStore.addListener(this.getErrors);
+	    this.errorListener = SessionStore.addListener(this.getErrors);
+	  },
+	
+	  componentWillUnmount: function () {
+	    this.errorListener.remove();
 	  },
 	
 	  contextTypes: {
@@ -25693,7 +25695,7 @@
 	    };
 	
 	    SessionApiUtil.login(user, function () {
-	      that.context.router.push("index");
+	      that.context.router.push('index');
 	    });
 	  },
 	
@@ -25778,7 +25780,7 @@
 	        React.createElement(
 	          'div',
 	          { className: 'loginText' },
-	          'Log In'
+	          'LOG IN'
 	        ),
 	        this.errors(),
 	        React.createElement(
@@ -33011,6 +33013,10 @@
 	    router: React.PropTypes.object
 	  },
 	
+	  componentWillReceiveProps: function () {
+	    $('.dropdown-button').dropdown();
+	  },
+	
 	  logout: function (event) {
 	    event.preventDefault();
 	    SessionApiUtil.logout();
@@ -33038,19 +33044,34 @@
 	          React.createElement('li', { className: 'divider' }),
 	          React.createElement(
 	            'li',
-	            null,
+	            { className: 'dropdown-item' },
+	            React.createElement(
+	              'i',
+	              { className: 'material-icons dropdown-icon' },
+	              'perm_identity'
+	            ),
 	            'Profile'
 	          ),
 	          React.createElement('li', { className: 'divider' }),
 	          React.createElement(
 	            'li',
-	            null,
+	            { className: 'dropdown-item' },
+	            React.createElement(
+	              'i',
+	              { className: 'material-icons dropdown-icon' },
+	              'settings'
+	            ),
 	            'Settings'
 	          ),
 	          React.createElement('li', { className: 'divider' }),
 	          React.createElement(
 	            'li',
-	            { onClick: this.logout },
+	            { className: 'dropdown-item', onClick: this.logout },
+	            React.createElement(
+	              'i',
+	              { className: 'material-icons dropdown-icon' },
+	              'input'
+	            ),
 	            'Sign Out'
 	          )
 	        ),
@@ -33088,7 +33109,7 @@
 	      React.createElement(
 	        'div',
 	        { className: 'logo' },
-	        'Pyxels'
+	        'PYXELS'
 	      ),
 	      React.createElement(
 	        'div',
@@ -33182,7 +33203,7 @@
 	          ),
 	          React.createElement(
 	            'form',
-	            { onSubmit: this.handleSubmit, 'class': 'signupForm' },
+	            { onSubmit: this.handleSubmit, className: 'signupForm' },
 	            React.createElement(
 	              'div',
 	              { className: 'row' },
@@ -33319,9 +33340,16 @@
 	    };
 	  },
 	
+	  contextTypes: {
+	    router: React.PropTypes.object.isRequired
+	  },
+	
 	  componentDidMount: function () {
 	    this.photoListener = PhotoStore.addListener(this._onChange);
 	
+	    if (window.localStorage.getItem('currentUser') === "false") {
+	      this.context.router.push('/');
+	    }
 	    if (this.state.photos.length === 0) {
 	      ApiUtil.fetchAllPhotos();
 	    }
@@ -33355,7 +33383,7 @@
 	
 	    return React.createElement(
 	      'div',
-	      { className: 'indexWrapper' },
+	      { className: 'indexWrapper fade-in' },
 	      React.createElement(
 	        Masonry,
 	        {
@@ -33461,7 +33489,7 @@
 	module.exports = {
 	  fetchAllPhotos: function () {
 	    $.ajax({
-	      url: 'api/photos',
+	      url: '/api/photos',
 	      datatype: 'json',
 	      success: function (photos) {
 	        PhotoActions.receivePhotos(photos);
@@ -33562,11 +33590,21 @@
 	module.exports = React.createClass({
 	  displayName: 'exports',
 	
+	
+	  contextTypes: {
+	    router: React.PropTypes.object.isRequired
+	  },
+	
+	  handleClick: function (event) {
+	    this.context.router.push('photos/' + this.props.photo.id);
+	    event.stopPropagation();
+	  },
+	
 	  render: function () {
 	    return React.createElement(
 	      'li',
 	      { className: 'photo' },
-	      React.createElement('img', { src: this.props.photo.photo_url })
+	      React.createElement('img', { onClick: this.handleClick, src: this.props.photo.photo_url })
 	    );
 	  }
 	});
@@ -36532,6 +36570,210 @@
 	});
 	
 	}.call(window));
+
+/***/ },
+/* 275 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1),
+	    SessionStore = __webpack_require__(230),
+	    PhotoStore = __webpack_require__(261),
+	    ApiUtil = __webpack_require__(263),
+	    UserDetail = __webpack_require__(276);
+	
+	var PhotoDetail = React.createClass({
+			displayName: 'PhotoDetail',
+	
+			getInitialState: function () {
+					return {
+							photo: ""
+					};
+			},
+	
+			contextTypes: {
+					router: React.PropTypes.object
+			},
+	
+			componentDidMount: function () {
+					console.log('i mounted');
+					this.photoListener = PhotoStore.addListener(this._onChange);
+	
+					this.sessionListener = SessionStore.addListener(this._onSessionChange);
+	
+					$(document.body).on('keydown', this.handleKey);
+	
+					if (window.localStorage.getItem('currentUser') === "false") {
+							this.context.router.push('/');
+					}
+			},
+	
+			_onChange: function () {
+					this.setState({ photo: PhotoStore.find(parseInt(this.props.params.id)) });
+			},
+	
+			_onSessionChange: function () {
+					this.setState({ current: SessionStore.currentUser() });
+			},
+	
+			_photoLoaded: function () {
+					if (this.state.photo) {
+							this.havePhoto = true;
+					} else {
+							this.havePhoto = false;
+							ApiUtil.fetchAllPhotos();
+					}
+			},
+	
+			componentWillUnmount: function () {
+					this.photoListener.remove();
+					this.sessionListener.remove();
+					$(document.body).off('keydown', this.handleKey);
+			},
+	
+			handleOuterClick: function (e) {
+					if (e.currentTarget.className === "photo-detail") {
+							this.context.router.goBack();
+					}
+			},
+	
+			handleInnerClick: function (e) {
+					e.stopPropagation();
+			},
+	
+			handleKey: function (e) {
+					if (e.which === 27) {
+							this.context.router.goBack();
+					}
+	
+					// if (e.which === 37){
+					// 	this.grabSequential("prev")
+					// } else if (e.which === 39){
+					// 	this.grabSequential("next")
+					// }
+			},
+	
+			render: function () {
+					this._photoLoaded();
+					if (this.havePhoto) {
+							return React.createElement(
+									'div',
+									{ className: 'photo-detail-container fade-in' },
+									React.createElement(
+											'div',
+											{ className: 'photo-detail', onClick: this.handleOuterClick },
+											React.createElement('img', { className: 'img-detail', src: this.state.photo.photo_url, onClick: this.handleInnerClick })
+									),
+									React.createElement(
+											'section',
+											{ className: 'photo-info' },
+											React.createElement(UserDetail, { user: this.state.photo.user }),
+											React.createElement(
+													'div',
+													{ className: 'info' },
+													React.createElement(
+															'div',
+															{ className: 'detail-title' },
+															' ',
+															this.state.photo.title,
+															' '
+													),
+													React.createElement(
+															'div',
+															{ className: 'detail-description' },
+															' ',
+															this.state.photo.description,
+															' '
+													)
+											)
+									)
+							);
+					} else {
+							return React.createElement(
+									'div',
+									{ className: 'loader' },
+									'Loading...'
+							);
+					}
+			}
+	});
+	
+	module.exports = PhotoDetail;
+
+/***/ },
+/* 276 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var SessionStore = __webpack_require__(230);
+	var ApiUtil = __webpack_require__(263),
+	    UserStore = __webpack_require__(277);
+	
+	var UserDetail = React.createClass({
+		displayName: 'UserDetail',
+	
+	
+		contextTypes: {
+			router: React.PropTypes.object
+		},
+	
+		handleClick: function () {
+			this.context.router.push("users/" + this.props.user.id);
+		},
+	
+		render: function () {
+			return React.createElement(
+				'div',
+				{ className: 'user-detail' },
+				React.createElement(
+					'section',
+					{ className: 'img-container' },
+					React.createElement('img', { src: this.props.user.profile_pic })
+				),
+				React.createElement(
+					'section',
+					{ onClick: this.handleClick, className: 'user-info' },
+					this.props.user.username
+				)
+			);
+		}
+	});
+	
+	module.exports = UserDetail;
+
+/***/ },
+/* 277 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var AppDispatcher = __webpack_require__(221),
+	    Store = __webpack_require__(231).Store,
+	    UserConstants = __webpack_require__(225);
+	
+	var UserStore = new Store(AppDispatcher);
+	
+	var _users = {};
+	
+	var resetUsers = function (users) {
+	  _users = {};
+	
+	  users.forEach(function (user) {
+	    _users[user.id] = user;
+	  });
+	};
+	
+	UserStore.all = function () {
+	  return Object.keys(_users).map(function (userId) {
+	    return _users[userId];
+	  });
+	};
+	
+	UserStore.__onDispatch = function (payload) {
+	  switch (payload.actionType) {
+	    case UserConstants.RECEIVE_USERS:
+	      resetUsers(payload.users);
+	      break;
+	  }
+	  this.__emitChange();
+	};
 
 /***/ }
 /******/ ]);

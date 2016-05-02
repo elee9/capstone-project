@@ -34,9 +34,12 @@
    font-size: 18px;
  }
 
- body {
-   font-family: Raleway;
+ html, body, #root {
+   font-family: Lato;
+   height: 100%;
  }
+
+
 
 .error {
   color: red;

@@ -4,5 +4,7 @@ json.array! @photos do |photo|
 	json.title photo.title
 
 	json.description photo.description
-	json.user photo.user_id
+	json.user do
+		json.extract! photo.user, :id, :username, :profile_pic
+	end
 end

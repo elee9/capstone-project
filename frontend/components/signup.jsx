@@ -59,7 +59,7 @@ module.exports = React.createClass({
         <Modal ref="modal" className="signupModal">
           <div className="row">
             <div className="signupText">Sign Up</div>
-              <form onSubmit={this.handleSubmit} class="signupForm">
+              <form onSubmit={this.handleSubmit} className="signupForm">
                   <div className="row">
                     <div className="input-field col s6 inputText">
                       <input type='text' id="username"

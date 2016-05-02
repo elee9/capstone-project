@@ -4,7 +4,7 @@ var AppDispatcher = require('../dispatcher/dispatcher'),
 module.exports = {
   fetchAllPhotos: function() {
     $.ajax({
-      url: 'api/photos',
+      url: '/api/photos',
       datatype: 'json',
       success: function(photos){
         PhotoActions.receivePhotos(photos);

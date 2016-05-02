@@ -1,6 +1,7 @@
 Rails.application.routes.draw do
   root to: 'static_pages#root'
   get "/index", to: 'static_pages#root'
+  get "/photos/:id", to: 'static_pages#root'
 
   namespace :api, defaults: { format: :json } do
     resources :photos, only: [:show, :index, :create, :update, :destroy]

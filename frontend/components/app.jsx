@@ -8,9 +8,9 @@ module.exports = React.createClass({
     return(
       <div className="app-container">
         <NavBar/>
-        <div className="photo-grid">
-          {this.props.children}
-        </div>
+
+        {this.props.children}
+
       </div>
     );
   }

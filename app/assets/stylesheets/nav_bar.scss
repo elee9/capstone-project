@@ -18,28 +18,31 @@
 
 .dropdown-loggedin {
   position: absolute;
-  left: -10px;
+  left: -12px;
   top: 70px!important;
   font-size: 14px;
   white-space: nowrap;
   box-shadow: -2px 4px 8px 0 rgba(0, 0, 0, 0.2), -3px 9px 20px 0 rgba(0, 0, 0, 0.19) !important;
   top: 76px !important;
-  width: 200px !important;
+  width: 192px !important;
   left: -22px !important;
 }
 
 .login-text, .signup-text{
   display: inline-block;
+  letter-spacing: 2px;
   padding: 10px 20px 10px 20px;
 }
 
 .signup-text{
+  letter-spacing: 2px;
   margin-right: 10px;
 }
 
 .logo {
   padding: 10px 0px 10px 20px;
   font-size: 48px;
+  letter-spacing: 2px;
 }
 
 .profile-circle {
@@ -77,5 +80,25 @@
 }
 
 .dropdown-item {
+  display: flex;
+  width: 152px!important;
+  flex-direction: row;
+  font-size: inherit;
+  justify-content: flex-start;
+  padding-left: 40px;
+}
 
+.dropdown-item span {
+  color: black!important;
+  cursor: pointer;
+}
+
+.dropdown-item:hover .dropdown-icon, .dropdown-item:hover span {
+  color: #26a69a!important;
+}
+
+.dropdown-icon {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
 }

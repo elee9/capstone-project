@@ -7,7 +7,11 @@ var React = require('react'),
 
 module.exports = React.createClass({
   componentDidMount: function() {
-    SessionStore.addListener(this.getErrors);
+    this.errorListener = SessionStore.addListener(this.getErrors);
+  },
+
+  componentWillUnmount: function() {
+    this.errorListener.remove();
   },
 
   contextTypes: {
@@ -49,7 +53,7 @@ module.exports = React.createClass({
     };
 
     SessionApiUtil.login(user, function(){
-      that.context.router.push("index");
+      that.context.router.push('index');
     });
   },
 
@@ -125,7 +129,7 @@ module.exports = React.createClass({
     return(
       <Modal ref='modal'>
         <div className="row loginModal">
-          <div className="loginText">Log In</div>
+          <div className="loginText">LOG IN</div>
             {this.errors()}
             <form onSubmit={this.handleSubmit} className="loginForm">
                 <div className="row">

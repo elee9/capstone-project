@@ -15,6 +15,10 @@ module.exports = React.createClass({
     router: React.PropTypes.object
   },
 
+  componentWillReceiveProps: function() {
+    $('.dropdown-button').dropdown();
+  },
+
   logout: function(event) {
     event.preventDefault();
     SessionApiUtil.logout();
@@ -36,11 +40,11 @@ module.exports = React.createClass({
           auth = (<div className='profile'>
                     <ul id='dropdown1' className='dropdown-content dropdown-loggedin'>
                       <li className='divider'/>
-                      <li >Profile</li>
+                      <li className='dropdown-item'><i className="material-icons dropdown-icon">perm_identity</i>Profile</li>
                       <li className='divider'/>
-                      <li >Settings</li>
+                      <li className='dropdown-item'><i className="material-icons dropdown-icon">settings</i>Settings</li>
                       <li className='divider'/>
-                      <li onClick={this.logout}>Sign Out</li>
+                      <li className='dropdown-item' onClick={this.logout}><i className="material-icons dropdown-icon">input</i>Sign Out</li>
                     </ul>
                     <a className='username-text'>{this.state.currentUser.username}</a>
                     <a className='dropdown-button profile-circle' data-activates='dropdown1'>
@@ -56,7 +60,7 @@ module.exports = React.createClass({
 
     return (
       <div className={onSplash}>
-        <div className='logo'>Pyxels</div>
+        <div className='logo'>PYXELS</div>
         <div>{auth}</div>
       </div>
     );

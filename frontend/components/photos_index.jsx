@@ -11,9 +11,16 @@ module.exports = React.createClass({
     };
   },
 
+  contextTypes: {
+    router: React.PropTypes.object.isRequired
+  },
+
   componentDidMount: function() {
     this.photoListener = PhotoStore.addListener(this._onChange);
 
+    if (window.localStorage.getItem('currentUser') === "false") {
+      this.context.router.push('/');
+    }
     if (this.state.photos.length === 0){
       ApiUtil.fetchAllPhotos();
     }
@@ -46,7 +53,7 @@ module.exports = React.createClass({
     };
 
     return(
-      <div className='indexWrapper'>
+      <div className='indexWrapper fade-in'>
         <Masonry
           className='photoIndex'
           elementType={'ul'}
