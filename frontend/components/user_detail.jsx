@@ -1,7 +1,9 @@
 var React = require('react');
 var SessionStore = require('../stores/session_store');
 var ApiUtil = require('../util/api_util'),
-		UserStore = require('../stores/user_store');
+		UserStore = require('../stores/user_store'),
+	  ReactRouter = require('react-router'),
+		browserHistory = ReactRouter.browserHistory;
 
 var UserDetail = React.createClass({
 
@@ -10,7 +12,7 @@ var UserDetail = React.createClass({
   },
 
 	handleClick: function(){
-		this.context.router.push("users/"+this.props.user.id);
+		this.history.push("users/"+this.props.user.id);
 	},
 
 	render: function() {

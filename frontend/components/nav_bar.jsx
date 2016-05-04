@@ -46,7 +46,7 @@ module.exports = React.createClass({
                       <li className='divider'/>
                       <li className='dropdown-item' onClick={this.logout}><i className="material-icons dropdown-icon">input</i>Sign Out</li>
                     </ul>
-                    <a className='username-text'>{this.state.currentUser.username}</a>
+                    <a className='dropdown-button username-text' data-activates='dropdown1'>{this.state.currentUser.username}</a>
                     <a className='dropdown-button profile-circle' data-activates='dropdown1'>
                       <img src={this.state.currentUser.profile_pic}/>
                     </a>

@@ -59,7 +59,8 @@
 	    Login = __webpack_require__(228),
 	    Signup = __webpack_require__(258),
 	    PhotoIndex = __webpack_require__(260),
-	    PhotoDetail = __webpack_require__(275);
+	    PhotoDetail = __webpack_require__(275),
+	    UserProfile = __webpack_require__(281);
 	
 	var Router = React.createElement(
 	  Router,
@@ -69,7 +70,8 @@
 	    { path: '/', component: App },
 	    React.createElement(IndexRoute, { component: Splash }),
 	    React.createElement(Route, { path: '/index', component: PhotoIndex }),
-	    React.createElement(Route, { path: '/photos/:id', component: PhotoDetail })
+	    React.createElement(Route, { path: '/photos/:id', component: PhotoDetail }),
+	    React.createElement(Route, { path: '/users/:id', component: UserProfile })
 	  )
 	);
 	
@@ -33077,7 +33079,7 @@
 	        ),
 	        React.createElement(
 	          'a',
-	          { className: 'username-text' },
+	          { className: 'dropdown-button username-text', 'data-activates': 'dropdown1' },
 	          this.state.currentUser.username
 	        ),
 	        React.createElement(
@@ -33383,7 +33385,7 @@
 	
 	    return React.createElement(
 	      'div',
-	      { className: 'indexWrapper fade-in' },
+	      { className: 'indexWrapper' },
 	      React.createElement(
 	        Masonry,
 	        {
@@ -36579,122 +36581,130 @@
 	    SessionStore = __webpack_require__(230),
 	    PhotoStore = __webpack_require__(261),
 	    ApiUtil = __webpack_require__(263),
-	    UserDetail = __webpack_require__(276);
+	    UserDetail = __webpack_require__(276),
+	    Comments = __webpack_require__(278);
 	
 	var PhotoDetail = React.createClass({
-			displayName: 'PhotoDetail',
+	  displayName: 'PhotoDetail',
 	
-			getInitialState: function () {
-					return {
-							photo: ""
-					};
-			},
+	  getInitialState: function () {
+	    return {
+	      photo: ""
+	    };
+	  },
 	
-			contextTypes: {
-					router: React.PropTypes.object
-			},
+	  contextTypes: {
+	    router: React.PropTypes.object
+	  },
 	
-			componentDidMount: function () {
-					console.log('i mounted');
-					this.photoListener = PhotoStore.addListener(this._onChange);
+	  componentDidMount: function () {
+	    this.photoListener = PhotoStore.addListener(this._onChange);
 	
-					this.sessionListener = SessionStore.addListener(this._onSessionChange);
+	    this.sessionListener = SessionStore.addListener(this._onSessionChange);
 	
-					$(document.body).on('keydown', this.handleKey);
+	    $(document.body).on('keydown', this.handleKey);
 	
-					if (window.localStorage.getItem('currentUser') === "false") {
-							this.context.router.push('/');
-					}
-			},
+	    if (window.localStorage.getItem('currentUser') === "false") {
+	      this.context.router.push('/');
+	    }
+	  },
 	
-			_onChange: function () {
-					this.setState({ photo: PhotoStore.find(parseInt(this.props.params.id)) });
-			},
+	  _onChange: function () {
+	    this.setState({ photo: PhotoStore.find(parseInt(this.props.params.id)) });
+	  },
 	
-			_onSessionChange: function () {
-					this.setState({ current: SessionStore.currentUser() });
-			},
+	  componentDidUpdate: function () {
+	    setTimeout(function () {
+	      $('.photo-detail-container').addClass('loaded');
+	    }, 50);
+	  },
 	
-			_photoLoaded: function () {
-					if (this.state.photo) {
-							this.havePhoto = true;
-					} else {
-							this.havePhoto = false;
-							ApiUtil.fetchAllPhotos();
-					}
-			},
+	  _onSessionChange: function () {
+	    this.setState({ current: SessionStore.currentUser() });
+	  },
 	
-			componentWillUnmount: function () {
-					this.photoListener.remove();
-					this.sessionListener.remove();
-					$(document.body).off('keydown', this.handleKey);
-			},
+	  _photoLoaded: function () {
+	    if (this.state.photo) {
+	      this.havePhoto = true;
+	    } else {
+	      this.havePhoto = false;
+	      ApiUtil.fetchAllPhotos();
+	    }
+	  },
 	
-			handleOuterClick: function (e) {
-					if (e.currentTarget.className === "photo-detail") {
-							this.context.router.goBack();
-					}
-			},
+	  componentWillUnmount: function () {
+	    this.photoListener.remove();
+	    this.sessionListener.remove();
+	    $(document.body).off('keydown', this.handleKey);
+	  },
 	
-			handleInnerClick: function (e) {
-					e.stopPropagation();
-			},
+	  handleOuterClick: function (e) {
+	    if (e.currentTarget.className === "photo-detail") {
+	      this.context.router.goBack();
+	    }
+	  },
 	
-			handleKey: function (e) {
-					if (e.which === 27) {
-							this.context.router.goBack();
-					}
+	  handleInnerClick: function (e) {
+	    e.stopPropagation();
+	  },
 	
-					// if (e.which === 37){
-					// 	this.grabSequential("prev")
-					// } else if (e.which === 39){
-					// 	this.grabSequential("next")
-					// }
-			},
+	  handleKey: function (event) {
+	    if (event.which === 27) {
+	      this.context.router.goBack();
+	    }
 	
-			render: function () {
-					this._photoLoaded();
-					if (this.havePhoto) {
-							return React.createElement(
-									'div',
-									{ className: 'photo-detail-container fade-in' },
-									React.createElement(
-											'div',
-											{ className: 'photo-detail', onClick: this.handleOuterClick },
-											React.createElement('img', { className: 'img-detail', src: this.state.photo.photo_url, onClick: this.handleInnerClick })
-									),
-									React.createElement(
-											'section',
-											{ className: 'photo-info' },
-											React.createElement(UserDetail, { user: this.state.photo.user }),
-											React.createElement(
-													'div',
-													{ className: 'info' },
-													React.createElement(
-															'div',
-															{ className: 'detail-title' },
-															' ',
-															this.state.photo.title,
-															' '
-													),
-													React.createElement(
-															'div',
-															{ className: 'detail-description' },
-															' ',
-															this.state.photo.description,
-															' '
-													)
-											)
-									)
-							);
-					} else {
-							return React.createElement(
-									'div',
-									{ className: 'loader' },
-									'Loading...'
-							);
-					}
-			}
+	    // if (e.which === 37){
+	    // 	this.grabSequential("prev")
+	    // } else if (e.which === 39){
+	    // 	this.grabSequential("next")
+	    // }
+	  },
+	
+	  render: function () {
+	    this._photoLoaded();
+	
+	    if (this.state.photo) {
+	      return React.createElement(
+	        'div',
+	        { className: 'photo-detail-container' },
+	        React.createElement(
+	          'div',
+	          { className: 'photo-detail', onClick: this.handleOuterClick },
+	          React.createElement('img', { className: 'img-detail', src: this.state.photo.photo_url, onClick: this.handleInnerClick })
+	        ),
+	        React.createElement(
+	          'section',
+	          { className: 'photo-info' },
+	          React.createElement(UserDetail, { user: this.state.photo.user }),
+	          React.createElement(
+	            'div',
+	            { className: 'info' },
+	            React.createElement(
+	              'div',
+	              { className: 'detail-title' },
+	              ' ',
+	              this.state.photo.title,
+	              ' '
+	            ),
+	            React.createElement(
+	              'div',
+	              { className: 'detail-description' },
+	              ' ',
+	              this.state.photo.description,
+	              ' '
+	            )
+	          ),
+	          React.createElement(Comments, { photo: this.state.photo, current: JSON.parse(window.localStorage.getItem("currentUser")) })
+	        )
+	      );
+	    } else {
+	      return React.createElement(
+	        'div',
+	        null,
+	        'loading...'
+	      );
+	    }
+	  }
 	});
 	
 	module.exports = PhotoDetail;
@@ -36706,7 +36716,9 @@
 	var React = __webpack_require__(1);
 	var SessionStore = __webpack_require__(230);
 	var ApiUtil = __webpack_require__(263),
-	    UserStore = __webpack_require__(277);
+	    UserStore = __webpack_require__(277),
+	    ReactRouter = __webpack_require__(159),
+	    browserHistory = ReactRouter.browserHistory;
 	
 	var UserDetail = React.createClass({
 		displayName: 'UserDetail',
@@ -36717,7 +36729,7 @@
 		},
 	
 		handleClick: function () {
-			this.context.router.push("users/" + this.props.user.id);
+			this.history.push("users/" + this.props.user.id);
 		},
 	
 		render: function () {
@@ -36774,6 +36786,172 @@
 	  }
 	  this.__emitChange();
 	};
+
+/***/ },
+/* 278 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1),
+	    CommentForm = __webpack_require__(280),
+	    CommentItem = __webpack_require__(279);
+	
+	var Comments = React.createClass({
+	  displayName: 'Comments',
+	
+	  getInitialState: function () {
+	    return {
+	      comments: this.props.photo.comments,
+	      photo: this.props.photo
+	    };
+	  },
+	
+	  generateCommentItems: function () {
+	    var self = this;
+	    console.log(this.state);
+	    if (this.state.comments) {
+	      return this.state.comments.map(function (comment, idx) {
+	        return React.createElement(CommentItem, { key: idx, comment: comment });
+	      });
+	    }
+	  },
+	
+	  commentWillRecieveProps: function (newProps) {
+	    if (newProps.photo) {
+	      this.setState({ comments: newProps.photo.comments,
+	        photo: newProps.photo });
+	    }
+	  },
+	
+	  render: function () {
+	    return React.createElement(
+	      'div',
+	      { className: 'comment-container' },
+	      React.createElement(
+	        'div',
+	        { className: 'comment-title' },
+	        'Comments'
+	      ),
+	      React.createElement(CommentForm, { photo: this.state.photo, current: this.props.current }),
+	      React.createElement(
+	        'ul',
+	        { className: 'comment-list' },
+	        this.generateCommentItems()
+	      )
+	    );
+	  }
+	
+	});
+	
+	module.exports = Comments;
+
+/***/ },
+/* 279 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1),
+	    ReactRouter = __webpack_require__(159),
+	    browserHistory = ReactRouter.browserHistory;
+	
+	var CommentItem = React.createClass({
+	  displayName: 'CommentItem',
+	
+	  getInitialState: function () {
+	    return {
+	      comment: this.props.comment
+	    };
+	  },
+	
+	  handleClick: function () {
+	    browserHistory.push("/users/" + this.state.comment.user_id);
+	  },
+	
+	  commentWillRecieveProps: function (newProps) {
+	    if (newProps.comment) {
+	      this.setState({ comment: newProps.comment });
+	    }
+	  },
+	
+	  commentBody: function () {
+	    if (this.state.comment) {
+	      return React.createElement(
+	        'li',
+	        { className: 'comment-item' },
+	        React.createElement(
+	          'section',
+	          { className: 'comment-header' },
+	          React.createElement(
+	            'div',
+	            { className: 'comment-profile-pic', onClick: this.handleClick },
+	            React.createElement('img', { src: this.state.comment.user.profile_pic })
+	          ),
+	          React.createElement(
+	            'div',
+	            { className: 'comment-user-info', onClick: this.handleClick },
+	            this.state.comment.user.username
+	          )
+	        ),
+	        React.createElement(
+	          'section',
+	          { className: 'comment-content-container' },
+	          React.createElement(
+	            'div',
+	            { className: 'comment-content' },
+	            this.state.comment.body
+	          )
+	        )
+	      );
+	    }
+	  },
+	
+	  render: function () {
+	    return React.createElement(
+	      'div',
+	      null,
+	      this.commentBody()
+	    );
+	  }
+	
+	});
+	
+	module.exports = CommentItem;
+
+/***/ },
+/* 280 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var PropTypes = React.PropTypes;
+	
+	var CommentForm = React.createClass({
+	  displayName: 'CommentForm',
+	
+	
+	  render: function () {
+	    return React.createElement('div', null);
+	  }
+	
+	});
+	
+	module.exports = CommentForm;
+
+/***/ },
+/* 281 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var PropTypes = React.PropTypes;
+	
+	var UserProfile = React.createClass({
+	  displayName: 'UserProfile',
+	
+	
+	  render: function () {
+	    return React.createElement('div', null);
+	  }
+	
+	});
+	
+	module.exports = UserProfile;
 
 /***/ }
 /******/ ]);

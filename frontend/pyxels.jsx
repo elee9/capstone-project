@@ -13,7 +13,8 @@ var App = require('./components/app'),
     Login = require('./components/login'),
     Signup = require('./components/signup'),
     PhotoIndex = require('./components/photos_index'),
-    PhotoDetail = require('./components/photo_detail');
+    PhotoDetail = require('./components/photo_detail'),
+    UserProfile = require('./components/user_profile');
 
 
 var Router = (
@@ -22,6 +23,7 @@ var Router = (
       <IndexRoute component={Splash}/>
       <Route path='/index' component={PhotoIndex}/>
       <Route path="/photos/:id" component={PhotoDetail}/>
+      <Route path='/users/:id' component={UserProfile}/>
     </Route>
   </Router>
 );
