@@ -42,3 +42,7 @@
 .passwordInput {
   padding-bottom: 30px;
 }
+
+.btn.disabled {
+  pointer-events: none;
+}

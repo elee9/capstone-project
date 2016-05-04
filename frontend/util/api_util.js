@@ -55,5 +55,17 @@ module.exports = {
         PhotoActions.removePhoto(photo);
       }
     });
+  },
+
+  createComment: function(params) {
+    $.ajax({
+			url: "/api/comments",
+			data: {comment: params},
+			type: "POST",
+			datatype: "json",
+			success: function(photo){
+				PhotoActions.updatePhoto(photo);
+			}
+		});
   }
 };

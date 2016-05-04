@@ -24,7 +24,8 @@
 .comment-title {
   display: flex;
   padding: 5px;
-  justify-content: center;
+  width: 300px;
+  justify-content: flex-start;
 }
 
 .comment-content-container {
@@ -57,4 +58,22 @@
   align-items: center;
   justify-content: flex-start;
   margin: 0px 10px;
+}
+
+.form-input {
+  height: 2rem!important;
+  margin: 0 0 15px 5px!important;
+}
+
+input[type='text'].form-input::-webkit-input-placeholder { /* Chrome/Opera/Safari */
+  color: darkgrey;
+}
+input[type='text'].form-input::-moz-placeholder { /* Firefox 19+ */
+  color: darkgrey;
+}
+input[type='text'].form-input:-ms-input-placeholder { /* IE 10+ */
+  color: darkgrey;
+}
+input[type='text'].form-input:-moz-placeholder { /* Firefox 18- */
+  color: darkgrey;
 }

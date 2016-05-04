@@ -82,7 +82,6 @@ var PhotoDetail = React.createClass({
 
   render: function() {
     this._photoLoaded();
-
     if (this.state.photo) {
 		return (
 			<div className="photo-detail-container">

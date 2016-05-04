@@ -12,7 +12,6 @@ var Comments = React.createClass({
 
   generateCommentItems: function() {
     var self = this;
-    console.log(this.state);
     if(this.state.comments) {
       return this.state.comments.map(function(comment, idx) {
         return <CommentItem key={idx} comment={comment}/>;
@@ -20,7 +19,7 @@ var Comments = React.createClass({
     }
   },
 
-  commentWillRecieveProps: function(newProps) {
+  componentWillReceiveProps: function(newProps) {
     if (newProps.photo) {
       this.setState({comments: newProps.photo.comments,
                      photo: newProps.photo});

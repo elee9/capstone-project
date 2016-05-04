@@ -85,7 +85,8 @@ module.exports = React.createClass({
   guestLogin: function(event) {
     event.preventDefault();
     var that = this;
-
+    $('.left').addClass('disabled');
+    
     this.setState({
       username: '',
       password: ''

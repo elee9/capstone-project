@@ -43,16 +43,18 @@ SessionStore.__onDispatch = function(payload) {
       login(payload.user);
       window.localStorage.setItem("currentUser", JSON.stringify(payload.user));
       _currentUserFetched = true;
+      SessionStore.__emitChange();
       break;
     case SessionConstants.LOGOUT:
       logout();
       window.localStorage.setItem("currentUser", "false");
+      SessionStore.__emitChange();
       break;
     case SessionConstants.ERROR:
       setErrors(payload.errors);
+      SessionStore.__emitChange();
       break;
   }
-  SessionStore.__emitChange();
 };
 
 module.exports = SessionStore;

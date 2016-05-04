@@ -25733,6 +25733,7 @@
 	  guestLogin: function (event) {
 	    event.preventDefault();
 	    var that = this;
+	    $('.left').addClass('disabled');
 	
 	    this.setState({
 	      username: '',
@@ -25932,16 +25933,18 @@
 	      login(payload.user);
 	      window.localStorage.setItem("currentUser", JSON.stringify(payload.user));
 	      _currentUserFetched = true;
+	      SessionStore.__emitChange();
 	      break;
 	    case SessionConstants.LOGOUT:
 	      logout();
 	      window.localStorage.setItem("currentUser", "false");
+	      SessionStore.__emitChange();
 	      break;
 	    case SessionConstants.ERROR:
 	      setErrors(payload.errors);
+	      SessionStore.__emitChange();
 	      break;
 	  }
-	  SessionStore.__emitChange();
 	};
 	
 	module.exports = SessionStore;
@@ -33428,18 +33431,21 @@
 	  switch (payload.actionType) {
 	    case PhotoConstants.RECEIVE_ALL_PHOTOS:
 	      resetPhotos(payload.photos);
+	      PhotoStore.__emitChange();
 	      break;
 	    case PhotoConstants.RECEIVE_PHOTO:
 	      setPhoto(payload.photo);
+	      PhotoStore.__emitChange();
 	      break;
 	    case PhotoConstants.UPDATE_PHOTO:
 	      updatePhoto(payload.photo);
+	      PhotoStore.__emitChange();
 	      break;
 	    case PhotoConstants.DELETE_PHOTO:
 	      deletePhoto(payload.photo);
+	      PhotoStore.__emitChange();
 	      break;
 	  }
-	  PhotoStore.__emitChange();
 	};
 	
 	function resetPhotos(photos) {
@@ -33540,6 +33546,18 @@
 	      datatype: 'json',
 	      success: function (photo) {
 	        PhotoActions.removePhoto(photo);
+	      }
+	    });
+	  },
+	
+	  createComment: function (params) {
+	    $.ajax({
+	      url: "/api/comments",
+	      data: { comment: params },
+	      type: "POST",
+	      datatype: "json",
+	      success: function (photo) {
+	        PhotoActions.updatePhoto(photo);
 	      }
 	    });
 	  }
@@ -36662,7 +36680,6 @@
 	
 	  render: function () {
 	    this._photoLoaded();
-	
 	    if (this.state.photo) {
 	      return React.createElement(
 	        'div',
@@ -36782,9 +36799,9 @@
 	  switch (payload.actionType) {
 	    case UserConstants.RECEIVE_USERS:
 	      resetUsers(payload.users);
+	      UserStore.__emitChange();
 	      break;
 	  }
-	  this.__emitChange();
 	};
 
 /***/ },
@@ -36807,7 +36824,6 @@
 	
 	  generateCommentItems: function () {
 	    var self = this;
-	    console.log(this.state);
 	    if (this.state.comments) {
 	      return this.state.comments.map(function (comment, idx) {
 	        return React.createElement(CommentItem, { key: idx, comment: comment });
@@ -36815,7 +36831,7 @@
 	    }
 	  },
 	
-	  commentWillRecieveProps: function (newProps) {
+	  componentWillReceiveProps: function (newProps) {
 	    if (newProps.photo) {
 	      this.setState({ comments: newProps.photo.comments,
 	        photo: newProps.photo });
@@ -36919,15 +36935,53 @@
 /* 280 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var React = __webpack_require__(1);
-	var PropTypes = React.PropTypes;
+	var React = __webpack_require__(1),
+	    CommentActions = __webpack_require__(282);
 	
 	var CommentForm = React.createClass({
 	  displayName: 'CommentForm',
 	
+	  getInitialState: function () {
+	    return {
+	      photo_id: "",
+	      body: ""
+	    };
+	  },
+	
+	  handleSubmit: function (event) {
+	    event.preventDefault();
+	    var params = {
+	      body: this.state.body,
+	      photo_id: this.state.photo_id
+	    };
+	    CommentActions.createComment(params);
+	    this.setState({ body: "" });
+	  },
+	
+	  updateBody: function (event) {
+	    this.setState({ body: event.target.value });
+	    this.setState({ photo_id: this.props.photo.id });
+	  },
 	
 	  render: function () {
-	    return React.createElement('div', null);
+	    return React.createElement(
+	      'div',
+	      { className: 'comment-form' },
+	      React.createElement(
+	        'form',
+	        { onSubmit: this.handleSubmit },
+	        React.createElement(
+	          'div',
+	          { className: 'comment-input' },
+	          React.createElement('input', {
+	            type: 'text',
+	            onChange: this.updateBody,
+	            value: this.state.body,
+	            className: 'form-input',
+	            placeholder: "Leave a comment..." })
+	        )
+	      )
+	    );
 	  }
 	
 	});
@@ -36952,6 +37006,21 @@
 	});
 	
 	module.exports = UserProfile;
+
+/***/ },
+/* 282 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var AppDispatcher = __webpack_require__(221);
+	var ApiUtil = __webpack_require__(263);
+	
+	var CommentActions = {
+		createComment: function (params) {
+			ApiUtil.createComment(params);
+		}
+	};
+	
+	module.exports = CommentActions;
 
 /***/ }
 /******/ ]);

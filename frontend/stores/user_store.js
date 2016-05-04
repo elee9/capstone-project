@@ -24,7 +24,7 @@ UserStore.__onDispatch = function(payload) {
   switch (payload.actionType) {
     case UserConstants.RECEIVE_USERS:
       resetUsers(payload.users);
+      UserStore.__emitChange();
       break;
   }
-  this.__emitChange();
 };

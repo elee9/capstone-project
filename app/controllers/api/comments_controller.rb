@@ -9,7 +9,7 @@ class Api::CommentsController < ApplicationController
     @comment.user_id = current_user.id
     @comment.save!
 
-    @photo = Photo.includes(comments: :user).find(comment_params[:photo_id])
+    @photo = Photo.includes(:user, comments: :user).find(comment_params[:photo_id])
 
     render :show
   end
