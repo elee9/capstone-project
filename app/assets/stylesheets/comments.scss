@@ -51,6 +51,7 @@
   height: 40px;
   align-items: center;
   cursor: pointer;
+  font-weight: 700;
 }
 
 .comment-content {
@@ -63,6 +64,7 @@
 .form-input {
   height: 2rem!important;
   margin: 0 0 15px 5px!important;
+  cursor: text;
 }
 
 input[type='text'].form-input::-webkit-input-placeholder { /* Chrome/Opera/Safari */

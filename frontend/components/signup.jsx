@@ -45,6 +45,12 @@ module.exports = React.createClass({
   },
 
   showModal: function(){
+    this.setState({ username: "" });
+    this.setState({ password: "" });
+    this.setState({ errors: [] });
+    this.setState({ first_name: "" });
+    this.setState({ last_name: "" });
+    this.setState({ email: "" });
     this.refs.modal.show();
   },
 
@@ -54,14 +60,12 @@ module.exports = React.createClass({
 
   form: function() {
     return(
-      <div>
-        <div onClick={this.showModal} className="beckiswrong">SIGN UP</div>
-        <Modal ref="modal" className="signupModal">
-          <div className="row">
-            <div className="signupText">Sign Up</div>
+        <Modal ref="modal">
+          <div className="row signupModal">
+            <div className="signupText">SIGN UP</div>
               <form onSubmit={this.handleSubmit} className="signupForm">
                   <div className="row">
-                    <div className="input-field col s6 inputText">
+                    <div className="input-field col s12 inputText">
                       <input type='text' id="username"
                              onChange={this.updateUsername}
                              value={this.state.username}/>
@@ -84,15 +88,15 @@ module.exports = React.createClass({
                     </div>
                   </div>
                   <div className="row">
-                    <div className="input-field col s6 inputText">
+                    <div className="input-field col s12 inputText">
                       <input type='text' id="email"
-                             onChange={this.updatePassword}
+                             onChange={this.updateEmail}
                              value={this.state.email}/>
                       <label htmlFor="email">Email</label>
                     </div>
                   </div>
                   <div className="row">
-                    <div className="input-field col s6 inputText">
+                    <div className="input-field col s12 inputText">
                       <input type='password' id="password"
                              onChange={this.updatePassword}
                              value={this.state.password}/>
@@ -101,15 +105,11 @@ module.exports = React.createClass({
                   </div>
 
                 <button type="submit" name="action" value="submit"
-                        className="waves-effect waves-light btn right">Log In
-                </button>
-                <button onClick={this.guestLogin}
-                        className="waves-effect waves-light btn left">Guest
+                        className="waves-effect waves-light btn">Log In
                 </button>
               </form>
             </div>
         </Modal>
-      </div>
     );
   },
 
@@ -117,6 +117,7 @@ module.exports = React.createClass({
     return(
       <div>
         {this.form()}
+        <div onClick={this.showModal} className="beckiswrong">SIGN UP</div>
       </div>
     );
   }

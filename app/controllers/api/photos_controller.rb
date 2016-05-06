@@ -12,9 +12,11 @@ class Api::PhotosController < ApplicationController
 
   def create
     @photo = Photo.new(photo_params)
+    @photo.user_id = current_user.id
 
     if @photo.save
-      render :show
+      @photos = Photo.includes(:user, comments: :user).all.order(id: :desc)
+      render :index
     else
       render 'api/shared/errors', status: 422
     end

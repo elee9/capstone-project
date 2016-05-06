@@ -23,13 +23,12 @@
 .dropdown-loggedin {
   position: absolute;
   left: -12px;
-  top: 70px!important;
   font-size: 14px;
   white-space: nowrap;
   box-shadow: -2px 4px 8px 0 rgba(0, 0, 0, 0.2), -3px 9px 20px 0 rgba(0, 0, 0, 0.19) !important;
-  top: 76px !important;
+  top: 77px !important;
   width: 192px !important;
-  left: -22px !important;
+  left: 30px !important;
 }
 
 .login-text, .signup-text{
@@ -47,13 +46,14 @@
   padding: 10px 0px 10px 20px;
   font-size: 48px;
   letter-spacing: 2px;
+  cursor: pointer;
 }
 
 .profile-circle {
   width: 50px;
   height: 50px;
   margin-right: 20px;
-  margin-top: 13px;
+  margin-top: 14px;
   border-radius: 50%;
 }
 
@@ -62,12 +62,17 @@
 	max-height: 100%;
   border: white solid 2px;
   border-radius: 50%;
+  cursor: pointer;
 }
 
 .username-text {
-  margin-top: 27px;
   position: relative;
+  display: flex;
+  align-items: center;
   left: -10px;
+  cursor: pointer;
+  height: 20px;
+  top: 29px;
 }
 
 .arrow-up {
@@ -105,4 +110,22 @@
   display: flex;
   justify-content: flex-start;
   align-items: center;
+}
+
+.upload-text{
+  display: flex;
+  align-items: center;
+  position: relative;
+  justify-content: center;
+  left: -25px;
+}
+
+.splashbar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.hidden {
+  opacity: 0;
 }

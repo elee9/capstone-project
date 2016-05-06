@@ -28,6 +28,25 @@ module.exports = {
 			actionType: PhotoConstants.REMOVE_PHOTO,
 			photo: photo
 		});
-	}
+	},
 
+  receivePublicImageUrl: function(publicUrl) {
+    AppDispatcher.dispatch({
+      actionType: PhotoConstants.PUBLIC_IMAGE_URL_RECEIVED,
+      publicUrl: publicUrl
+    });
+  },
+
+  receivePresignedURL: function(presignedUrl) {
+    AppDispatcher.dispatch({
+      actionType: PhotoConstants.PRESIGNED_URL_RECEIEVED,
+      presignedUrl: presignedUrl
+    });
+  },
+
+  clearUploadStore: function() {
+    AppDispatcher.dispatch({
+      actionType: PhotoConstants.CLEAR_UPLOAD_STORE
+    });
+  }
 };

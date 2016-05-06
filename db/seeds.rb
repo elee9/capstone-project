@@ -11,9 +11,9 @@ PHOTO_URLS = ["https://images.unsplash.com/photo-1459664018906-085c36f472af?ixli
   "https://images.unsplash.com/photo-1431576901776-e539bd916ba2?ixlib=rb-0.3.5&q=80&fm=jpg&crop=entropy&w=1080&fit=max&s=47d289aab516853866fd57d2312fd101",
   "https://images.unsplash.com/photo-1416169607655-0c2b3ce2e1cc?ixlib=rb-0.3.5&q=80&fm=jpg&crop=entropy&w=1080&fit=max&s=3cd382936e9c68cf7ece9c8883d40db4",
   "https://images.unsplash.com/photo-1453230806017-56d81464b6c5?ixlib=rb-0.3.5&q=80&fm=jpg&crop=entropy&w=1080&fit=max&s=b135939883e8a42fdd8fdcc7ef1f3fb4",
-  "http://i.imgur.com/blbgF7k.jpg",
-  "http://i.imgur.com/CzcmeSt.jpg",
-  "http://i.imgur.com/oCLeyEy.jpg"]
+  "https://i.imgur.com/blbgF7k.jpg",
+  "https://i.imgur.com/CzcmeSt.jpg",
+  "https://i.imgur.com/oCLeyEy.jpg"]
 
 PHOTO_TITLES = ["Botanical Beauty",
   "Take the Leap",
@@ -35,16 +35,16 @@ PHOTO_DESCRIPTIONS = ["From the gardens of Denmark.",
   "Cheesy, crispy, and garlicky. Just the way I like it.",
   "Dusk's fiery beauty."]
 
-User.create!({username: 'demothedog', first_name: 'demo', last_name: 'thedog',
-              email: 'demothedog@gmail.com', profile_pic: "http://i.imgur.com/LdpbHK4.jpg",
+User.create!({username: 'demothedog', first_name: 'Demo', last_name: 'the Dog',
+              email: 'demothedog@gmail.com', profile_pic: "https://i.imgur.com/LdpbHK4.jpg",
               password: 'demodemo', bio: 'Hi! I\'m Demo the Dog!'})
 
-User.create!({username: 'bihnkim', first_name: 'bihn', last_name: 'kim',
-              email: 'bihnkim@gmail.com', profile_pic: "https://photos-2.dropbox.com/t/2/AADfuF6sl2MZFtIjHmSENsUgcjcaNEnw00PqSbiGFxxB4g/12/4184880/png/32x32/1/_/1/2/Screenshot%202016-05-03%2011.51.20.png/ENeNkgMY2TwgBygH/0b-BjwZk3JvFrNJclLx0zU2uLCyBmEIWasffnSu8XIk?size_mode=5",
+User.create!({username: 'bihnkim', first_name: 'Bihn', last_name: 'Kim',
+              email: 'bihnkim@gmail.com', profile_pic: "https://i.imgur.com/Kaq8tNR.png",
               password: 'datboioshitwaddup', bio: 'I\'m DAT BOI. O shit waddup!'})
 
-User.create!({username: 'kasper', first_name: 'kasper', last_name: 'kuo',
-              email: 'kasperkuo@gmail.com', profile_pic: "https://photos-6.dropbox.com/t/2/AACx9QwT72qmm9NHNhaxbXK9-oHr6fLY_UxC4AhX0VgnbQ/12/4184880/png/32x32/1/_/1/2/Screenshot%202016-05-03%2011.54.22.png/ENeNkgMY2jwgBygH/Rb4xZVRFLlX64lENq06tdpNyA3E74S6GgEdF4AEAvdA?size_mode=5",
+User.create!({username: 'kaspertheghost', first_name: 'Kasper', last_name: 'Kuo',
+              email: 'kasperkuo@gmail.com', profile_pic: "https://i.imgur.com/qQt5mGN.png",
               password: 'artistlyfe', bio: 'I am an ARTIST!!!'})
 
 PHOTO_URLS.each_with_index do |el, i|

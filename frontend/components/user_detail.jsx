@@ -12,7 +12,7 @@ var UserDetail = React.createClass({
   },
 
 	handleClick: function(){
-		this.history.push("users/"+this.props.user.id);
+		browserHistory.push("/users/" + this.props.user.id);
 	},
 
 	render: function() {

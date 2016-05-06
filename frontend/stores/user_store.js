@@ -1,30 +1,27 @@
 var AppDispatcher = require('../dispatcher/dispatcher'),
     Store = require('flux/utils').Store,
-    UserConstants = require('../constants/session_constants');
+    UserConstants = require('../constants/user_constants');
 
 var UserStore = new Store(AppDispatcher);
 
-var _users = {};
+var _user;
 
-var resetUsers = function(users) {
-  _users = {};
-
-  users.forEach(function(user) {
-    _users[user.id] = user;
-  });
+UserStore.getUser = function() {
+  return _user;
 };
 
-UserStore.all = function() {
-  return Object.keys(_users).map(function(userId) {
-    return _users[userId];
-  });
+var updateUser = function(user) {
+  _user = undefined;
+  _user = user;
 };
 
 UserStore.__onDispatch = function(payload) {
   switch (payload.actionType) {
-    case UserConstants.RECEIVE_USERS:
-      resetUsers(payload.users);
+    case UserConstants.RECEIVE_USER:
+      updateUser(payload.user);
       UserStore.__emitChange();
       break;
   }
 };
+
+module.exports = UserStore;

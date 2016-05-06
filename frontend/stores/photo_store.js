@@ -22,21 +22,21 @@ PhotoStore.find = function(id) {
 PhotoStore.__onDispatch = function(payload) {
   switch (payload.actionType) {
     case PhotoConstants.RECEIVE_ALL_PHOTOS:
-    resetPhotos(payload.photos);
-    PhotoStore.__emitChange();
-    break;
+      resetPhotos(payload.photos);
+      PhotoStore.__emitChange();
+      break;
     case PhotoConstants.RECEIVE_PHOTO:
-    setPhoto(payload.photo);
-    PhotoStore.__emitChange();
-    break;
+      setPhoto(payload.photo);
+      PhotoStore.__emitChange();
+      break;
     case PhotoConstants.UPDATE_PHOTO:
-    updatePhoto(payload.photo);
-    PhotoStore.__emitChange();
-    break;
+      updatePhoto(payload.photo);
+      PhotoStore.__emitChange();
+      break;
     case PhotoConstants.DELETE_PHOTO:
-    deletePhoto(payload.photo);
-    PhotoStore.__emitChange();
-    break;
+      deletePhoto(payload.photo);
+      PhotoStore.__emitChange();
+      break;
   }
 };
 
@@ -45,7 +45,7 @@ function resetPhotos(photos){
 }
 
 function setPhoto(photo){
-	_photo = photo;
+	_photos.push(photo);
 }
 
 function updatePhoto(photo){

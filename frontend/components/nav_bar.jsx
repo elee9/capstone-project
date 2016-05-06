@@ -4,7 +4,8 @@ var React = require('react'),
     SessionApiUtil = require('../util/session_api_util'),
     ReactRouter = require('react-router'),
     browserHistory = ReactRouter.browserHistory,
-    Signup = require('./signup');
+    Signup = require('./signup'),
+    PhotoUpload = require('./photo_upload');
 
 
 
@@ -25,10 +26,20 @@ module.exports = React.createClass({
     this.context.router.push('/');
   },
 
+  profile: function (event) {
+    event.preventDefault();
+    this.context.router.push('/users/' + this.state.currentUser.id);
+  },
+
+  handleClick: function() {
+    this.context.router.push('/index');
+  },
+
   render: function() {
     var auth;
 
     var onSplash;
+    var uploadOnIndex;
 
     if (document.location.pathname === '/') {
       onSplash = 'navbar onsplash';
@@ -36,23 +47,30 @@ module.exports = React.createClass({
       onSplash = 'navbar';
     }
 
+    if (document.location.pathname === '/index') {
+      uploadOnIndex = <PhotoUpload onIndex='true'/>;
+    } else {
+      uploadOnIndex = <PhotoUpload onIndex='false'/>;
+    }
+
     if (this.state.currentUser) {
           auth = (<div className='profile'>
+                    <div className='upload-text'>{uploadOnIndex}</div>
                     <ul id='dropdown1' className='dropdown-content dropdown-loggedin'>
                       <li className='divider'/>
-                      <li className='dropdown-item'><i className="material-icons dropdown-icon">perm_identity</i>Profile</li>
+                      <li className='dropdown-item' onClick={this.profile}><i className="material-icons dropdown-icon">perm_identity</i>Profile</li>
                       <li className='divider'/>
                       <li className='dropdown-item'><i className="material-icons dropdown-icon">settings</i>Settings</li>
                       <li className='divider'/>
                       <li className='dropdown-item' onClick={this.logout}><i className="material-icons dropdown-icon">input</i>Sign Out</li>
                     </ul>
-                    <a className='dropdown-button username-text' data-activates='dropdown1'>{this.state.currentUser.username}</a>
+                    <div className='dropdown-button username-text' data-activates='dropdown1'>{this.state.currentUser.username}</div>
                     <a className='dropdown-button profile-circle' data-activates='dropdown1'>
                       <img src={this.state.currentUser.profile_pic}/>
                     </a>
                   </div>);
     } else {
-      auth = (<div>
+      auth = (<div className='splashbar'>
                 <div className='signup-text'><Signup/></div>
                 <div className='login-text'><Login/></div>
               </div>);
@@ -60,7 +78,7 @@ module.exports = React.createClass({
 
     return (
       <div className={onSplash}>
-        <div className='logo'>PYXELS</div>
+        <div className='logo' onClick={this.handleClick}>PYXELS</div>
         <div>{auth}</div>
       </div>
     );

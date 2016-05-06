@@ -8,6 +8,8 @@ var React = require('react'),
     browserHistory = ReactRouter.browserHistory,
     SessionApiUtil = require('./util/session_api_util');
 
+    window.ApiUtil = require('./util/api_util');
+
 var App = require('./components/app'),
     Splash = require('./components/splash'),
     Login = require('./components/login'),

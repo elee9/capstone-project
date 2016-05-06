@@ -54,13 +54,15 @@
 	    browserHistory = ReactRouter.browserHistory,
 	    SessionApiUtil = __webpack_require__(220);
 	
-	var App = __webpack_require__(227),
-	    Splash = __webpack_require__(259),
-	    Login = __webpack_require__(228),
-	    Signup = __webpack_require__(258),
-	    PhotoIndex = __webpack_require__(260),
-	    PhotoDetail = __webpack_require__(275),
-	    UserProfile = __webpack_require__(281);
+	window.ApiUtil = __webpack_require__(227);
+	
+	var App = __webpack_require__(230),
+	    Splash = __webpack_require__(265),
+	    Login = __webpack_require__(231),
+	    Signup = __webpack_require__(261),
+	    PhotoIndex = __webpack_require__(266),
+	    PhotoDetail = __webpack_require__(278),
+	    UserProfile = __webpack_require__(285);
 	
 	var Router = React.createElement(
 	  Router,
@@ -25618,10 +25620,201 @@
 /* 227 */
 /***/ function(module, exports, __webpack_require__) {
 
+	var AppDispatcher = __webpack_require__(221),
+	    PhotoActions = __webpack_require__(228),
+	    UserActions = __webpack_require__(292);
+	
+	module.exports = {
+	  fetchAllPhotos: function () {
+	    $.ajax({
+	      url: '/api/photos',
+	      datatype: 'json',
+	      success: function (photos) {
+	        PhotoActions.receivePhotos(photos);
+	      }
+	    });
+	  },
+	
+	  fetchPhoto: function (id) {
+	    $.ajax({
+	      url: 'api/photos' + id,
+	      datatype: 'json',
+	      success: function (photo) {
+	        PhotoActions.receivePhoto(photo);
+	      }
+	    });
+	  },
+	
+	  createPhoto: function (params, callback) {
+	    $.ajax({
+	      url: 'api/photos',
+	      method: 'post',
+	      datatype: 'json',
+	      data: { photo: params },
+	      success: function (photos) {
+	        callback();
+	        PhotoActions.receivePhotos(photos);
+	      }
+	    });
+	  },
+	
+	  updatePhoto: function (id, params, callback) {
+	    $.ajax({
+	      url: 'api/photos' + id,
+	      method: 'patch',
+	      datatype: 'json',
+	      success: function (photo) {
+	        PhotoActions.updatePhoto(photo);
+	        callback();
+	      }
+	    });
+	  },
+	
+	  deletePhoto: function (id) {
+	    $.ajax({
+	      url: 'api/photos' + id,
+	      method: 'delete',
+	      datatype: 'json',
+	      success: function (photo) {
+	        PhotoActions.removePhoto(photo);
+	      }
+	    });
+	  },
+	
+	  createComment: function (params) {
+	    $.ajax({
+	      url: "/api/comments",
+	      data: { comment: params },
+	      type: "POST",
+	      datatype: "json",
+	      success: function (photo) {
+	        PhotoActions.updatePhoto(photo);
+	      }
+	    });
+	  },
+	
+	  getPresignedUrl: function (data, callback) {
+	    $.ajax({
+	      url: 'api/upload',
+	      method: 'GET',
+	      data: { prefix: data.prefix, filename: data.filename },
+	      success: function (url) {
+	        callback(url);
+	      }
+	    });
+	  },
+	
+	  uploadToS3: function (file, url) {
+	    var presignedUrl = url.presigned_url;
+	    var publicUrl = url.public_url;
+	    var filetype = file.type;
+	
+	    var xhr = new XMLHttpRequest();
+	    xhr.open('PUT', presignedUrl, true);
+	    xhr.setRequestHeader("Content-Type", filetype);
+	
+	    xhr.onreadystatechange = function () {
+	      if (xhr.readyState === XMLHttpRequest.DONE) {
+	        // if (file.type.match(/^audio.*$/) !== null) {
+	        //   UserActions.receivePublicAudioUrl(publicUrl);
+	        // } else {
+	        PhotoActions.receivePublicImageUrl(publicUrl);
+	        // }
+	      }
+	    };
+	    xhr.send(file);
+	  },
+	
+	  fetchUser: function (id) {
+	    $.ajax({
+	      url: "/api/users/" + id,
+	      method: "GET",
+	      success: function (user) {
+	        UserActions.receiveUser(user);
+	      }
+	    });
+	  }
+	};
+
+/***/ },
+/* 228 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var AppDispatcher = __webpack_require__(221),
+	    PhotoConstants = __webpack_require__(229);
+	
+	module.exports = {
+		receivePhotos: function (photos) {
+			AppDispatcher.dispatch({
+				actionType: PhotoConstants.RECEIVE_ALL_PHOTOS,
+				photos: photos
+			});
+		},
+	
+		receivePhoto: function (photo) {
+			AppDispatcher.dispatch({
+				actionType: PhotoConstants.RECEIVE_PHOTO,
+				photo: photo
+			});
+		},
+	
+		updatePhoto: function (photo) {
+			AppDispatcher.dispatch({
+				actionType: PhotoConstants.UPDATE_PHOTO,
+				photo: photo
+			});
+		},
+	
+		removePhoto: function (photo) {
+			AppDispatcher.dispatch({
+				actionType: PhotoConstants.REMOVE_PHOTO,
+				photo: photo
+			});
+		},
+	
+		receivePublicImageUrl: function (publicUrl) {
+			AppDispatcher.dispatch({
+				actionType: PhotoConstants.PUBLIC_IMAGE_URL_RECEIVED,
+				publicUrl: publicUrl
+			});
+		},
+	
+		receivePresignedURL: function (presignedUrl) {
+			AppDispatcher.dispatch({
+				actionType: PhotoConstants.PRESIGNED_URL_RECEIEVED,
+				presignedUrl: presignedUrl
+			});
+		},
+	
+		clearUploadStore: function () {
+			AppDispatcher.dispatch({
+				actionType: PhotoConstants.CLEAR_UPLOAD_STORE
+			});
+		}
+	};
+
+/***/ },
+/* 229 */
+/***/ function(module, exports) {
+
+	module.exports = {
+		RECEIVE_ALL_PHOTOS: "RECEIVE_ALL_PHOTOS",
+		RECEIVE_PHOTO: "RECEIVE_PHOTO",
+		UPDATE_PHOTO: "UPDATE_PHOTO",
+		REMOVE_PHOTO: "REMOVE_PHOTO",
+		PUBLIC_IMAGE_URL_RECEIVED: "PUBLIC_IMAGE_URL_RECEIVED",
+		PRESIGNED_URL_RECEIEVED: "PRESIGNED_URL_RECEIEVED",
+		CLEAR_UPLOAD_STORE: "CLEAR_UPLOAD_STORE"
+	};
+
+/***/ },
+/* 230 */
+/***/ function(module, exports, __webpack_require__) {
+
 	var React = __webpack_require__(1),
-	    Login = __webpack_require__(228),
+	    Login = __webpack_require__(231),
 	    Link = __webpack_require__(159).Link,
-	    NavBar = __webpack_require__(257);
+	    NavBar = __webpack_require__(260);
 	
 	module.exports = React.createClass({
 	  displayName: 'exports',
@@ -25637,15 +25830,15 @@
 	});
 
 /***/ },
-/* 228 */
+/* 231 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1),
 	    Link = __webpack_require__(159).Link,
 	    SessionApiUtil = __webpack_require__(220),
-	    CurrentUserState = __webpack_require__(229),
-	    SessionStore = __webpack_require__(230),
-	    Modal = __webpack_require__(248);
+	    CurrentUserState = __webpack_require__(232),
+	    SessionStore = __webpack_require__(233),
+	    Modal = __webpack_require__(251);
 	
 	module.exports = React.createClass({
 	  displayName: 'exports',
@@ -25851,10 +26044,10 @@
 	});
 
 /***/ },
-/* 229 */
+/* 232 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var SessionStore = __webpack_require__(230),
+	var SessionStore = __webpack_require__(233),
 	    SessionApiUtil = __webpack_require__(220);
 	
 	var CurrentUserState = {
@@ -25885,11 +26078,11 @@
 	module.exports = CurrentUserState;
 
 /***/ },
-/* 230 */
+/* 233 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var AppDispatcher = __webpack_require__(221),
-	    Store = __webpack_require__(231).Store,
+	    Store = __webpack_require__(234).Store,
 	    SessionConstants = __webpack_require__(225);
 	
 	var SessionStore = new Store(AppDispatcher);
@@ -25950,7 +26143,7 @@
 	module.exports = SessionStore;
 
 /***/ },
-/* 231 */
+/* 234 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -25962,15 +26155,15 @@
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 */
 	
-	module.exports.Container = __webpack_require__(232);
-	module.exports.MapStore = __webpack_require__(235);
-	module.exports.Mixin = __webpack_require__(247);
-	module.exports.ReduceStore = __webpack_require__(236);
-	module.exports.Store = __webpack_require__(237);
+	module.exports.Container = __webpack_require__(235);
+	module.exports.MapStore = __webpack_require__(238);
+	module.exports.Mixin = __webpack_require__(250);
+	module.exports.ReduceStore = __webpack_require__(239);
+	module.exports.Store = __webpack_require__(240);
 
 
 /***/ },
-/* 232 */
+/* 235 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -25992,10 +26185,10 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var FluxStoreGroup = __webpack_require__(233);
+	var FluxStoreGroup = __webpack_require__(236);
 	
 	var invariant = __webpack_require__(224);
-	var shallowEqual = __webpack_require__(234);
+	var shallowEqual = __webpack_require__(237);
 	
 	var DEFAULT_OPTIONS = {
 	  pure: true,
@@ -26153,7 +26346,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 233 */
+/* 236 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -26234,7 +26427,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 234 */
+/* 237 */
 /***/ function(module, exports) {
 
 	/**
@@ -26289,7 +26482,7 @@
 	module.exports = shallowEqual;
 
 /***/ },
-/* 235 */
+/* 238 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -26310,8 +26503,8 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var FluxReduceStore = __webpack_require__(236);
-	var Immutable = __webpack_require__(246);
+	var FluxReduceStore = __webpack_require__(239);
+	var Immutable = __webpack_require__(249);
 	
 	var invariant = __webpack_require__(224);
 	
@@ -26439,7 +26632,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 236 */
+/* 239 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -26460,9 +26653,9 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var FluxStore = __webpack_require__(237);
+	var FluxStore = __webpack_require__(240);
 	
-	var abstractMethod = __webpack_require__(245);
+	var abstractMethod = __webpack_require__(248);
 	var invariant = __webpack_require__(224);
 	
 	var FluxReduceStore = (function (_FluxStore) {
@@ -26546,7 +26739,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 237 */
+/* 240 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -26565,7 +26758,7 @@
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 	
-	var _require = __webpack_require__(238);
+	var _require = __webpack_require__(241);
 	
 	var EventEmitter = _require.EventEmitter;
 	
@@ -26729,7 +26922,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 238 */
+/* 241 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -26742,14 +26935,14 @@
 	 */
 	
 	var fbemitter = {
-	  EventEmitter: __webpack_require__(239)
+	  EventEmitter: __webpack_require__(242)
 	};
 	
 	module.exports = fbemitter;
 
 
 /***/ },
-/* 239 */
+/* 242 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -26768,11 +26961,11 @@
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 	
-	var EmitterSubscription = __webpack_require__(240);
-	var EventSubscriptionVendor = __webpack_require__(242);
+	var EmitterSubscription = __webpack_require__(243);
+	var EventSubscriptionVendor = __webpack_require__(245);
 	
-	var emptyFunction = __webpack_require__(244);
-	var invariant = __webpack_require__(243);
+	var emptyFunction = __webpack_require__(247);
+	var invariant = __webpack_require__(246);
 	
 	/**
 	 * @class BaseEventEmitter
@@ -26946,7 +27139,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 240 */
+/* 243 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -26967,7 +27160,7 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var EventSubscription = __webpack_require__(241);
+	var EventSubscription = __webpack_require__(244);
 	
 	/**
 	 * EmitterSubscription represents a subscription with listener and context data.
@@ -26999,7 +27192,7 @@
 	module.exports = EmitterSubscription;
 
 /***/ },
-/* 241 */
+/* 244 */
 /***/ function(module, exports) {
 
 	/**
@@ -27053,7 +27246,7 @@
 	module.exports = EventSubscription;
 
 /***/ },
-/* 242 */
+/* 245 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -27072,7 +27265,7 @@
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 	
-	var invariant = __webpack_require__(243);
+	var invariant = __webpack_require__(246);
 	
 	/**
 	 * EventSubscriptionVendor stores a set of EventSubscriptions that are
@@ -27162,7 +27355,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 243 */
+/* 246 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -27217,7 +27410,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 244 */
+/* 247 */
 /***/ function(module, exports) {
 
 	/**
@@ -27259,7 +27452,7 @@
 	module.exports = emptyFunction;
 
 /***/ },
-/* 245 */
+/* 248 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -27286,7 +27479,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 246 */
+/* 249 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -32270,7 +32463,7 @@
 	}));
 
 /***/ },
-/* 247 */
+/* 250 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -32287,7 +32480,7 @@
 	
 	'use strict';
 	
-	var FluxStoreGroup = __webpack_require__(233);
+	var FluxStoreGroup = __webpack_require__(236);
 	
 	var invariant = __webpack_require__(224);
 	
@@ -32393,13 +32586,13 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 248 */
+/* 251 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
-	var modalFactory = __webpack_require__(249);
-	var insertKeyframesRule = __webpack_require__(254);
-	var appendVendorPrefix = __webpack_require__(251);
+	var modalFactory = __webpack_require__(252);
+	var insertKeyframesRule = __webpack_require__(257);
+	var appendVendorPrefix = __webpack_require__(254);
 	
 	var animation = {
 	    show: {
@@ -32545,12 +32738,12 @@
 
 
 /***/ },
-/* 249 */
+/* 252 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
-	var transitionEvents = __webpack_require__(250);
-	var appendVendorPrefix = __webpack_require__(251);
+	var transitionEvents = __webpack_require__(253);
+	var appendVendorPrefix = __webpack_require__(254);
 	
 	module.exports = function(animation){
 	
@@ -32729,7 +32922,7 @@
 
 
 /***/ },
-/* 250 */
+/* 253 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -32830,12 +33023,12 @@
 
 
 /***/ },
-/* 251 */
+/* 254 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var getVendorPropertyName = __webpack_require__(252);
+	var getVendorPropertyName = __webpack_require__(255);
 	
 	module.exports = function(target, sources) {
 	  var to = Object(target);
@@ -32866,12 +33059,12 @@
 
 
 /***/ },
-/* 252 */
+/* 255 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var builtinStyle = __webpack_require__(253);
+	var builtinStyle = __webpack_require__(256);
 	var prefixes = ['Moz', 'Webkit', 'O', 'ms'];
 	var domVendorPrefix;
 	
@@ -32909,7 +33102,7 @@
 
 
 /***/ },
-/* 253 */
+/* 256 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -32918,13 +33111,13 @@
 
 
 /***/ },
-/* 254 */
+/* 257 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var insertRule = __webpack_require__(255);
-	var vendorPrefix = __webpack_require__(256)();
+	var insertRule = __webpack_require__(258);
+	var vendorPrefix = __webpack_require__(259)();
 	var index = 0;
 	
 	module.exports = function(keyframes) {
@@ -32954,7 +33147,7 @@
 
 
 /***/ },
-/* 255 */
+/* 258 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -32979,7 +33172,7 @@
 
 
 /***/ },
-/* 256 */
+/* 259 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -32998,16 +33191,17 @@
 
 
 /***/ },
-/* 257 */
+/* 260 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1),
-	    Login = __webpack_require__(228),
-	    CurrentUserState = __webpack_require__(229),
+	    Login = __webpack_require__(231),
+	    CurrentUserState = __webpack_require__(232),
 	    SessionApiUtil = __webpack_require__(220),
 	    ReactRouter = __webpack_require__(159),
 	    browserHistory = ReactRouter.browserHistory,
-	    Signup = __webpack_require__(258);
+	    Signup = __webpack_require__(261),
+	    PhotoUpload = __webpack_require__(262);
 	
 	module.exports = React.createClass({
 	  displayName: 'exports',
@@ -33028,10 +33222,20 @@
 	    this.context.router.push('/');
 	  },
 	
+	  profile: function (event) {
+	    event.preventDefault();
+	    this.context.router.push('/users/' + this.state.currentUser.id);
+	  },
+	
+	  handleClick: function () {
+	    this.context.router.push('/index');
+	  },
+	
 	  render: function () {
 	    var auth;
 	
 	    var onSplash;
+	    var uploadOnIndex;
 	
 	    if (document.location.pathname === '/') {
 	      onSplash = 'navbar onsplash';
@@ -33039,17 +33243,28 @@
 	      onSplash = 'navbar';
 	    }
 	
+	    if (document.location.pathname === '/index') {
+	      uploadOnIndex = React.createElement(PhotoUpload, { onIndex: 'true' });
+	    } else {
+	      uploadOnIndex = React.createElement(PhotoUpload, { onIndex: 'false' });
+	    }
+	
 	    if (this.state.currentUser) {
 	      auth = React.createElement(
 	        'div',
 	        { className: 'profile' },
+	        React.createElement(
+	          'div',
+	          { className: 'upload-text' },
+	          uploadOnIndex
+	        ),
 	        React.createElement(
 	          'ul',
 	          { id: 'dropdown1', className: 'dropdown-content dropdown-loggedin' },
 	          React.createElement('li', { className: 'divider' }),
 	          React.createElement(
 	            'li',
-	            { className: 'dropdown-item' },
+	            { className: 'dropdown-item', onClick: this.profile },
 	            React.createElement(
 	              'i',
 	              { className: 'material-icons dropdown-icon' },
@@ -33081,7 +33296,7 @@
 	          )
 	        ),
 	        React.createElement(
-	          'a',
+	          'div',
 	          { className: 'dropdown-button username-text', 'data-activates': 'dropdown1' },
 	          this.state.currentUser.username
 	        ),
@@ -33094,7 +33309,7 @@
 	    } else {
 	      auth = React.createElement(
 	        'div',
-	        null,
+	        { className: 'splashbar' },
 	        React.createElement(
 	          'div',
 	          { className: 'signup-text' },
@@ -33113,7 +33328,7 @@
 	      { className: onSplash },
 	      React.createElement(
 	        'div',
-	        { className: 'logo' },
+	        { className: 'logo', onClick: this.handleClick },
 	        'PYXELS'
 	      ),
 	      React.createElement(
@@ -33127,13 +33342,13 @@
 	});
 
 /***/ },
-/* 258 */
+/* 261 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1),
 	    Link = __webpack_require__(159).Link,
 	    SessionApiUtil = __webpack_require__(220),
-	    Modal = __webpack_require__(248);
+	    Modal = __webpack_require__(251);
 	
 	module.exports = React.createClass({
 	  displayName: 'exports',
@@ -33179,6 +33394,12 @@
 	  },
 	
 	  showModal: function () {
+	    this.setState({ username: "" });
+	    this.setState({ password: "" });
+	    this.setState({ errors: [] });
+	    this.setState({ first_name: "" });
+	    this.setState({ last_name: "" });
+	    this.setState({ email: "" });
 	    this.refs.modal.show();
 	  },
 	
@@ -33188,115 +33409,100 @@
 	
 	  form: function () {
 	    return React.createElement(
-	      'div',
-	      null,
+	      Modal,
+	      { ref: 'modal' },
 	      React.createElement(
 	        'div',
-	        { onClick: this.showModal, className: 'beckiswrong' },
-	        'SIGN UP'
-	      ),
-	      React.createElement(
-	        Modal,
-	        { ref: 'modal', className: 'signupModal' },
+	        { className: 'row signupModal' },
 	        React.createElement(
 	          'div',
-	          { className: 'row' },
+	          { className: 'signupText' },
+	          'SIGN UP'
+	        ),
+	        React.createElement(
+	          'form',
+	          { onSubmit: this.handleSubmit, className: 'signupForm' },
 	          React.createElement(
 	            'div',
-	            { className: 'signupText' },
-	            'Sign Up'
+	            { className: 'row' },
+	            React.createElement(
+	              'div',
+	              { className: 'input-field col s12 inputText' },
+	              React.createElement('input', { type: 'text', id: 'username',
+	                onChange: this.updateUsername,
+	                value: this.state.username }),
+	              React.createElement(
+	                'label',
+	                { id: 'userlabel', htmlFor: 'username' },
+	                'Username'
+	              )
+	            )
 	          ),
 	          React.createElement(
-	            'form',
-	            { onSubmit: this.handleSubmit, className: 'signupForm' },
+	            'div',
+	            { className: 'row' },
 	            React.createElement(
 	              'div',
-	              { className: 'row' },
+	              { className: 'input-field col s6 inputText' },
+	              React.createElement('input', { type: 'text', id: 'first_name',
+	                onChange: this.updateFirstName,
+	                value: this.state.first_name }),
 	              React.createElement(
-	                'div',
-	                { className: 'input-field col s6 inputText' },
-	                React.createElement('input', { type: 'text', id: 'username',
-	                  onChange: this.updateUsername,
-	                  value: this.state.username }),
-	                React.createElement(
-	                  'label',
-	                  { id: 'userlabel', htmlFor: 'username' },
-	                  'Username'
-	                )
+	                'label',
+	                { htmlFor: 'first_name' },
+	                'First Name'
 	              )
 	            ),
 	            React.createElement(
 	              'div',
-	              { className: 'row' },
+	              { className: 'input-field col s6 inputText' },
+	              React.createElement('input', { type: 'text', id: 'last_name',
+	                onChange: this.updateLastName,
+	                value: this.state.last_name }),
 	              React.createElement(
-	                'div',
-	                { className: 'input-field col s6 inputText' },
-	                React.createElement('input', { type: 'text', id: 'first_name',
-	                  onChange: this.updateFirstName,
-	                  value: this.state.first_name }),
-	                React.createElement(
-	                  'label',
-	                  { htmlFor: 'first_name' },
-	                  'First Name'
-	                )
-	              ),
-	              React.createElement(
-	                'div',
-	                { className: 'input-field col s6 inputText' },
-	                React.createElement('input', { type: 'text', id: 'last_name',
-	                  onChange: this.updateLastName,
-	                  value: this.state.last_name }),
-	                React.createElement(
-	                  'label',
-	                  { htmlFor: 'last_name' },
-	                  'Last Name'
-	                )
+	                'label',
+	                { htmlFor: 'last_name' },
+	                'Last Name'
 	              )
-	            ),
-	            React.createElement(
-	              'div',
-	              { className: 'row' },
-	              React.createElement(
-	                'div',
-	                { className: 'input-field col s6 inputText' },
-	                React.createElement('input', { type: 'text', id: 'email',
-	                  onChange: this.updatePassword,
-	                  value: this.state.email }),
-	                React.createElement(
-	                  'label',
-	                  { htmlFor: 'email' },
-	                  'Email'
-	                )
-	              )
-	            ),
-	            React.createElement(
-	              'div',
-	              { className: 'row' },
-	              React.createElement(
-	                'div',
-	                { className: 'input-field col s6 inputText' },
-	                React.createElement('input', { type: 'password', id: 'password',
-	                  onChange: this.updatePassword,
-	                  value: this.state.password }),
-	                React.createElement(
-	                  'label',
-	                  { id: 'passlabel', htmlFor: 'password' },
-	                  'Password'
-	                )
-	              )
-	            ),
-	            React.createElement(
-	              'button',
-	              { type: 'submit', name: 'action', value: 'submit',
-	                className: 'waves-effect waves-light btn right' },
-	              'Log In'
-	            ),
-	            React.createElement(
-	              'button',
-	              { onClick: this.guestLogin,
-	                className: 'waves-effect waves-light btn left' },
-	              'Guest'
 	            )
+	          ),
+	          React.createElement(
+	            'div',
+	            { className: 'row' },
+	            React.createElement(
+	              'div',
+	              { className: 'input-field col s12 inputText' },
+	              React.createElement('input', { type: 'text', id: 'email',
+	                onChange: this.updateEmail,
+	                value: this.state.email }),
+	              React.createElement(
+	                'label',
+	                { htmlFor: 'email' },
+	                'Email'
+	              )
+	            )
+	          ),
+	          React.createElement(
+	            'div',
+	            { className: 'row' },
+	            React.createElement(
+	              'div',
+	              { className: 'input-field col s12 inputText' },
+	              React.createElement('input', { type: 'password', id: 'password',
+	                onChange: this.updatePassword,
+	                value: this.state.password }),
+	              React.createElement(
+	                'label',
+	                { id: 'passlabel', htmlFor: 'password' },
+	                'Password'
+	              )
+	            )
+	          ),
+	          React.createElement(
+	            'button',
+	            { type: 'submit', name: 'action', value: 'submit',
+	              className: 'waves-effect waves-light btn' },
+	            'Log In'
 	          )
 	        )
 	      )
@@ -33307,13 +33513,615 @@
 	    return React.createElement(
 	      'div',
 	      null,
-	      this.form()
+	      this.form(),
+	      React.createElement(
+	        'div',
+	        { onClick: this.showModal, className: 'beckiswrong' },
+	        'SIGN UP'
+	      )
 	    );
 	  }
 	});
 
 /***/ },
-/* 259 */
+/* 262 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1),
+	    UploadStore = __webpack_require__(286),
+	    SessionStore = __webpack_require__(233),
+	    Dropzone = __webpack_require__(263),
+	    PhotoActions = __webpack_require__(228),
+	    UploadActions = __webpack_require__(264),
+	    Modal = __webpack_require__(251),
+	    ApiUtil = __webpack_require__(227);
+	
+	var PhotoUpload = React.createClass({
+	  displayName: 'PhotoUpload',
+	
+	  getInitialState: function () {
+	    return {
+	      title: "",
+	      description: "",
+	      image_url: "",
+	      errors: []
+	    };
+	  },
+	
+	  componentDidMount: function () {
+	    this.uploadListener = UploadStore.addListener(this.onPhotoUpload);
+	  },
+	
+	  onPhotoUpload: function () {
+	    this.setState({ image_url: UploadStore.getImageUrl() });
+	    document.getElementById('submitPhoto').disabled = false;
+	  },
+	
+	  componentWillUnmount: function () {
+	    this.uploadListener.remove();
+	  },
+	
+	  handleImageUpload: function (file) {
+	    document.getElementById('submitPhoto').disabled = true;
+	    if (/\.(gif|jpg|jpeg|tiff|png)$/i.test(file[0].name)) {
+	      UploadActions.fetchPresignedUrl('photos/', file[0].name, file[0]);
+	    } else {
+	      console.log("asdfasdf");
+	    }
+	  },
+	
+	  showModal: function () {
+	    this.setState({ title: "" });
+	    this.setState({ description: "" });
+	    this.setState({ image_url: "" });
+	    this.setState({ errors: [] });
+	    this.refs.modal.show();
+	  },
+	
+	  hideModal: function () {
+	    this.refs.modal.hide();
+	  },
+	
+	  errors: function () {
+	    if (!this.state.errors) {
+	      return;
+	    }
+	    var self = this;
+	    return React.createElement(
+	      'ul',
+	      null,
+	      this.state.errors.map(function (el, i) {
+	        return React.createElement(
+	          'li',
+	          { className: 'error', key: i },
+	          el
+	        );
+	      })
+	    );
+	  },
+	
+	  updateTitle: function (event) {
+	    this.setState({ title: event.target.value });
+	  },
+	
+	  updateDescription: function (event) {
+	    this.setState({ description: event.target.value });
+	  },
+	
+	  handleSubmit: function (event) {
+	    if (event) {
+	      event.preventDefault();
+	    }
+	    var that = this;
+	
+	    var photo = {
+	      title: this.state.title,
+	      description: this.state.description,
+	      photo_url: this.state.image_url
+	    };
+	    console.log(photo);
+	    ApiUtil.createPhoto(photo, function () {
+	      this.hideModal();
+	    }.bind(this));
+	  },
+	
+	  dropzone: function () {
+	    if (this.state.image_url) {
+	      return React.createElement('img', { className: 'upload-image', ref: 'img', src: this.state.image_url });
+	    } else {
+	      return React.createElement(
+	        Dropzone,
+	        { className: 'drop-zone', activeClassName: 'drop-activated', onDrop: this.handleImageUpload, multiple: false, accept: 'image/*' },
+	        React.createElement(
+	          'div',
+	          { className: 'drop-text' },
+	          'Drag and drop your photo here.'
+	        )
+	      );
+	    }
+	  },
+	
+	  form: function () {
+	    return React.createElement(
+	      Modal,
+	      { ref: 'modal' },
+	      React.createElement(
+	        'div',
+	        { className: 'row uploadModal' },
+	        React.createElement(
+	          'div',
+	          { className: 'loginText' },
+	          'UPLOAD'
+	        ),
+	        this.errors(),
+	        React.createElement(
+	          'form',
+	          { onSubmit: this.handleSubmit, className: 'loginForm' },
+	          React.createElement(
+	            'div',
+	            { className: 'row' },
+	            React.createElement(
+	              'div',
+	              { className: 'input-field inputText' },
+	              React.createElement('input', { type: 'text', id: 'title', onChange: this.updateTitle, value: this.state.title }),
+	              React.createElement(
+	                'label',
+	                { id: 'userlabel', htmlFor: 'title' },
+	                'Title'
+	              )
+	            )
+	          ),
+	          React.createElement(
+	            'div',
+	            { className: 'row' },
+	            React.createElement(
+	              'div',
+	              { className: 'input-field inputText' },
+	              React.createElement('input', { type: 'text', id: 'description', onChange: this.updateDescription, value: this.state.description }),
+	              React.createElement(
+	                'label',
+	                { id: 'passlabel', htmlFor: 'description' },
+	                'Description'
+	              )
+	            )
+	          ),
+	          this.dropzone(),
+	          React.createElement(
+	            'button',
+	            { type: 'submit', id: 'submitPhoto', disabled: 'true', name: 'action', value: 'submit', className: 'waves-effect waves-light btn' },
+	            'Upload Photo'
+	          )
+	        )
+	      )
+	    );
+	  },
+	
+	  render: function () {
+	    var uploadShow;
+	
+	    if (this.props.onIndex === 'true') {
+	      uploadShow = 'beckiswrong uploadText';
+	    } else {
+	      uploadShow = 'beckiswrong uploadText hidden';
+	    }
+	
+	    return React.createElement(
+	      'div',
+	      null,
+	      React.createElement(
+	        'div',
+	        null,
+	        React.createElement(
+	          'div',
+	          { onClick: this.showModal, className: uploadShow },
+	          'upload'
+	        ),
+	        this.form()
+	      )
+	    );
+	  }
+	
+	});
+	
+	module.exports = PhotoUpload;
+
+/***/ },
+/* 263 */
+/***/ function(module, exports, __webpack_require__) {
+
+	(function webpackUniversalModuleDefinition(root, factory) {
+		if(true)
+			module.exports = factory(__webpack_require__(1));
+		else if(typeof define === 'function' && define.amd)
+			define(["react"], factory);
+		else if(typeof exports === 'object')
+			exports["Dropzone"] = factory(require("react"));
+		else
+			root["Dropzone"] = factory(root["react"]);
+	})(this, function(__WEBPACK_EXTERNAL_MODULE_2__) {
+	return /******/ (function(modules) { // webpackBootstrap
+	/******/ 	// The module cache
+	/******/ 	var installedModules = {};
+	/******/
+	/******/ 	// The require function
+	/******/ 	function __webpack_require__(moduleId) {
+	/******/
+	/******/ 		// Check if module is in cache
+	/******/ 		if(installedModules[moduleId])
+	/******/ 			return installedModules[moduleId].exports;
+	/******/
+	/******/ 		// Create a new module (and put it into the cache)
+	/******/ 		var module = installedModules[moduleId] = {
+	/******/ 			exports: {},
+	/******/ 			id: moduleId,
+	/******/ 			loaded: false
+	/******/ 		};
+	/******/
+	/******/ 		// Execute the module function
+	/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+	/******/
+	/******/ 		// Flag the module as loaded
+	/******/ 		module.loaded = true;
+	/******/
+	/******/ 		// Return the exports of the module
+	/******/ 		return module.exports;
+	/******/ 	}
+	/******/
+	/******/
+	/******/ 	// expose the modules object (__webpack_modules__)
+	/******/ 	__webpack_require__.m = modules;
+	/******/
+	/******/ 	// expose the module cache
+	/******/ 	__webpack_require__.c = installedModules;
+	/******/
+	/******/ 	// __webpack_public_path__
+	/******/ 	__webpack_require__.p = "";
+	/******/
+	/******/ 	// Load entry module and return exports
+	/******/ 	return __webpack_require__(0);
+	/******/ })
+	/************************************************************************/
+	/******/ ([
+	/* 0 */
+	/***/ function(module, exports, __webpack_require__) {
+	
+		'use strict';
+		
+		Object.defineProperty(exports, "__esModule", {
+		  value: true
+		});
+		
+		var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+		
+		var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+		
+		var _attrAccept = __webpack_require__(1);
+		
+		var _attrAccept2 = _interopRequireDefault(_attrAccept);
+		
+		var _react = __webpack_require__(2);
+		
+		var _react2 = _interopRequireDefault(_react);
+		
+		function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+		
+		function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
+		
+		function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+		
+		function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+		
+		function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+		
+		var supportMultiple = typeof document !== 'undefined' && document && document.createElement ? 'multiple' in document.createElement('input') : true;
+		
+		var Dropzone = function (_React$Component) {
+		  _inherits(Dropzone, _React$Component);
+		
+		  function Dropzone(props, context) {
+		    _classCallCheck(this, Dropzone);
+		
+		    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Dropzone).call(this, props, context));
+		
+		    _this.onClick = _this.onClick.bind(_this);
+		    _this.onDragEnter = _this.onDragEnter.bind(_this);
+		    _this.onDragLeave = _this.onDragLeave.bind(_this);
+		    _this.onDragOver = _this.onDragOver.bind(_this);
+		    _this.onDrop = _this.onDrop.bind(_this);
+		
+		    _this.state = {
+		      isDragActive: false
+		    };
+		    return _this;
+		  }
+		
+		  _createClass(Dropzone, [{
+		    key: 'componentDidMount',
+		    value: function componentDidMount() {
+		      this.enterCounter = 0;
+		    }
+		  }, {
+		    key: 'onDragEnter',
+		    value: function onDragEnter(e) {
+		      e.preventDefault();
+		
+		      // Count the dropzone and any children that are entered.
+		      ++this.enterCounter;
+		
+		      // This is tricky. During the drag even the dataTransfer.files is null
+		      // But Chrome implements some drag store, which is accesible via dataTransfer.items
+		      var dataTransferItems = e.dataTransfer && e.dataTransfer.items ? e.dataTransfer.items : [];
+		
+		      // Now we need to convert the DataTransferList to Array
+		      var allFilesAccepted = this.allFilesAccepted(Array.prototype.slice.call(dataTransferItems));
+		
+		      this.setState({
+		        isDragActive: allFilesAccepted,
+		        isDragReject: !allFilesAccepted
+		      });
+		
+		      if (this.props.onDragEnter) {
+		        this.props.onDragEnter.call(this, e);
+		      }
+		    }
+		  }, {
+		    key: 'onDragOver',
+		    value: function onDragOver(e) {
+		      e.preventDefault();
+		      e.stopPropagation();
+		      return false;
+		    }
+		  }, {
+		    key: 'onDragLeave',
+		    value: function onDragLeave(e) {
+		      e.preventDefault();
+		
+		      // Only deactivate once the dropzone and all children was left.
+		      if (--this.enterCounter > 0) {
+		        return;
+		      }
+		
+		      this.setState({
+		        isDragActive: false,
+		        isDragReject: false
+		      });
+		
+		      if (this.props.onDragLeave) {
+		        this.props.onDragLeave.call(this, e);
+		      }
+		    }
+		  }, {
+		    key: 'onDrop',
+		    value: function onDrop(e) {
+		      e.preventDefault();
+		
+		      // Reset the counter along with the drag on a drop.
+		      this.enterCounter = 0;
+		
+		      this.setState({
+		        isDragActive: false,
+		        isDragReject: false
+		      });
+		
+		      var droppedFiles = e.dataTransfer ? e.dataTransfer.files : e.target.files;
+		      var max = this.props.multiple ? droppedFiles.length : Math.min(droppedFiles.length, 1);
+		      var files = [];
+		
+		      for (var i = 0; i < max; i++) {
+		        var file = droppedFiles[i];
+		        // We might want to disable the preview creation to support big files
+		        if (!this.props.disablePreview) {
+		          file.preview = window.URL.createObjectURL(file);
+		        }
+		        files.push(file);
+		      }
+		
+		      if (this.props.onDrop) {
+		        this.props.onDrop.call(this, files, e);
+		      }
+		
+		      if (this.allFilesAccepted(files)) {
+		        if (this.props.onDropAccepted) {
+		          this.props.onDropAccepted.call(this, files, e);
+		        }
+		      } else {
+		        if (this.props.onDropRejected) {
+		          this.props.onDropRejected.call(this, files, e);
+		        }
+		      }
+		    }
+		  }, {
+		    key: 'onClick',
+		    value: function onClick() {
+		      if (!this.props.disableClick) {
+		        this.open();
+		      }
+		    }
+		  }, {
+		    key: 'allFilesAccepted',
+		    value: function allFilesAccepted(files) {
+		      var _this2 = this;
+		
+		      return files.every(function (file) {
+		        return (0, _attrAccept2.default)(file, _this2.props.accept);
+		      });
+		    }
+		  }, {
+		    key: 'open',
+		    value: function open() {
+		      this.fileInputEl.value = null;
+		      this.fileInputEl.click();
+		    }
+		  }, {
+		    key: 'render',
+		    value: function render() {
+		      var _this3 = this;
+		
+		      var _props = this.props;
+		      var accept = _props.accept;
+		      var activeClassName = _props.activeClassName;
+		      var inputProps = _props.inputProps;
+		      var multiple = _props.multiple;
+		      var name = _props.name;
+		      var rejectClassName = _props.rejectClassName;
+		
+		      var rest = _objectWithoutProperties(_props, ['accept', 'activeClassName', 'inputProps', 'multiple', 'name', 'rejectClassName']);
+		
+		      var activeStyle = // eslint-disable-line prefer-const
+		      rest.activeStyle;
+		      var className = rest.className;
+		      var rejectStyle = rest.rejectStyle;
+		      var style = rest.style;
+		
+		      var props = _objectWithoutProperties(rest, ['activeStyle', 'className', 'rejectStyle', 'style']);
+		
+		      var _state = this.state;
+		      var isDragActive = _state.isDragActive;
+		      var isDragReject = _state.isDragReject;
+		
+		
+		      className = className || '';
+		
+		      if (isDragActive && activeClassName) {
+		        className += ' ' + activeClassName;
+		      }
+		      if (isDragReject && rejectClassName) {
+		        className += ' ' + rejectClassName;
+		      }
+		
+		      if (!className && !style && !activeStyle && !rejectStyle) {
+		        style = {
+		          width: 200,
+		          height: 200,
+		          borderWidth: 2,
+		          borderColor: '#666',
+		          borderStyle: 'dashed',
+		          borderRadius: 5
+		        };
+		        activeStyle = {
+		          borderStyle: 'solid',
+		          backgroundColor: '#eee'
+		        };
+		        rejectStyle = {
+		          borderStyle: 'solid',
+		          backgroundColor: '#ffdddd'
+		        };
+		      }
+		
+		      var appliedStyle = void 0;
+		      if (activeStyle && isDragActive) {
+		        appliedStyle = _extends({}, style, activeStyle);
+		      } else if (rejectStyle && isDragReject) {
+		        appliedStyle = _extends({}, style, rejectStyle);
+		      } else {
+		        appliedStyle = _extends({}, style);
+		      }
+		
+		      var inputAttributes = {
+		        accept: accept,
+		        type: 'file',
+		        style: { display: 'none' },
+		        multiple: supportMultiple && multiple,
+		        ref: function ref(el) {
+		          return _this3.fileInputEl = el;
+		        },
+		        onChange: this.onDrop
+		      };
+		
+		      if (name && name.length) {
+		        inputAttributes.name = name;
+		      }
+		
+		      return _react2.default.createElement(
+		        'div',
+		        _extends({
+		          className: className,
+		          style: appliedStyle
+		        }, props /* expand user provided props first so event handlers are never overridden */, {
+		          onClick: this.onClick,
+		          onDragEnter: this.onDragEnter,
+		          onDragOver: this.onDragOver,
+		          onDragLeave: this.onDragLeave,
+		          onDrop: this.onDrop
+		        }),
+		        this.props.children,
+		        _react2.default.createElement('input', _extends({}, inputProps /* expand user provided inputProps first so inputAttributes override them */, inputAttributes))
+		      );
+		    }
+		  }]);
+		
+		  return Dropzone;
+		}(_react2.default.Component);
+		
+		Dropzone.defaultProps = {
+		  disablePreview: false,
+		  disableClick: false,
+		  multiple: true
+		};
+		
+		Dropzone.propTypes = {
+		  onDrop: _react2.default.PropTypes.func,
+		  onDropAccepted: _react2.default.PropTypes.func,
+		  onDropRejected: _react2.default.PropTypes.func,
+		  onDragEnter: _react2.default.PropTypes.func,
+		  onDragLeave: _react2.default.PropTypes.func,
+		
+		  children: _react2.default.PropTypes.node,
+		  style: _react2.default.PropTypes.object,
+		  activeStyle: _react2.default.PropTypes.object,
+		  rejectStyle: _react2.default.PropTypes.object,
+		  className: _react2.default.PropTypes.string,
+		  activeClassName: _react2.default.PropTypes.string,
+		  rejectClassName: _react2.default.PropTypes.string,
+		
+		  disablePreview: _react2.default.PropTypes.bool,
+		  disableClick: _react2.default.PropTypes.bool,
+		
+		  inputProps: _react2.default.PropTypes.object,
+		  multiple: _react2.default.PropTypes.bool,
+		  accept: _react2.default.PropTypes.string,
+		  name: _react2.default.PropTypes.string
+		};
+		
+		exports.default = Dropzone;
+		module.exports = exports['default'];
+	
+	/***/ },
+	/* 1 */
+	/***/ function(module, exports) {
+	
+		module.exports=function(t){function n(e){if(r[e])return r[e].exports;var o=r[e]={exports:{},id:e,loaded:!1};return t[e].call(o.exports,o,o.exports,n),o.loaded=!0,o.exports}var r={};return n.m=t,n.c=r,n.p="",n(0)}([function(t,n,r){"use strict";n.__esModule=!0,r(8),r(9),n["default"]=function(t,n){if(t&&n){var r=function(){var r=n.split(","),e=t.name||"",o=t.type||"",i=o.replace(/\/.*$/,"");return{v:r.some(function(t){var n=t.trim();return"."===n.charAt(0)?e.toLowerCase().endsWith(n.toLowerCase()):/\/\*$/.test(n)?i===n.replace(/\/.*$/,""):o===n})}}();if("object"==typeof r)return r.v}return!0},t.exports=n["default"]},function(t,n){var r=t.exports={version:"1.2.2"};"number"==typeof __e&&(__e=r)},function(t,n){var r=t.exports="undefined"!=typeof window&&window.Math==Math?window:"undefined"!=typeof self&&self.Math==Math?self:Function("return this")();"number"==typeof __g&&(__g=r)},function(t,n,r){var e=r(2),o=r(1),i=r(4),u=r(19),c="prototype",f=function(t,n){return function(){return t.apply(n,arguments)}},s=function(t,n,r){var a,p,l,d,y=t&s.G,h=t&s.P,v=y?e:t&s.S?e[n]||(e[n]={}):(e[n]||{})[c],x=y?o:o[n]||(o[n]={});y&&(r=n);for(a in r)p=!(t&s.F)&&v&&a in v,l=(p?v:r)[a],d=t&s.B&&p?f(l,e):h&&"function"==typeof l?f(Function.call,l):l,v&&!p&&u(v,a,l),x[a]!=l&&i(x,a,d),h&&((x[c]||(x[c]={}))[a]=l)};e.core=o,s.F=1,s.G=2,s.S=4,s.P=8,s.B=16,s.W=32,t.exports=s},function(t,n,r){var e=r(5),o=r(18);t.exports=r(22)?function(t,n,r){return e.setDesc(t,n,o(1,r))}:function(t,n,r){return t[n]=r,t}},function(t,n){var r=Object;t.exports={create:r.create,getProto:r.getPrototypeOf,isEnum:{}.propertyIsEnumerable,getDesc:r.getOwnPropertyDescriptor,setDesc:r.defineProperty,setDescs:r.defineProperties,getKeys:r.keys,getNames:r.getOwnPropertyNames,getSymbols:r.getOwnPropertySymbols,each:[].forEach}},function(t,n){var r=0,e=Math.random();t.exports=function(t){return"Symbol(".concat(void 0===t?"":t,")_",(++r+e).toString(36))}},function(t,n,r){var e=r(20)("wks"),o=r(2).Symbol;t.exports=function(t){return e[t]||(e[t]=o&&o[t]||(o||r(6))("Symbol."+t))}},function(t,n,r){r(26),t.exports=r(1).Array.some},function(t,n,r){r(25),t.exports=r(1).String.endsWith},function(t,n){t.exports=function(t){if("function"!=typeof t)throw TypeError(t+" is not a function!");return t}},function(t,n){var r={}.toString;t.exports=function(t){return r.call(t).slice(8,-1)}},function(t,n,r){var e=r(10);t.exports=function(t,n,r){if(e(t),void 0===n)return t;switch(r){case 1:return function(r){return t.call(n,r)};case 2:return function(r,e){return t.call(n,r,e)};case 3:return function(r,e,o){return t.call(n,r,e,o)}}return function(){return t.apply(n,arguments)}}},function(t,n){t.exports=function(t){if(void 0==t)throw TypeError("Can't call method on  "+t);return t}},function(t,n,r){t.exports=function(t){var n=/./;try{"/./"[t](n)}catch(e){try{return n[r(7)("match")]=!1,!"/./"[t](n)}catch(o){}}return!0}},function(t,n){t.exports=function(t){try{return!!t()}catch(n){return!0}}},function(t,n){t.exports=function(t){return"object"==typeof t?null!==t:"function"==typeof t}},function(t,n,r){var e=r(16),o=r(11),i=r(7)("match");t.exports=function(t){var n;return e(t)&&(void 0!==(n=t[i])?!!n:"RegExp"==o(t))}},function(t,n){t.exports=function(t,n){return{enumerable:!(1&t),configurable:!(2&t),writable:!(4&t),value:n}}},function(t,n,r){var e=r(2),o=r(4),i=r(6)("src"),u="toString",c=Function[u],f=(""+c).split(u);r(1).inspectSource=function(t){return c.call(t)},(t.exports=function(t,n,r,u){"function"==typeof r&&(o(r,i,t[n]?""+t[n]:f.join(String(n))),"name"in r||(r.name=n)),t===e?t[n]=r:(u||delete t[n],o(t,n,r))})(Function.prototype,u,function(){return"function"==typeof this&&this[i]||c.call(this)})},function(t,n,r){var e=r(2),o="__core-js_shared__",i=e[o]||(e[o]={});t.exports=function(t){return i[t]||(i[t]={})}},function(t,n,r){var e=r(17),o=r(13);t.exports=function(t,n,r){if(e(n))throw TypeError("String#"+r+" doesn't accept regex!");return String(o(t))}},function(t,n,r){t.exports=!r(15)(function(){return 7!=Object.defineProperty({},"a",{get:function(){return 7}}).a})},function(t,n){var r=Math.ceil,e=Math.floor;t.exports=function(t){return isNaN(t=+t)?0:(t>0?e:r)(t)}},function(t,n,r){var e=r(23),o=Math.min;t.exports=function(t){return t>0?o(e(t),9007199254740991):0}},function(t,n,r){"use strict";var e=r(3),o=r(24),i=r(21),u="endsWith",c=""[u];e(e.P+e.F*r(14)(u),"String",{endsWith:function(t){var n=i(this,t,u),r=arguments,e=r.length>1?r[1]:void 0,f=o(n.length),s=void 0===e?f:Math.min(o(e),f),a=String(t);return c?c.call(n,a,s):n.slice(s-a.length,s)===a}})},function(t,n,r){var e=r(5),o=r(3),i=r(1).Array||Array,u={},c=function(t,n){e.each.call(t.split(","),function(t){void 0==n&&t in i?u[t]=i[t]:t in[]&&(u[t]=r(12)(Function.call,[][t],n))})};c("pop,reverse,shift,keys,values,entries",1),c("indexOf,every,some,forEach,map,filter,find,findIndex,includes",3),c("join,slice,concat,push,splice,unshift,sort,lastIndexOf,reduce,reduceRight,copyWithin,fill"),o(o.S,"Array",u)}]);
+	
+	/***/ },
+	/* 2 */
+	/***/ function(module, exports) {
+	
+		module.exports = __WEBPACK_EXTERNAL_MODULE_2__;
+	
+	/***/ }
+	/******/ ])
+	});
+	;
+	//# sourceMappingURL=index.js.map
+
+/***/ },
+/* 264 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var ApiUtil = __webpack_require__(227);
+	
+	module.exports = {
+	  fetchPresignedUrl: function (prefix, filename, file) {
+	    ApiUtil.getPresignedUrl({ prefix: prefix, filename: filename }, this.uploadToS3.bind(null, file));
+	  },
+	
+	  uploadToS3: function (presignedUrl, file) {
+	    ApiUtil.uploadToS3(presignedUrl, file);
+	  }
+	};
+
+/***/ },
+/* 265 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -33327,14 +34135,14 @@
 	});
 
 /***/ },
-/* 260 */
+/* 266 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1),
-	    PhotoStore = __webpack_require__(261),
-	    ApiUtil = __webpack_require__(263),
-	    PhotoIndexItem = __webpack_require__(265),
-	    Masonry = __webpack_require__(266);
+	    PhotoStore = __webpack_require__(267),
+	    ApiUtil = __webpack_require__(227),
+	    PhotoIndexItem = __webpack_require__(268),
+	    Masonry = __webpack_require__(269);
 	
 	module.exports = React.createClass({
 	  displayName: 'exports',
@@ -33388,7 +34196,7 @@
 	
 	    return React.createElement(
 	      'div',
-	      { className: 'indexWrapper' },
+	      { className: 'indexWrapper fade-in' },
 	      React.createElement(
 	        Masonry,
 	        {
@@ -33403,12 +34211,12 @@
 	});
 
 /***/ },
-/* 261 */
+/* 267 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var AppDispatcher = __webpack_require__(221),
-	    Store = __webpack_require__(231).Store,
-	    PhotoConstants = __webpack_require__(262);
+	    Store = __webpack_require__(234).Store,
+	    PhotoConstants = __webpack_require__(229);
 	
 	var _photos = [],
 	    _photo = {};
@@ -33453,7 +34261,7 @@
 	}
 	
 	function setPhoto(photo) {
-	  _photo = photo;
+	  _photos.push(photo);
 	}
 	
 	function updatePhoto(photo) {
@@ -33477,132 +34285,7 @@
 	module.exports = PhotoStore;
 
 /***/ },
-/* 262 */
-/***/ function(module, exports) {
-
-	module.exports = {
-		RECEIVE_ALL_PHOTOS: "RECEIVE_ALL_PHOTOS",
-		RECEIVE_PHOTO: "RECEIVE_PHOTO",
-		UPDATE_PHOTO: "UPDATE_PHOTO",
-		REMOVE_PHOTO: "REMOVE_PHOTO"
-	};
-
-/***/ },
-/* 263 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var AppDispatcher = __webpack_require__(221),
-	    PhotoActions = __webpack_require__(264);
-	
-	module.exports = {
-	  fetchAllPhotos: function () {
-	    $.ajax({
-	      url: '/api/photos',
-	      datatype: 'json',
-	      success: function (photos) {
-	        PhotoActions.receivePhotos(photos);
-	      }
-	    });
-	  },
-	
-	  fetchPhoto: function (id) {
-	    $.ajax({
-	      url: 'api/photos' + id,
-	      datatype: 'json',
-	      success: function (photo) {
-	        PhotoActions.receivePhoto(photo);
-	      }
-	    });
-	  },
-	
-	  createPhoto: function (params) {
-	    $.ajax({
-	      url: 'api/photos',
-	      method: 'post',
-	      datatype: 'json',
-	      data: { photo: params },
-	      success: function (photo) {
-	        PhotoActions.receivePhoto(photo);
-	      }
-	    });
-	  },
-	
-	  updatePhoto: function (id, params, callback) {
-	    $.ajax({
-	      url: 'api/photos' + id,
-	      method: 'patch',
-	      datatype: 'json',
-	      success: function (photo) {
-	        PhotoActions.updatePhoto(photo);
-	        callback();
-	      }
-	    });
-	  },
-	
-	  deletePhoto: function (id) {
-	    $.ajax({
-	      url: 'api/photos' + id,
-	      method: 'delete',
-	      datatype: 'json',
-	      success: function (photo) {
-	        PhotoActions.removePhoto(photo);
-	      }
-	    });
-	  },
-	
-	  createComment: function (params) {
-	    $.ajax({
-	      url: "/api/comments",
-	      data: { comment: params },
-	      type: "POST",
-	      datatype: "json",
-	      success: function (photo) {
-	        PhotoActions.updatePhoto(photo);
-	      }
-	    });
-	  }
-	};
-
-/***/ },
-/* 264 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var AppDispatcher = __webpack_require__(221),
-	    PhotoConstants = __webpack_require__(262);
-	
-	module.exports = {
-		receivePhotos: function (photos) {
-			AppDispatcher.dispatch({
-				actionType: PhotoConstants.RECEIVE_ALL_PHOTOS,
-				photos: photos
-			});
-		},
-	
-		receivePhoto: function (photo) {
-			AppDispatcher.dispatch({
-				actionType: PhotoConstants.RECEIVE_PHOTO,
-				photo: photo
-			});
-		},
-	
-		updatePhoto: function (photo) {
-			AppDispatcher.dispatch({
-				actionType: PhotoConstants.UPDATE_PHOTO,
-				photo: photo
-			});
-		},
-	
-		removePhoto: function (photo) {
-			AppDispatcher.dispatch({
-				actionType: PhotoConstants.REMOVE_PHOTO,
-				photo: photo
-			});
-		}
-	
-	};
-
-/***/ },
-/* 265 */
+/* 268 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -33630,7 +34313,7 @@
 	});
 
 /***/ },
-/* 266 */
+/* 269 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*** IMPORTS FROM imports-loader ***/
@@ -33638,8 +34321,8 @@
 	(function() {
 	
 	var isBrowser = typeof window !== 'undefined';
-	var Masonry = isBrowser ? window.Masonry || __webpack_require__(267) : null;
-	var imagesloaded = isBrowser ? __webpack_require__(274) : null;
+	var Masonry = isBrowser ? window.Masonry || __webpack_require__(270) : null;
+	var imagesloaded = isBrowser ? __webpack_require__(277) : null;
 	var React = __webpack_require__(1);
 	var refName = 'masonryContainer';
 	
@@ -33836,7 +34519,7 @@
 	}.call(window));
 
 /***/ },
-/* 267 */
+/* 270 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*** IMPORTS FROM imports-loader ***/
@@ -33864,8 +34547,8 @@
 	  } else if ( typeof module == 'object' && module.exports ) {
 	    // CommonJS
 	    module.exports = factory(
-	      __webpack_require__(268),
-	      __webpack_require__(270)
+	      __webpack_require__(271),
+	      __webpack_require__(273)
 	    );
 	  } else {
 	    // browser global
@@ -34052,7 +34735,7 @@
 	}.call(window));
 
 /***/ },
-/* 268 */
+/* 271 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*** IMPORTS FROM imports-loader ***/
@@ -34085,10 +34768,10 @@
 	    // CommonJS - Browserify, Webpack
 	    module.exports = factory(
 	      window,
-	      __webpack_require__(269),
-	      __webpack_require__(270),
-	      __webpack_require__(271),
-	      __webpack_require__(273)
+	      __webpack_require__(272),
+	      __webpack_require__(273),
+	      __webpack_require__(274),
+	      __webpack_require__(276)
 	    );
 	  } else {
 	    // browser global
@@ -35002,7 +35685,7 @@
 	}.call(window));
 
 /***/ },
-/* 269 */
+/* 272 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;/**
@@ -35117,7 +35800,7 @@
 
 
 /***/ },
-/* 270 */
+/* 273 */
 /***/ function(module, exports) {
 
 	/*** IMPORTS FROM imports-loader ***/
@@ -35337,7 +36020,7 @@
 	}.call(window));
 
 /***/ },
-/* 271 */
+/* 274 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*** IMPORTS FROM imports-loader ***/
@@ -35366,7 +36049,7 @@
 	    // CommonJS
 	    module.exports = factory(
 	      window,
-	      __webpack_require__(272)
+	      __webpack_require__(275)
 	    );
 	  } else {
 	    // browser global
@@ -35583,7 +36266,7 @@
 	}.call(window));
 
 /***/ },
-/* 272 */
+/* 275 */
 /***/ function(module, exports) {
 
 	/*** IMPORTS FROM imports-loader ***/
@@ -35647,7 +36330,7 @@
 	}.call(window));
 
 /***/ },
-/* 273 */
+/* 276 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*** IMPORTS FROM imports-loader ***/
@@ -35672,8 +36355,8 @@
 	  } else if ( typeof module == 'object' && module.exports ) {
 	    // CommonJS - Browserify, Webpack
 	    module.exports = factory(
-	      __webpack_require__(269),
-	      __webpack_require__(270)
+	      __webpack_require__(272),
+	      __webpack_require__(273)
 	    );
 	  } else {
 	    // browser global
@@ -36211,7 +36894,7 @@
 	}.call(window));
 
 /***/ },
-/* 274 */
+/* 277 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*** IMPORTS FROM imports-loader ***/
@@ -36240,7 +36923,7 @@
 	    // CommonJS
 	    module.exports = factory(
 	      window,
-	      __webpack_require__(269)
+	      __webpack_require__(272)
 	    );
 	  } else {
 	    // browser global
@@ -36592,15 +37275,15 @@
 	}.call(window));
 
 /***/ },
-/* 275 */
+/* 278 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1),
-	    SessionStore = __webpack_require__(230),
-	    PhotoStore = __webpack_require__(261),
-	    ApiUtil = __webpack_require__(263),
-	    UserDetail = __webpack_require__(276),
-	    Comments = __webpack_require__(278);
+	    SessionStore = __webpack_require__(233),
+	    PhotoStore = __webpack_require__(267),
+	    ApiUtil = __webpack_require__(227),
+	    UserDetail = __webpack_require__(279),
+	    Comments = __webpack_require__(281);
 	
 	var PhotoDetail = React.createClass({
 	  displayName: 'PhotoDetail',
@@ -36656,10 +37339,15 @@
 	    $(document.body).off('keydown', this.handleKey);
 	  },
 	
-	  handleOuterClick: function (e) {
-	    if (e.currentTarget.className === "photo-detail") {
+	  handleOuterClick: function (event) {
+	    if (event.currentTarget.className === "photo-detail") {
 	      this.context.router.goBack();
 	    }
+	  },
+	
+	  backToIndex: function (event) {
+	    event.preventDefault();
+	    this.context.router.goBack();
 	  },
 	
 	  handleInnerClick: function (e) {
@@ -36711,7 +37399,12 @@
 	              ' '
 	            )
 	          ),
-	          React.createElement(Comments, { photo: this.state.photo, current: JSON.parse(window.localStorage.getItem("currentUser")) })
+	          React.createElement(Comments, { photo: this.state.photo, current: JSON.parse(window.localStorage.getItem("currentUser")) }),
+	          React.createElement(
+	            'div',
+	            { className: 'back-button', onClick: this.backToIndex },
+	            'Back'
+	          )
 	        )
 	      );
 	    } else {
@@ -36727,13 +37420,13 @@
 	module.exports = PhotoDetail;
 
 /***/ },
-/* 276 */
+/* 279 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
-	var SessionStore = __webpack_require__(230);
-	var ApiUtil = __webpack_require__(263),
-	    UserStore = __webpack_require__(277),
+	var SessionStore = __webpack_require__(233);
+	var ApiUtil = __webpack_require__(227),
+	    UserStore = __webpack_require__(280),
 	    ReactRouter = __webpack_require__(159),
 	    browserHistory = ReactRouter.browserHistory;
 	
@@ -36746,7 +37439,7 @@
 		},
 	
 		handleClick: function () {
-			this.history.push("users/" + this.props.user.id);
+			browserHistory.push("/users/" + this.props.user.id);
 		},
 	
 		render: function () {
@@ -36770,47 +37463,44 @@
 	module.exports = UserDetail;
 
 /***/ },
-/* 277 */
+/* 280 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var AppDispatcher = __webpack_require__(221),
-	    Store = __webpack_require__(231).Store,
-	    UserConstants = __webpack_require__(225);
+	    Store = __webpack_require__(234).Store,
+	    UserConstants = __webpack_require__(293);
 	
 	var UserStore = new Store(AppDispatcher);
 	
-	var _users = {};
+	var _user;
 	
-	var resetUsers = function (users) {
-	  _users = {};
-	
-	  users.forEach(function (user) {
-	    _users[user.id] = user;
-	  });
+	UserStore.getUser = function () {
+	  return _user;
 	};
 	
-	UserStore.all = function () {
-	  return Object.keys(_users).map(function (userId) {
-	    return _users[userId];
-	  });
+	var updateUser = function (user) {
+	  _user = undefined;
+	  _user = user;
 	};
 	
 	UserStore.__onDispatch = function (payload) {
 	  switch (payload.actionType) {
-	    case UserConstants.RECEIVE_USERS:
-	      resetUsers(payload.users);
+	    case UserConstants.RECEIVE_USER:
+	      updateUser(payload.user);
 	      UserStore.__emitChange();
 	      break;
 	  }
 	};
+	
+	module.exports = UserStore;
 
 /***/ },
-/* 278 */
+/* 281 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1),
-	    CommentForm = __webpack_require__(280),
-	    CommentItem = __webpack_require__(279);
+	    CommentForm = __webpack_require__(282),
+	    CommentItem = __webpack_require__(284);
 	
 	var Comments = React.createClass({
 	  displayName: 'Comments',
@@ -36861,7 +37551,79 @@
 	module.exports = Comments;
 
 /***/ },
-/* 279 */
+/* 282 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1),
+	    CommentActions = __webpack_require__(283);
+	
+	var CommentForm = React.createClass({
+	  displayName: 'CommentForm',
+	
+	  getInitialState: function () {
+	    return {
+	      photo_id: "",
+	      body: ""
+	    };
+	  },
+	
+	  handleSubmit: function (event) {
+	    event.preventDefault();
+	    var params = {
+	      body: this.state.body,
+	      photo_id: this.state.photo_id
+	    };
+	    CommentActions.createComment(params);
+	    this.setState({ body: "" });
+	  },
+	
+	  updateBody: function (event) {
+	    this.setState({ body: event.target.value });
+	    this.setState({ photo_id: this.props.photo.id });
+	  },
+	
+	  render: function () {
+	    return React.createElement(
+	      'div',
+	      { className: 'comment-form' },
+	      React.createElement(
+	        'form',
+	        { onSubmit: this.handleSubmit },
+	        React.createElement(
+	          'div',
+	          { className: 'comment-input' },
+	          React.createElement('input', {
+	            type: 'text',
+	            onChange: this.updateBody,
+	            value: this.state.body,
+	            className: 'form-input',
+	            placeholder: "Leave a comment..." })
+	        )
+	      )
+	    );
+	  }
+	
+	});
+	
+	module.exports = CommentForm;
+
+/***/ },
+/* 283 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var AppDispatcher = __webpack_require__(221);
+	var ApiUtil = __webpack_require__(227);
+	
+	var CommentActions = {
+		createComment: function (params) {
+			ApiUtil.createComment(params);
+		}
+	};
+	
+	module.exports = CommentActions;
+
+/***/ },
+/* 284 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1),
@@ -36932,75 +37694,175 @@
 	module.exports = CommentItem;
 
 /***/ },
-/* 280 */
+/* 285 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1),
-	    CommentActions = __webpack_require__(282);
-	
-	var CommentForm = React.createClass({
-	  displayName: 'CommentForm',
-	
-	  getInitialState: function () {
-	    return {
-	      photo_id: "",
-	      body: ""
-	    };
-	  },
-	
-	  handleSubmit: function (event) {
-	    event.preventDefault();
-	    var params = {
-	      body: this.state.body,
-	      photo_id: this.state.photo_id
-	    };
-	    CommentActions.createComment(params);
-	    this.setState({ body: "" });
-	  },
-	
-	  updateBody: function (event) {
-	    this.setState({ body: event.target.value });
-	    this.setState({ photo_id: this.props.photo.id });
-	  },
-	
-	  render: function () {
-	    return React.createElement(
-	      'div',
-	      { className: 'comment-form' },
-	      React.createElement(
-	        'form',
-	        { onSubmit: this.handleSubmit },
-	        React.createElement(
-	          'div',
-	          { className: 'comment-input' },
-	          React.createElement('input', {
-	            type: 'text',
-	            onChange: this.updateBody,
-	            value: this.state.body,
-	            className: 'form-input',
-	            placeholder: "Leave a comment..." })
-	        )
-	      )
-	    );
-	  }
-	
-	});
-	
-	module.exports = CommentForm;
-
-/***/ },
-/* 281 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var React = __webpack_require__(1);
-	var PropTypes = React.PropTypes;
+	    Masonry = __webpack_require__(269),
+	    SessionStore = __webpack_require__(233),
+	    UserStore = __webpack_require__(280),
+	    ApiUtil = __webpack_require__(227),
+	    PhotoIndexItem = __webpack_require__(268);
 	
 	var UserProfile = React.createClass({
 	  displayName: 'UserProfile',
 	
 	
+	  getInitialState: function () {
+	    return {
+	      currentUser: SessionStore.currentUser(),
+	      user: UserStore.getUser(),
+	      selected: "All Images"
+	    };
+	  },
+	
+	  _onUserChange: function () {
+	    this.setState({ user: UserStore.getUser() });
+	  },
+	
+	  _onSessionChange: function () {
+	    this.setState({ currentUser: SessionStore.currentUser() });
+	  },
+	
+	  componentDidMount: function () {
+	    this.userListener = UserStore.addListener(this._onUserChange);
+	    this.currentUserListener = SessionStore.addListener(this._onSessionChange);
+	    ApiUtil.fetchUser(parseInt(JSON.parse(localStorage.getItem('currentUser')).id));
+	  },
+	
+	  componentWillUnmount: function () {
+	    this.userListener.remove();
+	    this.currentUserListener.remove();
+	  },
+	
+	  allImages: function () {
+	    this.setState({ selected: "All Images" });
+	  },
+	
+	  editUser: function () {
+	    if (this.state.currentUser.id === this.state.userProfile.id) {
+	      this.setState({ selected: "Edit User" });
+	    } else {
+	      alert("Can't update other user's information");
+	    }
+	  },
+	
+	  exploreNavList: function () {
+	    var cName = "explore-button " + "type-selected";
+	    if (this.state.selected === "All Images") {
+	      return React.createElement(
+	        'ul',
+	        null,
+	        React.createElement(
+	          'li',
+	          { className: cName, onClick: this.allImages },
+	          'All Images'
+	        ),
+	        React.createElement(
+	          'li',
+	          { className: 'explore-button', onClick: this.editUser },
+	          'Edit Profile'
+	        )
+	      );
+	    } else {
+	      return React.createElement(
+	        'ul',
+	        null,
+	        React.createElement(
+	          'li',
+	          { className: 'explore-button', onClick: this.allImages },
+	          'All Images'
+	        ),
+	        React.createElement(
+	          'li',
+	          { className: cName, onClick: this.editUser },
+	          'Edit Profile'
+	        )
+	      );
+	    }
+	  },
+	
 	  render: function () {
-	    return React.createElement('div', null);
+	    if (this.state.user) {
+	      var name = this.state.user.first_name + " " + this.state.user.last_name;
+	      var imageList = this.state.user.photos.map(function (photo, index) {
+	        return React.createElement(PhotoIndexItem, { key: index, photo: photo, className: 'photo-index-item' });
+	      });
+	    }
+	
+	    var masonryOptions = {
+	      fitWidth: true,
+	      itemSelector: ".photo",
+	      gutter: 7,
+	      transitionDuration: '0.5s'
+	    };
+	
+	    var display;
+	
+	    if (this.state.selected === "All Images") {
+	      display = React.createElement(
+	        Masonry,
+	        {
+	          className: 'photoIndex',
+	          elementType: 'ul',
+	          options: masonryOptions,
+	          disableImagesLoaded: false },
+	        imageList
+	      );
+	    } else if (this.state.selected === "Edit User") {
+	      display = React.createElement(UserUpdateForm, null);
+	    } else {
+	      if (this.state.currentUser && this.state.userProfile) {
+	        if (this.state.currentUser.id === this.state.userProfile.id) {
+	          display = React.createElement(
+	            'div',
+	            { className: 'albums-container' },
+	            React.createElement(Albums, { user: this.state.currentUser }),
+	            React.createElement(AlbumForm, { user: this.state.currentUser }),
+	            ';'
+	          );
+	        } else {
+	          display = React.createElement(
+	            'div',
+	            { className: 'albums-container' },
+	            React.createElement(Albums, { user: this.state.currentUser })
+	          );
+	        }
+	      }
+	    }
+	
+	    $(window).scroll(function () {
+	      if ($(window).scrollTop() > 249) {
+	        $('.userNavBar').addClass('navbar-fixed');
+	      }
+	      if ($(window).scrollTop() < 250) {
+	        $('.userNavBar').removeClass('navbar-fixed');
+	      }
+	    });
+	
+	    return React.createElement(
+	      'div',
+	      { className: 'profile-container' },
+	      React.createElement(
+	        'div',
+	        { className: 'cover-container' },
+	        React.createElement(
+	          'div',
+	          { className: 'cover-header' },
+	          name
+	        ),
+	        React.createElement(
+	          'div',
+	          { className: 'userNavBar' },
+	          this.exploreNavList()
+	        )
+	      ),
+	      React.createElement(
+	        'div',
+	        { className: 'profile-images-container' },
+	        display
+	      )
+	    );
 	  }
 	
 	});
@@ -37008,19 +37870,81 @@
 	module.exports = UserProfile;
 
 /***/ },
-/* 282 */
+/* 286 */
 /***/ function(module, exports, __webpack_require__) {
 
+	var Store = __webpack_require__(234).Store;
 	var AppDispatcher = __webpack_require__(221);
-	var ApiUtil = __webpack_require__(263);
+	var PhotoConstants = __webpack_require__(229);
 	
-	var CommentActions = {
-		createComment: function (params) {
-			ApiUtil.createComment(params);
-		}
+	var _publicImageUrl = null;
+	var _presignedUrl = null;
+	
+	var UploadStore = new Store(AppDispatcher);
+	
+	UploadStore.getImageUrl = function () {
+	  return _publicImageUrl;
 	};
 	
-	module.exports = CommentActions;
+	UploadStore.getPresignedUrl = function () {
+	  return _presignedUrl;
+	};
+	
+	var setPublicImageUrl = function (url) {
+	  _publicImageUrl = url;
+	  UploadStore.__emitChange();
+	};
+	
+	var setPresignedUrl = function (url) {
+	  _presignedUrl = url;
+	};
+	
+	UploadStore.__onDispatch = function (payload) {
+	  switch (payload.actionType) {
+	    case PhotoConstants.PUBLIC_IMAGE_URL_RECEIVED:
+	      setPublicImageUrl(payload.publicUrl);
+	      break;
+	    case PhotoConstants.PRESIGNED_URL_RECEIEVED:
+	      setPresignedUrl(payload.presignedUrl);
+	      break;
+	    case PhotoConstants.CLEAR_UPLOAD_STORE:
+	
+	      break;
+	  }
+	};
+	
+	module.exports = UploadStore;
+
+/***/ },
+/* 287 */,
+/* 288 */,
+/* 289 */,
+/* 290 */,
+/* 291 */,
+/* 292 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var AppDispatcher = __webpack_require__(221),
+	    UserConstants = __webpack_require__(293);
+	
+	var UserActions = {
+	  receiveUser: function (user) {
+	    AppDispatcher.dispatch({
+	      actionType: UserConstants.RECEIVE_USER,
+	      user: user
+	    });
+	  }
+	};
+	
+	module.exports = UserActions;
+
+/***/ },
+/* 293 */
+/***/ function(module, exports) {
+
+	module.exports = {
+	  RECEIVE_USER: "RECEIVE_USER"
+	};
 
 /***/ }
 /******/ ]);

@@ -56,10 +56,15 @@ var PhotoDetail = React.createClass({
 		$(document.body).off('keydown', this.handleKey);
 	},
 
-  handleOuterClick: function(e){
-    if (e.currentTarget.className === "photo-detail"){
+  handleOuterClick: function(event){
+    if (event.currentTarget.className === "photo-detail"){
       this.context.router.goBack();
     }
+  },
+
+  backToIndex: function(event) {
+    event.preventDefault();
+    this.context.router.goBack();
   },
 
   handleInnerClick: function(e){
@@ -96,6 +101,7 @@ var PhotoDetail = React.createClass({
           	<div className="detail-description"> {this.state.photo.description} </div>
           </div>
           <Comments photo={this.state.photo} current={JSON.parse(window.localStorage.getItem("currentUser"))}/>
+          <div className='back-button' onClick={this.backToIndex}>Back</div>
 				</section>
 
 			</div>

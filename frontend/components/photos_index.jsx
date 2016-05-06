@@ -53,7 +53,7 @@ module.exports = React.createClass({
     };
 
     return(
-      <div className='indexWrapper'>
+      <div className='indexWrapper fade-in'>
         <Masonry
           className='photoIndex'
           elementType={'ul'}
