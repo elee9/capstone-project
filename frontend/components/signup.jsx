@@ -10,6 +10,10 @@ module.exports = React.createClass({
     };
   },
 
+  contextTypes: {
+    router: React.PropTypes.object
+  },
+
   updateUsername: function(event) {
     this.setState({ username: event.target.value });
   },
@@ -42,6 +46,7 @@ module.exports = React.createClass({
     };
 
     SessionApiUtil.signup(user);
+    this.context.router.push('/index');
   },
 
   showModal: function(){
@@ -105,7 +110,7 @@ module.exports = React.createClass({
                   </div>
 
                 <button type="submit" name="action" value="submit"
-                        className="waves-effect waves-light btn">Log In
+                        className="waves-effect waves-light btn">Sign Up
                 </button>
               </form>
             </div>

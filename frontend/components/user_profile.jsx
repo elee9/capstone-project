@@ -26,7 +26,7 @@ var UserProfile = React.createClass({
    componentDidMount: function() {
      this.userListener = UserStore.addListener(this._onUserChange);
      this.currentUserListener = SessionStore.addListener(this._onSessionChange);
-     ApiUtil.fetchUser(parseInt(JSON.parse(localStorage.getItem('currentUser')).id));
+     ApiUtil.fetchUser(this.props.params.id);
    },
 
    componentWillUnmount: function() {
@@ -114,11 +114,11 @@ var UserProfile = React.createClass({
 
 
      $(window).scroll(function () {
-       if ($(window).scrollTop() > 249) {
-           $('.userNavBar').addClass('navbar-fixed');
+       if ($(window).scrollTop() > 400) {
+           $('.userNavBar').addClass('usernavbar-fixed');
        }
-       if ($(window).scrollTop() < 250) {
-           $('.userNavBar').removeClass('navbar-fixed');
+       if ($(window).scrollTop() < 401) {
+           $('.userNavBar').removeClass('usernavbar-fixed');
        }
      });
 

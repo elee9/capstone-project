@@ -1,6 +1,7 @@
 var AppDispatcher = require('../dispatcher/dispatcher'),
     Store = require('flux/utils').Store,
-    SessionConstants = require('../constants/session_constants');
+    SessionConstants = require('../constants/session_constants'),
+    browserHistory = require('react-router').browserHistory;
 
 var SessionStore = new Store(AppDispatcher);
 var _currentUser = JSON.parse(window.localStorage.getItem("currentUser"));
@@ -48,6 +49,7 @@ SessionStore.__onDispatch = function(payload) {
     case SessionConstants.LOGOUT:
       logout();
       window.localStorage.setItem("currentUser", "false");
+      browserHistory.push('/');
       SessionStore.__emitChange();
       break;
     case SessionConstants.ERROR:

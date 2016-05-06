@@ -23,7 +23,6 @@ module.exports = React.createClass({
   logout: function(event) {
     event.preventDefault();
     SessionApiUtil.logout();
-    this.context.router.push('/');
   },
 
   profile: function (event) {

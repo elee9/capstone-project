@@ -26083,7 +26083,8 @@
 
 	var AppDispatcher = __webpack_require__(221),
 	    Store = __webpack_require__(234).Store,
-	    SessionConstants = __webpack_require__(225);
+	    SessionConstants = __webpack_require__(225),
+	    browserHistory = __webpack_require__(159).browserHistory;
 	
 	var SessionStore = new Store(AppDispatcher);
 	var _currentUser = JSON.parse(window.localStorage.getItem("currentUser"));
@@ -26131,6 +26132,7 @@
 	    case SessionConstants.LOGOUT:
 	      logout();
 	      window.localStorage.setItem("currentUser", "false");
+	      browserHistory.push('/');
 	      SessionStore.__emitChange();
 	      break;
 	    case SessionConstants.ERROR:
@@ -33219,7 +33221,6 @@
 	  logout: function (event) {
 	    event.preventDefault();
 	    SessionApiUtil.logout();
-	    this.context.router.push('/');
 	  },
 	
 	  profile: function (event) {
@@ -33359,6 +33360,10 @@
 	    };
 	  },
 	
+	  contextTypes: {
+	    router: React.PropTypes.object
+	  },
+	
 	  updateUsername: function (event) {
 	    this.setState({ username: event.target.value });
 	  },
@@ -33391,6 +33396,7 @@
 	    };
 	
 	    SessionApiUtil.signup(user);
+	    this.context.router.push('/index');
 	  },
 	
 	  showModal: function () {
@@ -33502,7 +33508,7 @@
 	            'button',
 	            { type: 'submit', name: 'action', value: 'submit',
 	              className: 'waves-effect waves-light btn' },
-	            'Log In'
+	            'Sign Up'
 	          )
 	        )
 	      )
@@ -34127,10 +34133,21 @@
 	var React = __webpack_require__(1);
 	
 	module.exports = React.createClass({
-	  displayName: "exports",
+	  displayName: 'exports',
+	
+	
+	  contextTypes: {
+	    router: React.PropTypes.object
+	  },
+	
+	  componentDidMount: function () {
+	    if (window.localStorage.getItem('currentUser') !== 'false') {
+	      this.context.router.push('/index');
+	    }
+	  },
 	
 	  render: function () {
-	    return React.createElement("div", { className: "splashHolder" });
+	    return React.createElement('div', { className: 'splashHolder' });
 	  }
 	});
 
@@ -37727,7 +37744,7 @@
 	  componentDidMount: function () {
 	    this.userListener = UserStore.addListener(this._onUserChange);
 	    this.currentUserListener = SessionStore.addListener(this._onSessionChange);
-	    ApiUtil.fetchUser(parseInt(JSON.parse(localStorage.getItem('currentUser')).id));
+	    ApiUtil.fetchUser(this.props.params.id);
 	  },
 	
 	  componentWillUnmount: function () {
@@ -37832,11 +37849,11 @@
 	    }
 	
 	    $(window).scroll(function () {
-	      if ($(window).scrollTop() > 249) {
-	        $('.userNavBar').addClass('navbar-fixed');
+	      if ($(window).scrollTop() > 400) {
+	        $('.userNavBar').addClass('usernavbar-fixed');
 	      }
-	      if ($(window).scrollTop() < 250) {
-	        $('.userNavBar').removeClass('navbar-fixed');
+	      if ($(window).scrollTop() < 401) {
+	        $('.userNavBar').removeClass('usernavbar-fixed');
 	      }
 	    });
 	

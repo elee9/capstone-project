@@ -1,7 +1,7 @@
 class Api::UsersController < ApplicationController
   def create
     @user = User.new(user_params)
-
+    @user.profile_pic = "https://s3-us-west-1.amazonaws.com/pyxels-photos/avatars/anonymous-avatar.png"
     if @user.save
       login_user!(@user)
       render 'api/users/show'
