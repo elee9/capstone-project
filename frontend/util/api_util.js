@@ -61,7 +61,7 @@ module.exports = {
 
   createComment: function(params) {
     $.ajax({
-			url: "/api/comments",
+			url: "api/comments",
 			data: {comment: params},
 			type: "POST",
 			datatype: "json",
