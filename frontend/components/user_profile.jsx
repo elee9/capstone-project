@@ -11,7 +11,6 @@ var UserProfile = React.createClass({
      return {
        currentUser: SessionStore.currentUser(),
        user: UserStore.getUser(),
-       selected: "All Images",
      };
    },
 
@@ -32,18 +31,6 @@ var UserProfile = React.createClass({
    componentWillUnmount: function() {
      this.userListener.remove();
      this.currentUserListener.remove();
-   },
-
-   allImages: function() {
-     this.setState({ selected: "All Images"});
-   },
-
-   editUser: function() {
-     if (this.state.currentUser.id === this.state.userProfile.id) {
-       this.setState({ selected: "Edit User"});
-     } else {
-       alert("Can't update other user's information");
-     }
    },
 
    exploreNavList: function() {
@@ -82,45 +69,15 @@ var UserProfile = React.createClass({
 
      var display;
 
-     if (this.state.selected === "All Images") {
-       display = (<Masonry
-         className="photoIndex"
-         elementType={'ul'}
-         options={masonryOptions}
-         disableImagesLoaded={false}>
-         {imageList}
-       </Masonry>
-       );
-     } else if (this.state.selected === "Edit User") {
-       display = <UserUpdateForm />;
-     } else {
-       if (this.state.currentUser && this.state.userProfile) {
-         if (this.state.currentUser.id === this.state.userProfile.id) {
-           display = (
-             <div className="albums-container">
-               <Albums user={this.state.currentUser} />
-               <AlbumForm user={this.state.currentUser} />;
-             </div>
-           );
-         } else {
-           display = (
-             <div className="albums-container">
-               <Albums user={this.state.currentUser} />
-             </div>
-           );
-         }
-       }
-     }
+     display = <Masonry
+                 className="photoIndex"
+                 elementType={'ul'}
+                 options={masonryOptions}
+                 disableImagesLoaded={false}>
+                 {imageList}
+               </Masonry>;
 
 
-     $(window).scroll(function () {
-       if ($(window).scrollTop() > 400) {
-           $('.userNavBar').addClass('usernavbar-fixed');
-       }
-       if ($(window).scrollTop() < 401) {
-           $('.userNavBar').removeClass('usernavbar-fixed');
-       }
-     });
 
      return (
        <div className="profile-container">

@@ -1,6 +1,7 @@
 var React = require('react'),
     Link = require('react-router').Link,
     SessionApiUtil = require('../util/session_api_util'),
+    SessionStore = require('../stores/session_store'),
     Modal = require('boron/OutlineModal');
 
 module.exports = React.createClass({
@@ -8,6 +9,10 @@ module.exports = React.createClass({
     return {
       username: "", email: "", first_name: "", last_name: "", password: ""
     };
+  },
+  
+  componentDidMount: function() {
+    this.errorListener = SessionStore.addListener(this.getErrors);
   },
 
   contextTypes: {
@@ -63,11 +68,30 @@ module.exports = React.createClass({
     this.refs.modal.hide();
   },
 
+  getErrors: function() {
+    this.setState({ errors: SessionStore.errors() });
+  },
+
+  errors: function() {
+    if (!this.state.errors){
+      return;
+    }
+    var self = this;
+    return (<ul>
+    {
+      this.state.errors.map(function(el, i){
+        return (<li className="error" key={i}>{el}</li>);
+      })
+    }
+    </ul>);
+  },
+
   form: function() {
     return(
         <Modal ref="modal">
           <div className="row signupModal">
             <div className="signupText">SIGN UP</div>
+              {this.errors()}
               <form onSubmit={this.handleSubmit} className="signupForm">
                   <div className="row">
                     <div className="input-field col s12 inputText">

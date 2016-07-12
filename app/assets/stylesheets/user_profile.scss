@@ -68,7 +68,7 @@
 .cover-header {
   font-weight: 100;
   position: relative;
-  text-align: center;
+  text-align: left;
   position: relative;
   font-size: 1.5rem;
   letter-spacing: 2px;
@@ -89,4 +89,9 @@
   text-align: center;
   position: relative;
   top: 200px;
+}
+
+.type-selected {
+  border-bottom: 5px solid black;
+  box-sizing: border-box;
 }

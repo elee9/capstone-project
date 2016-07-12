@@ -18,7 +18,7 @@ module.exports = React.createClass({
   componentDidMount: function() {
     this.photoListener = PhotoStore.addListener(this._onChange);
 
-    if (window.localStorage.getItem('currentUser') === "false") {
+    if (!window.localStorage.getItem('currentUser') || window.localStorage.getItem('currentUser') === 'false') {
       this.context.router.push('/');
     }
     if (this.state.photos.length === 0){

@@ -56,13 +56,13 @@
 	
 	window.ApiUtil = __webpack_require__(227);
 	
-	var App = __webpack_require__(230),
-	    Splash = __webpack_require__(265),
-	    Login = __webpack_require__(231),
-	    Signup = __webpack_require__(261),
-	    PhotoIndex = __webpack_require__(266),
-	    PhotoDetail = __webpack_require__(278),
-	    UserProfile = __webpack_require__(285);
+	var App = __webpack_require__(232),
+	    Splash = __webpack_require__(268),
+	    Login = __webpack_require__(233),
+	    Signup = __webpack_require__(263),
+	    PhotoIndex = __webpack_require__(269),
+	    PhotoDetail = __webpack_require__(281),
+	    UserProfile = __webpack_require__(288);
 	
 	var Router = React.createElement(
 	  Router,
@@ -25622,7 +25622,7 @@
 
 	var AppDispatcher = __webpack_require__(221),
 	    PhotoActions = __webpack_require__(228),
-	    UserActions = __webpack_require__(292);
+	    UserActions = __webpack_require__(230);
 	
 	module.exports = {
 	  fetchAllPhotos: function () {
@@ -25683,7 +25683,7 @@
 	
 	  createComment: function (params) {
 	    $.ajax({
-	      url: "/api/comments",
+	      url: "api/comments",
 	      data: { comment: params },
 	      type: "POST",
 	      datatype: "json",
@@ -25811,10 +25811,36 @@
 /* 230 */
 /***/ function(module, exports, __webpack_require__) {
 
+	var AppDispatcher = __webpack_require__(221),
+	    UserConstants = __webpack_require__(231);
+	
+	var UserActions = {
+	  receiveUser: function (user) {
+	    AppDispatcher.dispatch({
+	      actionType: UserConstants.RECEIVE_USER,
+	      user: user
+	    });
+	  }
+	};
+	
+	module.exports = UserActions;
+
+/***/ },
+/* 231 */
+/***/ function(module, exports) {
+
+	module.exports = {
+	  RECEIVE_USER: "RECEIVE_USER"
+	};
+
+/***/ },
+/* 232 */
+/***/ function(module, exports, __webpack_require__) {
+
 	var React = __webpack_require__(1),
-	    Login = __webpack_require__(231),
+	    Login = __webpack_require__(233),
 	    Link = __webpack_require__(159).Link,
-	    NavBar = __webpack_require__(260);
+	    NavBar = __webpack_require__(262);
 	
 	module.exports = React.createClass({
 	  displayName: 'exports',
@@ -25830,15 +25856,15 @@
 	});
 
 /***/ },
-/* 231 */
+/* 233 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1),
 	    Link = __webpack_require__(159).Link,
 	    SessionApiUtil = __webpack_require__(220),
-	    CurrentUserState = __webpack_require__(232),
-	    SessionStore = __webpack_require__(233),
-	    Modal = __webpack_require__(251);
+	    CurrentUserState = __webpack_require__(234),
+	    SessionStore = __webpack_require__(235),
+	    Modal = __webpack_require__(253);
 	
 	module.exports = React.createClass({
 	  displayName: 'exports',
@@ -26044,10 +26070,10 @@
 	});
 
 /***/ },
-/* 232 */
+/* 234 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var SessionStore = __webpack_require__(233),
+	var SessionStore = __webpack_require__(235),
 	    SessionApiUtil = __webpack_require__(220);
 	
 	var CurrentUserState = {
@@ -26078,11 +26104,11 @@
 	module.exports = CurrentUserState;
 
 /***/ },
-/* 233 */
+/* 235 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var AppDispatcher = __webpack_require__(221),
-	    Store = __webpack_require__(234).Store,
+	    Store = __webpack_require__(236).Store,
 	    SessionConstants = __webpack_require__(225),
 	    browserHistory = __webpack_require__(159).browserHistory;
 	
@@ -26145,7 +26171,7 @@
 	module.exports = SessionStore;
 
 /***/ },
-/* 234 */
+/* 236 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -26157,15 +26183,15 @@
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 */
 	
-	module.exports.Container = __webpack_require__(235);
-	module.exports.MapStore = __webpack_require__(238);
-	module.exports.Mixin = __webpack_require__(250);
-	module.exports.ReduceStore = __webpack_require__(239);
-	module.exports.Store = __webpack_require__(240);
+	module.exports.Container = __webpack_require__(237);
+	module.exports.MapStore = __webpack_require__(240);
+	module.exports.Mixin = __webpack_require__(252);
+	module.exports.ReduceStore = __webpack_require__(241);
+	module.exports.Store = __webpack_require__(242);
 
 
 /***/ },
-/* 235 */
+/* 237 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -26187,10 +26213,10 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var FluxStoreGroup = __webpack_require__(236);
+	var FluxStoreGroup = __webpack_require__(238);
 	
 	var invariant = __webpack_require__(224);
-	var shallowEqual = __webpack_require__(237);
+	var shallowEqual = __webpack_require__(239);
 	
 	var DEFAULT_OPTIONS = {
 	  pure: true,
@@ -26348,7 +26374,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 236 */
+/* 238 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -26429,7 +26455,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 237 */
+/* 239 */
 /***/ function(module, exports) {
 
 	/**
@@ -26484,7 +26510,7 @@
 	module.exports = shallowEqual;
 
 /***/ },
-/* 238 */
+/* 240 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -26505,8 +26531,8 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var FluxReduceStore = __webpack_require__(239);
-	var Immutable = __webpack_require__(249);
+	var FluxReduceStore = __webpack_require__(241);
+	var Immutable = __webpack_require__(251);
 	
 	var invariant = __webpack_require__(224);
 	
@@ -26634,7 +26660,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 239 */
+/* 241 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -26655,9 +26681,9 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var FluxStore = __webpack_require__(240);
+	var FluxStore = __webpack_require__(242);
 	
-	var abstractMethod = __webpack_require__(248);
+	var abstractMethod = __webpack_require__(250);
 	var invariant = __webpack_require__(224);
 	
 	var FluxReduceStore = (function (_FluxStore) {
@@ -26741,7 +26767,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 240 */
+/* 242 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -26760,7 +26786,7 @@
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 	
-	var _require = __webpack_require__(241);
+	var _require = __webpack_require__(243);
 	
 	var EventEmitter = _require.EventEmitter;
 	
@@ -26924,7 +26950,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 241 */
+/* 243 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -26937,14 +26963,14 @@
 	 */
 	
 	var fbemitter = {
-	  EventEmitter: __webpack_require__(242)
+	  EventEmitter: __webpack_require__(244)
 	};
 	
 	module.exports = fbemitter;
 
 
 /***/ },
-/* 242 */
+/* 244 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -26963,11 +26989,11 @@
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 	
-	var EmitterSubscription = __webpack_require__(243);
-	var EventSubscriptionVendor = __webpack_require__(245);
+	var EmitterSubscription = __webpack_require__(245);
+	var EventSubscriptionVendor = __webpack_require__(247);
 	
-	var emptyFunction = __webpack_require__(247);
-	var invariant = __webpack_require__(246);
+	var emptyFunction = __webpack_require__(249);
+	var invariant = __webpack_require__(248);
 	
 	/**
 	 * @class BaseEventEmitter
@@ -27141,7 +27167,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 243 */
+/* 245 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -27162,7 +27188,7 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var EventSubscription = __webpack_require__(244);
+	var EventSubscription = __webpack_require__(246);
 	
 	/**
 	 * EmitterSubscription represents a subscription with listener and context data.
@@ -27194,7 +27220,7 @@
 	module.exports = EmitterSubscription;
 
 /***/ },
-/* 244 */
+/* 246 */
 /***/ function(module, exports) {
 
 	/**
@@ -27248,7 +27274,7 @@
 	module.exports = EventSubscription;
 
 /***/ },
-/* 245 */
+/* 247 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -27267,7 +27293,7 @@
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 	
-	var invariant = __webpack_require__(246);
+	var invariant = __webpack_require__(248);
 	
 	/**
 	 * EventSubscriptionVendor stores a set of EventSubscriptions that are
@@ -27357,7 +27383,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 246 */
+/* 248 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -27412,7 +27438,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 247 */
+/* 249 */
 /***/ function(module, exports) {
 
 	/**
@@ -27454,7 +27480,7 @@
 	module.exports = emptyFunction;
 
 /***/ },
-/* 248 */
+/* 250 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -27481,7 +27507,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 249 */
+/* 251 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -32465,7 +32491,7 @@
 	}));
 
 /***/ },
-/* 250 */
+/* 252 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -32482,7 +32508,7 @@
 	
 	'use strict';
 	
-	var FluxStoreGroup = __webpack_require__(236);
+	var FluxStoreGroup = __webpack_require__(238);
 	
 	var invariant = __webpack_require__(224);
 	
@@ -32588,13 +32614,13 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 251 */
+/* 253 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
-	var modalFactory = __webpack_require__(252);
-	var insertKeyframesRule = __webpack_require__(257);
-	var appendVendorPrefix = __webpack_require__(254);
+	var modalFactory = __webpack_require__(254);
+	var insertKeyframesRule = __webpack_require__(259);
+	var appendVendorPrefix = __webpack_require__(256);
 	
 	var animation = {
 	    show: {
@@ -32740,12 +32766,12 @@
 
 
 /***/ },
-/* 252 */
+/* 254 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
-	var transitionEvents = __webpack_require__(253);
-	var appendVendorPrefix = __webpack_require__(254);
+	var transitionEvents = __webpack_require__(255);
+	var appendVendorPrefix = __webpack_require__(256);
 	
 	module.exports = function(animation){
 	
@@ -32924,7 +32950,7 @@
 
 
 /***/ },
-/* 253 */
+/* 255 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -33025,12 +33051,12 @@
 
 
 /***/ },
-/* 254 */
+/* 256 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var getVendorPropertyName = __webpack_require__(255);
+	var getVendorPropertyName = __webpack_require__(257);
 	
 	module.exports = function(target, sources) {
 	  var to = Object(target);
@@ -33061,12 +33087,12 @@
 
 
 /***/ },
-/* 255 */
+/* 257 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var builtinStyle = __webpack_require__(256);
+	var builtinStyle = __webpack_require__(258);
 	var prefixes = ['Moz', 'Webkit', 'O', 'ms'];
 	var domVendorPrefix;
 	
@@ -33104,7 +33130,7 @@
 
 
 /***/ },
-/* 256 */
+/* 258 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -33113,13 +33139,13 @@
 
 
 /***/ },
-/* 257 */
+/* 259 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var insertRule = __webpack_require__(258);
-	var vendorPrefix = __webpack_require__(259)();
+	var insertRule = __webpack_require__(260);
+	var vendorPrefix = __webpack_require__(261)();
 	var index = 0;
 	
 	module.exports = function(keyframes) {
@@ -33149,7 +33175,7 @@
 
 
 /***/ },
-/* 258 */
+/* 260 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -33174,7 +33200,7 @@
 
 
 /***/ },
-/* 259 */
+/* 261 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -33193,17 +33219,17 @@
 
 
 /***/ },
-/* 260 */
+/* 262 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1),
-	    Login = __webpack_require__(231),
-	    CurrentUserState = __webpack_require__(232),
+	    Login = __webpack_require__(233),
+	    CurrentUserState = __webpack_require__(234),
 	    SessionApiUtil = __webpack_require__(220),
 	    ReactRouter = __webpack_require__(159),
 	    browserHistory = ReactRouter.browserHistory,
-	    Signup = __webpack_require__(261),
-	    PhotoUpload = __webpack_require__(262);
+	    Signup = __webpack_require__(263),
+	    PhotoUpload = __webpack_require__(264);
 	
 	module.exports = React.createClass({
 	  displayName: 'exports',
@@ -33343,13 +33369,14 @@
 	});
 
 /***/ },
-/* 261 */
+/* 263 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1),
 	    Link = __webpack_require__(159).Link,
 	    SessionApiUtil = __webpack_require__(220),
-	    Modal = __webpack_require__(251);
+	    SessionStore = __webpack_require__(235),
+	    Modal = __webpack_require__(253);
 	
 	module.exports = React.createClass({
 	  displayName: 'exports',
@@ -33358,6 +33385,10 @@
 	    return {
 	      username: "", email: "", first_name: "", last_name: "", password: ""
 	    };
+	  },
+	
+	  componentDidMount: function () {
+	    this.errorListener = SessionStore.addListener(this.getErrors);
 	  },
 	
 	  contextTypes: {
@@ -33413,6 +33444,28 @@
 	    this.refs.modal.hide();
 	  },
 	
+	  getErrors: function () {
+	    this.setState({ errors: SessionStore.errors() });
+	  },
+	
+	  errors: function () {
+	    if (!this.state.errors) {
+	      return;
+	    }
+	    var self = this;
+	    return React.createElement(
+	      'ul',
+	      null,
+	      this.state.errors.map(function (el, i) {
+	        return React.createElement(
+	          'li',
+	          { className: 'error', key: i },
+	          el
+	        );
+	      })
+	    );
+	  },
+	
 	  form: function () {
 	    return React.createElement(
 	      Modal,
@@ -33425,6 +33478,7 @@
 	          { className: 'signupText' },
 	          'SIGN UP'
 	        ),
+	        this.errors(),
 	        React.createElement(
 	          'form',
 	          { onSubmit: this.handleSubmit, className: 'signupForm' },
@@ -33530,16 +33584,16 @@
 	});
 
 /***/ },
-/* 262 */
+/* 264 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1),
-	    UploadStore = __webpack_require__(286),
-	    SessionStore = __webpack_require__(233),
-	    Dropzone = __webpack_require__(263),
+	    UploadStore = __webpack_require__(265),
+	    SessionStore = __webpack_require__(235),
+	    Dropzone = __webpack_require__(266),
 	    PhotoActions = __webpack_require__(228),
-	    UploadActions = __webpack_require__(264),
-	    Modal = __webpack_require__(251),
+	    UploadActions = __webpack_require__(267),
+	    Modal = __webpack_require__(253),
 	    ApiUtil = __webpack_require__(227);
 	
 	var PhotoUpload = React.createClass({
@@ -33732,7 +33786,53 @@
 	module.exports = PhotoUpload;
 
 /***/ },
-/* 263 */
+/* 265 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Store = __webpack_require__(236).Store;
+	var AppDispatcher = __webpack_require__(221);
+	var PhotoConstants = __webpack_require__(229);
+	
+	var _publicImageUrl = null;
+	var _presignedUrl = null;
+	
+	var UploadStore = new Store(AppDispatcher);
+	
+	UploadStore.getImageUrl = function () {
+	  return _publicImageUrl;
+	};
+	
+	UploadStore.getPresignedUrl = function () {
+	  return _presignedUrl;
+	};
+	
+	var setPublicImageUrl = function (url) {
+	  _publicImageUrl = url;
+	  UploadStore.__emitChange();
+	};
+	
+	var setPresignedUrl = function (url) {
+	  _presignedUrl = url;
+	};
+	
+	UploadStore.__onDispatch = function (payload) {
+	  switch (payload.actionType) {
+	    case PhotoConstants.PUBLIC_IMAGE_URL_RECEIVED:
+	      setPublicImageUrl(payload.publicUrl);
+	      break;
+	    case PhotoConstants.PRESIGNED_URL_RECEIEVED:
+	      setPresignedUrl(payload.presignedUrl);
+	      break;
+	    case PhotoConstants.CLEAR_UPLOAD_STORE:
+	
+	      break;
+	  }
+	};
+	
+	module.exports = UploadStore;
+
+/***/ },
+/* 266 */
 /***/ function(module, exports, __webpack_require__) {
 
 	(function webpackUniversalModuleDefinition(root, factory) {
@@ -34111,7 +34211,7 @@
 	//# sourceMappingURL=index.js.map
 
 /***/ },
-/* 264 */
+/* 267 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var ApiUtil = __webpack_require__(227);
@@ -34127,7 +34227,7 @@
 	};
 
 /***/ },
-/* 265 */
+/* 268 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -34141,8 +34241,10 @@
 	  },
 	
 	  componentDidMount: function () {
-	    if (window.localStorage.getItem('currentUser') !== 'false') {
-	      this.context.router.push('/index');
+	    if (window.localStorage.getItem('currentUser')) {
+	      if (window.localStorage.getItem('currentUser') !== 'false') {
+	        this.context.router.push('/index');
+	      }
 	    }
 	  },
 	
@@ -34152,14 +34254,14 @@
 	});
 
 /***/ },
-/* 266 */
+/* 269 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1),
-	    PhotoStore = __webpack_require__(267),
+	    PhotoStore = __webpack_require__(270),
 	    ApiUtil = __webpack_require__(227),
-	    PhotoIndexItem = __webpack_require__(268),
-	    Masonry = __webpack_require__(269);
+	    PhotoIndexItem = __webpack_require__(271),
+	    Masonry = __webpack_require__(272);
 	
 	module.exports = React.createClass({
 	  displayName: 'exports',
@@ -34177,7 +34279,7 @@
 	  componentDidMount: function () {
 	    this.photoListener = PhotoStore.addListener(this._onChange);
 	
-	    if (window.localStorage.getItem('currentUser') === "false") {
+	    if (!window.localStorage.getItem('currentUser') || window.localStorage.getItem('currentUser') === 'false') {
 	      this.context.router.push('/');
 	    }
 	    if (this.state.photos.length === 0) {
@@ -34228,11 +34330,11 @@
 	});
 
 /***/ },
-/* 267 */
+/* 270 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var AppDispatcher = __webpack_require__(221),
-	    Store = __webpack_require__(234).Store,
+	    Store = __webpack_require__(236).Store,
 	    PhotoConstants = __webpack_require__(229);
 	
 	var _photos = [],
@@ -34302,7 +34404,7 @@
 	module.exports = PhotoStore;
 
 /***/ },
-/* 268 */
+/* 271 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -34330,7 +34432,7 @@
 	});
 
 /***/ },
-/* 269 */
+/* 272 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*** IMPORTS FROM imports-loader ***/
@@ -34338,8 +34440,8 @@
 	(function() {
 	
 	var isBrowser = typeof window !== 'undefined';
-	var Masonry = isBrowser ? window.Masonry || __webpack_require__(270) : null;
-	var imagesloaded = isBrowser ? __webpack_require__(277) : null;
+	var Masonry = isBrowser ? window.Masonry || __webpack_require__(273) : null;
+	var imagesloaded = isBrowser ? __webpack_require__(280) : null;
 	var React = __webpack_require__(1);
 	var refName = 'masonryContainer';
 	
@@ -34536,7 +34638,7 @@
 	}.call(window));
 
 /***/ },
-/* 270 */
+/* 273 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*** IMPORTS FROM imports-loader ***/
@@ -34564,8 +34666,8 @@
 	  } else if ( typeof module == 'object' && module.exports ) {
 	    // CommonJS
 	    module.exports = factory(
-	      __webpack_require__(271),
-	      __webpack_require__(273)
+	      __webpack_require__(274),
+	      __webpack_require__(276)
 	    );
 	  } else {
 	    // browser global
@@ -34752,7 +34854,7 @@
 	}.call(window));
 
 /***/ },
-/* 271 */
+/* 274 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*** IMPORTS FROM imports-loader ***/
@@ -34785,10 +34887,10 @@
 	    // CommonJS - Browserify, Webpack
 	    module.exports = factory(
 	      window,
-	      __webpack_require__(272),
-	      __webpack_require__(273),
-	      __webpack_require__(274),
-	      __webpack_require__(276)
+	      __webpack_require__(275),
+	      __webpack_require__(276),
+	      __webpack_require__(277),
+	      __webpack_require__(279)
 	    );
 	  } else {
 	    // browser global
@@ -35702,7 +35804,7 @@
 	}.call(window));
 
 /***/ },
-/* 272 */
+/* 275 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;/**
@@ -35817,7 +35919,7 @@
 
 
 /***/ },
-/* 273 */
+/* 276 */
 /***/ function(module, exports) {
 
 	/*** IMPORTS FROM imports-loader ***/
@@ -36037,7 +36139,7 @@
 	}.call(window));
 
 /***/ },
-/* 274 */
+/* 277 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*** IMPORTS FROM imports-loader ***/
@@ -36066,7 +36168,7 @@
 	    // CommonJS
 	    module.exports = factory(
 	      window,
-	      __webpack_require__(275)
+	      __webpack_require__(278)
 	    );
 	  } else {
 	    // browser global
@@ -36283,7 +36385,7 @@
 	}.call(window));
 
 /***/ },
-/* 275 */
+/* 278 */
 /***/ function(module, exports) {
 
 	/*** IMPORTS FROM imports-loader ***/
@@ -36347,7 +36449,7 @@
 	}.call(window));
 
 /***/ },
-/* 276 */
+/* 279 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*** IMPORTS FROM imports-loader ***/
@@ -36372,8 +36474,8 @@
 	  } else if ( typeof module == 'object' && module.exports ) {
 	    // CommonJS - Browserify, Webpack
 	    module.exports = factory(
-	      __webpack_require__(272),
-	      __webpack_require__(273)
+	      __webpack_require__(275),
+	      __webpack_require__(276)
 	    );
 	  } else {
 	    // browser global
@@ -36911,7 +37013,7 @@
 	}.call(window));
 
 /***/ },
-/* 277 */
+/* 280 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*** IMPORTS FROM imports-loader ***/
@@ -36940,7 +37042,7 @@
 	    // CommonJS
 	    module.exports = factory(
 	      window,
-	      __webpack_require__(272)
+	      __webpack_require__(275)
 	    );
 	  } else {
 	    // browser global
@@ -37292,15 +37394,15 @@
 	}.call(window));
 
 /***/ },
-/* 278 */
+/* 281 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1),
-	    SessionStore = __webpack_require__(233),
-	    PhotoStore = __webpack_require__(267),
+	    SessionStore = __webpack_require__(235),
+	    PhotoStore = __webpack_require__(270),
 	    ApiUtil = __webpack_require__(227),
-	    UserDetail = __webpack_require__(279),
-	    Comments = __webpack_require__(281);
+	    UserDetail = __webpack_require__(282),
+	    Comments = __webpack_require__(284);
 	
 	var PhotoDetail = React.createClass({
 	  displayName: 'PhotoDetail',
@@ -37437,13 +37539,13 @@
 	module.exports = PhotoDetail;
 
 /***/ },
-/* 279 */
+/* 282 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
-	var SessionStore = __webpack_require__(233);
+	var SessionStore = __webpack_require__(235);
 	var ApiUtil = __webpack_require__(227),
-	    UserStore = __webpack_require__(280),
+	    UserStore = __webpack_require__(283),
 	    ReactRouter = __webpack_require__(159),
 	    browserHistory = ReactRouter.browserHistory;
 	
@@ -37480,12 +37582,12 @@
 	module.exports = UserDetail;
 
 /***/ },
-/* 280 */
+/* 283 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var AppDispatcher = __webpack_require__(221),
-	    Store = __webpack_require__(234).Store,
-	    UserConstants = __webpack_require__(293);
+	    Store = __webpack_require__(236).Store,
+	    UserConstants = __webpack_require__(231);
 	
 	var UserStore = new Store(AppDispatcher);
 	
@@ -37512,12 +37614,12 @@
 	module.exports = UserStore;
 
 /***/ },
-/* 281 */
+/* 284 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1),
-	    CommentForm = __webpack_require__(282),
-	    CommentItem = __webpack_require__(284);
+	    CommentForm = __webpack_require__(285),
+	    CommentItem = __webpack_require__(287);
 	
 	var Comments = React.createClass({
 	  displayName: 'Comments',
@@ -37568,11 +37670,11 @@
 	module.exports = Comments;
 
 /***/ },
-/* 282 */
+/* 285 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1),
-	    CommentActions = __webpack_require__(283);
+	    CommentActions = __webpack_require__(286);
 	
 	var CommentForm = React.createClass({
 	  displayName: 'CommentForm',
@@ -37625,7 +37727,7 @@
 	module.exports = CommentForm;
 
 /***/ },
-/* 283 */
+/* 286 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var AppDispatcher = __webpack_require__(221);
@@ -37640,7 +37742,7 @@
 	module.exports = CommentActions;
 
 /***/ },
-/* 284 */
+/* 287 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1),
@@ -37711,15 +37813,15 @@
 	module.exports = CommentItem;
 
 /***/ },
-/* 285 */
+/* 288 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1),
-	    Masonry = __webpack_require__(269),
-	    SessionStore = __webpack_require__(233),
-	    UserStore = __webpack_require__(280),
+	    Masonry = __webpack_require__(272),
+	    SessionStore = __webpack_require__(235),
+	    UserStore = __webpack_require__(283),
 	    ApiUtil = __webpack_require__(227),
-	    PhotoIndexItem = __webpack_require__(268);
+	    PhotoIndexItem = __webpack_require__(271);
 	
 	var UserProfile = React.createClass({
 	  displayName: 'UserProfile',
@@ -37728,8 +37830,7 @@
 	  getInitialState: function () {
 	    return {
 	      currentUser: SessionStore.currentUser(),
-	      user: UserStore.getUser(),
-	      selected: "All Images"
+	      user: UserStore.getUser()
 	    };
 	  },
 	
@@ -37750,18 +37851,6 @@
 	  componentWillUnmount: function () {
 	    this.userListener.remove();
 	    this.currentUserListener.remove();
-	  },
-	
-	  allImages: function () {
-	    this.setState({ selected: "All Images" });
-	  },
-	
-	  editUser: function () {
-	    if (this.state.currentUser.id === this.state.userProfile.id) {
-	      this.setState({ selected: "Edit User" });
-	    } else {
-	      alert("Can't update other user's information");
-	    }
 	  },
 	
 	  exploreNavList: function () {
@@ -37816,46 +37905,15 @@
 	
 	    var display;
 	
-	    if (this.state.selected === "All Images") {
-	      display = React.createElement(
-	        Masonry,
-	        {
-	          className: 'photoIndex',
-	          elementType: 'ul',
-	          options: masonryOptions,
-	          disableImagesLoaded: false },
-	        imageList
-	      );
-	    } else if (this.state.selected === "Edit User") {
-	      display = React.createElement(UserUpdateForm, null);
-	    } else {
-	      if (this.state.currentUser && this.state.userProfile) {
-	        if (this.state.currentUser.id === this.state.userProfile.id) {
-	          display = React.createElement(
-	            'div',
-	            { className: 'albums-container' },
-	            React.createElement(Albums, { user: this.state.currentUser }),
-	            React.createElement(AlbumForm, { user: this.state.currentUser }),
-	            ';'
-	          );
-	        } else {
-	          display = React.createElement(
-	            'div',
-	            { className: 'albums-container' },
-	            React.createElement(Albums, { user: this.state.currentUser })
-	          );
-	        }
-	      }
-	    }
-	
-	    $(window).scroll(function () {
-	      if ($(window).scrollTop() > 400) {
-	        $('.userNavBar').addClass('usernavbar-fixed');
-	      }
-	      if ($(window).scrollTop() < 401) {
-	        $('.userNavBar').removeClass('usernavbar-fixed');
-	      }
-	    });
+	    display = React.createElement(
+	      Masonry,
+	      {
+	        className: 'photoIndex',
+	        elementType: 'ul',
+	        options: masonryOptions,
+	        disableImagesLoaded: false },
+	      imageList
+	    );
 	
 	    return React.createElement(
 	      'div',
@@ -37885,83 +37943,6 @@
 	});
 	
 	module.exports = UserProfile;
-
-/***/ },
-/* 286 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Store = __webpack_require__(234).Store;
-	var AppDispatcher = __webpack_require__(221);
-	var PhotoConstants = __webpack_require__(229);
-	
-	var _publicImageUrl = null;
-	var _presignedUrl = null;
-	
-	var UploadStore = new Store(AppDispatcher);
-	
-	UploadStore.getImageUrl = function () {
-	  return _publicImageUrl;
-	};
-	
-	UploadStore.getPresignedUrl = function () {
-	  return _presignedUrl;
-	};
-	
-	var setPublicImageUrl = function (url) {
-	  _publicImageUrl = url;
-	  UploadStore.__emitChange();
-	};
-	
-	var setPresignedUrl = function (url) {
-	  _presignedUrl = url;
-	};
-	
-	UploadStore.__onDispatch = function (payload) {
-	  switch (payload.actionType) {
-	    case PhotoConstants.PUBLIC_IMAGE_URL_RECEIVED:
-	      setPublicImageUrl(payload.publicUrl);
-	      break;
-	    case PhotoConstants.PRESIGNED_URL_RECEIEVED:
-	      setPresignedUrl(payload.presignedUrl);
-	      break;
-	    case PhotoConstants.CLEAR_UPLOAD_STORE:
-	
-	      break;
-	  }
-	};
-	
-	module.exports = UploadStore;
-
-/***/ },
-/* 287 */,
-/* 288 */,
-/* 289 */,
-/* 290 */,
-/* 291 */,
-/* 292 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var AppDispatcher = __webpack_require__(221),
-	    UserConstants = __webpack_require__(293);
-	
-	var UserActions = {
-	  receiveUser: function (user) {
-	    AppDispatcher.dispatch({
-	      actionType: UserConstants.RECEIVE_USER,
-	      user: user
-	    });
-	  }
-	};
-	
-	module.exports = UserActions;
-
-/***/ },
-/* 293 */
-/***/ function(module, exports) {
-
-	module.exports = {
-	  RECEIVE_USER: "RECEIVE_USER"
-	};
 
 /***/ }
 /******/ ]);

@@ -86,7 +86,7 @@ module.exports = React.createClass({
     event.preventDefault();
     var that = this;
     $('.left').addClass('disabled');
-    
+
     this.setState({
       username: '',
       password: ''

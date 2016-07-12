@@ -7,8 +7,10 @@ module.exports = React.createClass({
   },
 
   componentDidMount: function() {
-    if (window.localStorage.getItem('currentUser') !== 'false') {
-      this.context.router.push('/index');
+    if (window.localStorage.getItem('currentUser')) {
+      if (window.localStorage.getItem('currentUser') !== 'false') {
+        this.context.router.push('/index');
+      }
     }
   },
 
