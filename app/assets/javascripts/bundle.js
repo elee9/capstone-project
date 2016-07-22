@@ -33227,6 +33227,7 @@
 	    CurrentUserState = __webpack_require__(234),
 	    SessionApiUtil = __webpack_require__(220),
 	    ReactRouter = __webpack_require__(159),
+	    ApiUtil = __webpack_require__(227),
 	    browserHistory = ReactRouter.browserHistory,
 	    Signup = __webpack_require__(263),
 	    PhotoUpload = __webpack_require__(264);
@@ -33251,7 +33252,7 @@
 	
 	  profile: function (event) {
 	    event.preventDefault();
-	    this.context.router.push('/users/' + this.state.currentUser.id);
+	    this.context.router.push("/users/" + this.state.currentUser.id);
 	  },
 	
 	  handleClick: function () {
@@ -37848,49 +37849,20 @@
 	    ApiUtil.fetchUser(this.props.params.id);
 	  },
 	
+	  componentWillReceiveProps: function (nextProps) {
+	    ApiUtil.fetchUser(nextProps.params.id);
+	  },
+	
 	  componentWillUnmount: function () {
 	    this.userListener.remove();
 	    this.currentUserListener.remove();
 	  },
 	
-	  exploreNavList: function () {
-	    var cName = "explore-button " + "type-selected";
-	    if (this.state.selected === "All Images") {
-	      return React.createElement(
-	        'ul',
-	        null,
-	        React.createElement(
-	          'li',
-	          { className: cName, onClick: this.allImages },
-	          'All Images'
-	        ),
-	        React.createElement(
-	          'li',
-	          { className: 'explore-button', onClick: this.editUser },
-	          'Edit Profile'
-	        )
-	      );
-	    } else {
-	      return React.createElement(
-	        'ul',
-	        null,
-	        React.createElement(
-	          'li',
-	          { className: 'explore-button', onClick: this.allImages },
-	          'All Images'
-	        ),
-	        React.createElement(
-	          'li',
-	          { className: cName, onClick: this.editUser },
-	          'Edit Profile'
-	        )
-	      );
-	    }
-	  },
-	
 	  render: function () {
 	    if (this.state.user) {
 	      var name = this.state.user.first_name + " " + this.state.user.last_name;
+	      var username = this.state.user.username.toUpperCase();
+	      var bio = this.state.user.bio;
 	      var imageList = this.state.user.photos.map(function (photo, index) {
 	        return React.createElement(PhotoIndexItem, { key: index, photo: photo, className: 'photo-index-item' });
 	      });
@@ -37923,14 +37895,24 @@
 	        { className: 'cover-container' },
 	        React.createElement(
 	          'div',
-	          { className: 'cover-header' },
-	          name
+	          { className: 'info-section' },
+	          React.createElement(
+	            'div',
+	            { className: 'cover-username' },
+	            username
+	          ),
+	          React.createElement(
+	            'div',
+	            { className: 'cover-name' },
+	            name
+	          ),
+	          React.createElement(
+	            'div',
+	            { className: 'cover-bio' },
+	            bio
+	          )
 	        ),
-	        React.createElement(
-	          'div',
-	          { className: 'userNavBar' },
-	          this.exploreNavList()
-	        )
+	        React.createElement('div', { className: 'userNavBar' })
 	      ),
 	      React.createElement(
 	        'div',

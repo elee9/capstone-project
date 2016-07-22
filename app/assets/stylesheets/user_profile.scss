@@ -24,7 +24,6 @@
 .userNavBar {
   z-index: 800;
   position: relative;
-  top: 343px;
   width: 100%;
   background: #dedede;
   height: 44px;
@@ -58,26 +57,44 @@
   padding-right: 10px;
 }
 
-.usernavbar-fixed {
-    top: 77px;
-    z-index: 100;
-    position: fixed!important;
-    width: 100%;
+.info-section {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  height: 100%;
 }
 
-.cover-header {
-  font-weight: 100;
+.cover-username {
+  font-weight: 400;
+  text-align: left;
   position: relative;
+  font-size: 2.5rem;
+  letter-spacing: 9px;
+  background-position: 50% 50%;
+  background-size: cover;
+  padding: 0.3em 1em 0.5em 1em;
+}
+.cover-name {
+  font-weight: 100;
   text-align: left;
   position: relative;
   font-size: 1.5rem;
-  letter-spacing: 2px;
+  letter-spacing: 3px;
   background-position: 50% 50%;
   background-size: cover;
-  border: 1px solid white;
-  display: inline-block;
   padding: 0.3em 1em 0.5em 1em;
-  top: 170px;
+}
+.cover-bio {
+  font-weight: 100;
+  text-align: left;
+  position: relative;
+  font-size: 1.0rem;
+  letter-spacing: 3px;
+  background-position: 50% 50%;
+  background-size: cover;
+  padding: 0.3em 1em 0.5em 1em;
 }
 
 .profile-images-container {

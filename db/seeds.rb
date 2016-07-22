@@ -101,9 +101,9 @@ PHOTO_DESCRIPTIONS = ["From the gardens of Denmark.",
   "What're you lookin\' at?",
   "Nommin\'"]
 
-User.create!({username: 'demothedog', first_name: 'Demo', last_name: 'the Dog',
+User.create!({username: 'demothedog', first_name: 'Demo', last_name: 'Lee',
               email: 'demothedog@gmail.com', profile_pic: "https://s3-us-west-1.amazonaws.com/pyxels-photos/photos/4aa2cbac-be2a-4fe9-ba32-181efb87eeef.jpeg",
-              password: 'demodemo', bio: 'Hi! I\'m Demo the Dog!'})
+              password: 'demodemo', bio: 'Hi, I\'m Demo! Welcome to Pyxels!'})
 
 User.create!({username: 'reedforSPEED', first_name: 'Reed', last_name: 'Williams',
               email: 'soccerb0i@gmail.com', profile_pic: "https://s3-us-west-1.amazonaws.com/pyxels-photos/avatars/reed.jpg",

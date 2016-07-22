@@ -3,6 +3,7 @@ var React = require('react'),
     CurrentUserState = require('../mixins/current_user_state'),
     SessionApiUtil = require('../util/session_api_util'),
     ReactRouter = require('react-router'),
+    ApiUtil = require('../util/api_util'),
     browserHistory = ReactRouter.browserHistory,
     Signup = require('./signup'),
     PhotoUpload = require('./photo_upload');
@@ -27,7 +28,7 @@ module.exports = React.createClass({
 
   profile: function (event) {
     event.preventDefault();
-    this.context.router.push('/users/' + this.state.currentUser.id);
+    this.context.router.push("/users/" + this.state.currentUser.id);
   },
 
   handleClick: function() {

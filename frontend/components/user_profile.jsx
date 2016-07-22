@@ -28,33 +28,20 @@ var UserProfile = React.createClass({
      ApiUtil.fetchUser(this.props.params.id);
    },
 
+   componentWillReceiveProps: function(nextProps) {
+     ApiUtil.fetchUser(nextProps.params.id);
+   },
+
    componentWillUnmount: function() {
      this.userListener.remove();
      this.currentUserListener.remove();
    },
 
-   exploreNavList: function() {
-     var cName = "explore-button " + "type-selected";
-     if (this.state.selected === "All Images") {
-       return (
-         <ul>
-           <li className={cName} onClick={this.allImages}>All Images</li>
-           <li className="explore-button" onClick={this.editUser}>Edit Profile</li>
-         </ul>
-       );
-     } else  {
-       return (
-         <ul>
-           <li className="explore-button" onClick={this.allImages}>All Images</li>
-           <li className={cName} onClick={this.editUser}>Edit Profile</li>
-         </ul>
-       );
-     }
-   },
-
    render: function() {
      if (this.state.user) {
        var name = this.state.user.first_name + " " + this.state.user.last_name;
+       var username = this.state.user.username.toUpperCase();
+       var bio = this.state.user.bio;
        var imageList = this.state.user.photos.map(function(photo, index) {
          return <PhotoIndexItem key={index} photo={photo} className="photo-index-item"/>;
        });
@@ -82,8 +69,12 @@ var UserProfile = React.createClass({
      return (
        <div className="profile-container">
          <div className="cover-container">
-           <div className="cover-header">{name}</div>
-           <div className="userNavBar">{this.exploreNavList()}</div>
+           <div className="info-section">
+             <div className="cover-username">{username}</div>
+             <div className="cover-name">{name}</div>
+             <div className="cover-bio">{bio}</div>
+           </div>
+           <div className="userNavBar"></div>
          </div>
          <div className="profile-images-container">
            {display}
